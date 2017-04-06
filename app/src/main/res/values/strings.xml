@@ -1,0 +1,40 @@
+<resources xmlns:xliff="http://schemas.android.com/tools">
+    <string name="app_name">KomaMusic</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!--TabLayout-->
+    <string name="tab_playlist">Playlists</string>
+    <string name="tab_song">Songs</string>
+    <string name="tab_artist">Artists</string>
+    <string name="tab_album">Albums</string>
+    <string name="tab_genre">Genres</string>
+
+    <!--Empty-->
+    <string name="no_song">No songs</string>
+    <string name="no_artist">No artists</string>
+    <string name="no_genre">No genres</string>
+    <string name="no_album">No albums</string>
+
+    <!--Shuffle-->
+    <string name="shuffle">Shuffle all</string>
+
+    <string name="music_desc_format"><xliff:g id="artist">%s</xliff:g>—<xliff:g id="album">%s</xliff:g></string>
+
+    <!--playlist-->
+    <string name="recently_add">Recently added</string>
+    <string name="recently_play">Recently played</string>
+    <string name="my_favorite">My favorites</string>
+    <string name="my_playlist">My playlists</string>
+    <string name="add_playlist">New playlist</string>
+    <string name="add_song">Add songs</string>
+
+    <!--Notification-->
+    <string name="notification_pause">Pause</string>
+    <string name="notification_play">Play</string>
+    <string name="notification_prev">Prev</string>
+    <string name="notification_next">Next</string>
+</resources>

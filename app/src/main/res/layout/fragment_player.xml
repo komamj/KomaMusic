@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/iv_blur"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <LinearLayout
+        android:id="@+id/song_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:orientation="vertical"
+        android:paddingTop="15dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:alpha="0.87"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="海阔天空"
+                android:textColor="@android:color/black"
+                android:textSize="26sp" />
+
+            <ImageView
+                android:id="@+id/iv_finish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:paddingEnd="@dimen/activity_horizontal_margin"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_finish" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tv_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alpha="0.54"
+            android:ellipsize="end"
+            android:gravity="center_horizontal"
+            android:maxLines="1"
+            android:text="黄家驹"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/title_size" />
+    </LinearLayout>
+
+    <com.koma.music.widget.SquareImageView
+        android:id="@+id/iv_album"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@android:color/white"
+        android:elevation="20dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/default_artwork"
+        android:transitionName="share_album" />
+
+</android.support.design.widget.CoordinatorLayout>

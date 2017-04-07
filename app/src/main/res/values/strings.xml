@@ -37,4 +37,17 @@
     <string name="notification_play">Play</string>
     <string name="notification_prev">Prev</string>
     <string name="notification_next">Next</string>
+
+    <!--Format time-->
+    <string name="duration_format"><xliff:g id="hours">%1$s</xliff:g> <xliff:g id="minutes">%2$s</xliff:g></string>
+    <!--Do not translate-->
+    <!--This provides a separator for two strings -->
+    <string name="combine_two_strings" translatable="false">%1$s | %2$s</string>
+    <!--Duration format for duration < 1 hour -->
+    <string name="durationformatshort" translatable="false"><xliff:g id="format">%2$d:%3$02d</xliff:g></string>
+    <!--Duration format for duration >= 1 hour -->
+    <string name="durationformatlong" translatable="false"><xliff:g id="format">%1$d:%2$02d:%3$02d</xliff:g></string>
+
+    <!-- Toast messages -->
+    <string name="set_as_ringtone">\'<xliff:g id="name" example="Alarm Bell">%s</xliff:g>\' set as ringtone</string>
 </resources>

@@ -50,4 +50,5 @@
 
     <!-- Toast messages -->
     <string name="set_as_ringtone">\'<xliff:g id="name" example="Alarm Bell">%s</xliff:g>\' set as ringtone</string>
+    <string name="error_playing_track">Unable to play track %1$s</string>
 </resources>

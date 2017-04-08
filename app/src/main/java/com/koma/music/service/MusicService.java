@@ -26,6 +26,7 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.PowerManager;
+import android.os.RemoteException;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -37,7 +38,6 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.graphics.Palette;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 
 import com.koma.music.R;
@@ -47,6 +47,7 @@ import com.koma.music.util.ImageLoader;
 import com.koma.music.util.LogUtils;
 import com.koma.music.util.PreferenceUtils;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.ListIterator;
@@ -317,7 +318,6 @@ public class MusicService extends Service {
 
         // Initialize the handler
         mPlayerHandler = new MusicPlayerHandler(this, mHandlerThread.getLooper());
-
         // Initialize the audio manager and register any headset controls for
         // playback
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -326,7 +326,7 @@ public class MusicService extends Service {
         setUpMediaSession();
 
         // Initialize the preferences
-        mPreferences = getSharedPreferences("Service", 0);
+        mPreferences = getSharedPreferences("MusicService", 0);
         mCardId = getCardId();
 
         mShowAlbumArtOnLockscreen = mPreferences.getBoolean(
@@ -377,7 +377,7 @@ public class MusicService extends Service {
     }
 
     private void setUpMediaSession() {
-        mSession = new MediaSessionCompat(this, "Listener");
+        mSession = new MediaSessionCompat(this, "KomaMusic");
         mSession.setCallback(new MediaSessionCompat.Callback() {
             @Override
             public void onPause() {
@@ -580,7 +580,7 @@ public class MusicService extends Service {
         if (mHeadsetHookWakeLock == null) {
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
             mHeadsetHookWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-                    "Eleven headset button");
+                    "KomaMusic headset button");
             mHeadsetHookWakeLock.setReferenceCounted(false);
         }
         // Make sure we don't indefinitely hold the wake lock under any circumstances
@@ -949,7 +949,7 @@ public class MusicService extends Service {
                     updateCursor(mPlaylist.get(mPlayPos).mId);
                 } else {
                     mOpenFailedCounter = 0;
-                    Log.w(TAG, "Failed to open file for playback");
+                    LogUtils.e(TAG, "Failed to open file for playback");
                     shutdown = true;
                     break;
                 }
@@ -2590,4 +2590,247 @@ public class MusicService extends Service {
             // }
         }
     };
+
+    private static final class ServiceStub extends IMusicService.Stub {
+        private WeakReference<MusicService> mService;
+
+        public ServiceStub(MusicService musicService) {
+            mService = new WeakReference<>(musicService);
+        }
+
+        @Override
+        public void openFile(final String path) throws RemoteException {
+            mService.get().openFile(path);
+        }
+
+        @Override
+        public void open(final long[] list, final int position, long sourceId)
+                throws RemoteException {
+            mService.get().open(list, position, sourceId);
+        }
+
+        @Override
+        public void stop() throws RemoteException {
+            mService.get().stop();
+        }
+
+        @Override
+        public void pause() throws RemoteException {
+            mService.get().pause();
+        }
+
+        @Override
+        public void play() throws RemoteException {
+            mService.get().play();
+        }
+
+        @Override
+        public void prev(boolean forcePrevious) throws RemoteException {
+            mService.get().prev(forcePrevious);
+        }
+
+        @Override
+        public void next() throws RemoteException {
+            mService.get().gotoNext(true);
+        }
+
+        @Override
+        public void enqueue(final long[] list, final int action, long sourceId)
+                throws RemoteException {
+            mService.get().enqueue(list, action, sourceId);
+        }
+
+        @Override
+        public void setQueuePosition(final int index) throws RemoteException {
+            mService.get().setQueuePosition(index);
+        }
+
+        @Override
+        public void setShuffleMode(final int shufflemode) throws RemoteException {
+            mService.get().setShuffleMode(shufflemode);
+        }
+
+        @Override
+        public void setRepeatMode(final int repeatmode) throws RemoteException {
+            mService.get().setRepeatMode(repeatmode);
+        }
+
+        @Override
+        public void moveQueueItem(final int from, final int to) throws RemoteException {
+            mService.get().moveQueueItem(from, to);
+        }
+
+        @Override
+        public void refresh() throws RemoteException {
+            mService.get().refresh();
+        }
+
+        @Override
+        public void playlistChanged() throws RemoteException {
+            mService.get().playlistChanged();
+        }
+
+        @Override
+        public boolean isPlaying() throws RemoteException {
+            return mService.get().isPlaying();
+        }
+
+        @Override
+        public long[] getQueue() throws RemoteException {
+            return mService.get().getQueue();
+        }
+
+        @Override
+        public long getQueueItemAtPosition(int position) throws RemoteException {
+            return mService.get().getQueueItemAtPosition(position);
+        }
+
+        @Override
+        public int getQueueSize() throws RemoteException {
+            return mService.get().getQueueSize();
+        }
+
+        @Override
+        public int getQueueHistoryPosition(int position) throws RemoteException {
+            return mService.get().getQueueHistoryPosition(position);
+        }
+
+        @Override
+        public int getQueueHistorySize() throws RemoteException {
+            return mService.get().getQueueHistorySize();
+        }
+
+        @Override
+        public int[] getQueueHistoryList() throws RemoteException {
+            return mService.get().getQueueHistoryList();
+        }
+
+        @Override
+        public long duration() throws RemoteException {
+            return mService.get().duration();
+        }
+
+        @Override
+        public long position() throws RemoteException {
+            return mService.get().position();
+        }
+
+        @Override
+        public long seek(final long position) throws RemoteException {
+            return mService.get().seek(position);
+        }
+
+        @Override
+        public void seekRelative(final long deltaInMs) throws RemoteException {
+            mService.get().seekRelative(deltaInMs);
+        }
+
+        @Override
+        public long getAudioId() throws RemoteException {
+            return mService.get().getAudioId();
+        }
+
+        @Override
+        public MusicPlaybackTrack getCurrentTrack() throws RemoteException {
+            return mService.get().getCurrentTrack();
+        }
+
+        @Override
+        public MusicPlaybackTrack getTrack(int index) throws RemoteException {
+            return mService.get().getTrack(index);
+        }
+
+
+        @Override
+        public long getNextAudioId() throws RemoteException {
+            return mService.get().getNextAudioId();
+        }
+
+        @Override
+        public long getPreviousAudioId() throws RemoteException {
+            return mService.get().getPreviousAudioId();
+        }
+
+        @Override
+        public long getArtistId() throws RemoteException {
+            return mService.get().getArtistId();
+        }
+
+        @Override
+        public long getAlbumId() throws RemoteException {
+            return mService.get().getAlbumId();
+        }
+
+        @Override
+        public String getArtistName() throws RemoteException {
+            return mService.get().getArtistName();
+        }
+
+        @Override
+        public String getTrackName() throws RemoteException {
+            return mService.get().getTrackName();
+        }
+
+        @Override
+        public String getAlbumName() throws RemoteException {
+            return mService.get().getAlbumName();
+        }
+
+        @Override
+        public String getPath() throws RemoteException {
+            return mService.get().getPath();
+        }
+
+        @Override
+        public int getQueuePosition() throws RemoteException {
+            return mService.get().getQueuePosition();
+        }
+
+        @Override
+        public int getShuffleMode() throws RemoteException {
+            return mService.get().getShuffleMode();
+        }
+
+        @Override
+        public int getRepeatMode() throws RemoteException {
+            return mService.get().getRepeatMode();
+        }
+
+        @Override
+        public int removeTracks(final int first, final int last) throws RemoteException {
+            return mService.get().removeTracks(first, last);
+        }
+
+        @Override
+        public int removeTrack(final long id) throws RemoteException {
+            return mService.get().removeTrack(id);
+        }
+
+        @Override
+        public boolean removeTrackAtPosition(final long id, final int position)
+                throws RemoteException {
+            return mService.get().removeTrackAtPosition(id, position);
+        }
+
+        @Override
+        public int getMediaMountedCount() throws RemoteException {
+            return mService.get().getMediaMountedCount();
+        }
+
+        @Override
+        public int getAudioSessionId() throws RemoteException {
+            return mService.get().getAudioSessionId();
+        }
+
+        @Override
+        public void setShakeToPlayEnabled(boolean enabled) {
+            mService.get().setShakeToPlayEnabled(enabled);
+        }
+
+        @Override
+        public void setLockscreenAlbumArt(boolean enabled) {
+            mService.get().setLockscreenAlbumArt(enabled);
+        }
+
+    }
 }

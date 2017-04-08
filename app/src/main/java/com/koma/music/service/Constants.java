@@ -47,7 +47,10 @@ public class Constants {
      * Indicates the track fails to play
      */
     public static final String TRACK_ERROR = "com.cyanogenmod.eleven.trackerror";
-
+    /**
+     * Name of the track that was unable to play
+     */
+    public static final String TRACK_NAME = "trackname";
     /**
      * For backwards compatibility reasons, also provide sticky
      * broadcasts under the music package
@@ -245,16 +248,8 @@ public class Constants {
 
     /**
      * The max size allowed for the track history
-     * TODO: Comeback and rewrite/fix all the whole queue code bugs after demo
-     * https://cyanogen.atlassian.net/browse/MUSIC-175
-     * https://cyanogen.atlassian.net/browse/MUSIC-44
      */
     public static final int MAX_HISTORY_SIZE = 1000;
-
-    /**
-     * Name of the track that was unable to play
-     */
-    public static final String TRACK_NAME = "trackname";
 
     /**
      * The columns used to retrieve any info from the current track

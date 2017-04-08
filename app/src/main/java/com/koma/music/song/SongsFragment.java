@@ -118,7 +118,7 @@ public class SongsFragment extends BaseFragment implements SongsContract.View {
 
     @Override
     public void showSongs(List<Song> songs) {
-        LogUtils.i(TAG, "showSongs'");
+        LogUtils.i(TAG, "showSongs");
         mAdapter.replaceData(songs);
         mAdapter.notifyDataSetChanged();
     }

@@ -16,6 +16,10 @@ public interface MusicPlayerContract {
         void updateRepeatView();
 
         void updateTitle();
+
+        void updateBlurArtWork();
+
+        void updateAlbumImage();
     }
 
     interface Presenter extends BasePresenter {
@@ -26,5 +30,7 @@ public interface MusicPlayerContract {
         void doNext();
 
         void doFavorite();
+
+        void doBlurArtWork();
     }
 }

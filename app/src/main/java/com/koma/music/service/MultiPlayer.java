@@ -7,6 +7,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import com.koma.music.util.LogUtils;
+
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
@@ -67,9 +69,11 @@ public class MultiPlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
 
             player.prepare();
         } catch (final IOException todo) {
+            LogUtils.e(TAG, "setDataSourceImpl IOException error : " + todo.toString());
             // TODO: notify the user why the file couldn't be opened
             return false;
         } catch (final IllegalArgumentException todo) {
+            LogUtils.e(TAG, "setDataSourceImpl IllegalArgumentException error : " + todo.toString());
             // TODO: notify the user why the file couldn't be opened
             return false;
         }

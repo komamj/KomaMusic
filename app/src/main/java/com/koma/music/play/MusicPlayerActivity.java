@@ -1,25 +1,25 @@
 package com.koma.music.play;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import com.koma.music.R;
+import com.koma.music.base.BaseActivity;
 import com.koma.music.util.LogUtils;
 
 /**
  * Created by koma on 3/20/17.
  */
 
-public class MusicPlayerActivity extends AppCompatActivity {
+public class MusicPlayerActivity extends BaseActivity {
     private static final String TAG = MusicPlayerActivity.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_music_player);
-
         LogUtils.i(TAG, "onCreate");
+
+        setContentView(R.layout.activity_music_player);
     }
 
     @Override
@@ -34,5 +34,10 @@ public class MusicPlayerActivity extends AppCompatActivity {
         super.onStop();
 
         LogUtils.i(TAG, "onStop");
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_music_player;
     }
 }

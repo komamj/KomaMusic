@@ -23,7 +23,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/tv_title"
+                android:id="@+id/tv_track_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -45,7 +45,7 @@
         </FrameLayout>
 
         <TextView
-            android:id="@+id/tv_info"
+            android:id="@+id/tv_artist_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:alpha="0.54"

@@ -13,8 +13,8 @@ import java.util.List;
  * Created by koma on 3/21/17.
  */
 
-public class ListenerUtils {
-    private static final String TAG = ListenerUtils.class.getSimpleName();
+public class KomaUtils {
+    private static final String TAG = KomaUtils.class.getSimpleName();
     private static final String[] AUDIO_PROJECTION = new String[]{
                         /* 0 */
             MediaStore.Audio.Media._ID,

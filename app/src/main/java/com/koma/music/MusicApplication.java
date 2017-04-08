@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.StrictMode;
 
 import com.koma.music.util.LogUtils;
+import com.squareup.leakcanary.LeakCanary;
 
 /**
  * Created by koma on 3/20/17.
@@ -24,6 +25,13 @@ public class MusicApplication extends Application {
         enableStrictMode();
 
         sContext = getApplicationContext();
+
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        LeakCanary.install(this);
     }
 
     public synchronized static Context getContext() {

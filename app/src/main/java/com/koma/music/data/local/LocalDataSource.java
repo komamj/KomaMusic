@@ -1,7 +1,7 @@
 package com.koma.music.data.local;
 
 import com.koma.music.data.model.Song;
-import com.koma.music.util.ListenerUtils;
+import com.koma.music.util.KomaUtils;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class LocalDataSource implements MusicDataSource {
         return Observable.create(new Observable.OnSubscribe<List<Song>>() {
             @Override
             public void call(Subscriber<? super List<Song>> subscriber) {
-                subscriber.onNext(ListenerUtils.getAllSongs());
+                subscriber.onNext(KomaUtils.getAllSongs());
                 subscriber.onCompleted();
             }
         });

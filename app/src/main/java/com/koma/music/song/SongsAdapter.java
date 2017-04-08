@@ -9,8 +9,12 @@ import android.widget.TextView;
 import com.koma.music.R;
 import com.koma.music.data.model.Song;
 import com.koma.music.util.LogUtils;
+import com.koma.music.util.MusicUtils;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by koma on 3/23/17.
@@ -41,8 +45,9 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongsViewHol
 
     @Override
     public void onBindViewHolder(SongsViewHolder holder, int position) {
-        holder.mSongTitle.setText(mData.get(position).mSongName);
-        holder.mSongInfo.setText(mData.get(position).mArtistName);
+        holder.itemView.setTag(position);
+        holder.mTrackName.setText(mData.get(position).mSongName);
+        holder.mArtistName.setText(mData.get(position).mArtistName);
     }
 
     @Override
@@ -50,13 +55,50 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongsViewHol
         return mData == null ? 0 : mData.size();
     }
 
-    class SongsViewHolder extends RecyclerView.ViewHolder {
-        private TextView mSongTitle, mSongInfo;
+    /**
+     * @return Gets the list of song ids from the adapter
+     */
+    public long[] getSongIds() {
+        long[] ret = new long[getItemCount()];
+
+        for (int i = 0; i < getItemCount(); i++) {
+            ret[i] = mData.get(i).mSongId;
+        }
+
+        return ret;
+    }
+
+    class SongsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
+            View.OnLongClickListener {
+        @BindView(R.id.tv_title)
+        TextView mTrackName;
+        @BindView(R.id.tv_info)
+        TextView mArtistName;
 
         SongsViewHolder(View view) {
             super(view);
-            mSongTitle = (TextView) view.findViewById(R.id.tv_title);
-            mSongInfo = (TextView) view.findViewById(R.id.tv_info);
+            ButterKnife.bind(this, view);
+
+            view.setOnClickListener(this);
+            view.setOnLongClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            int position = (int) view.getTag();
+
+            LogUtils.i(TAG, "onClick position : " + position);
+
+            final long[] list = getSongIds();
+
+            if (list != null) {
+                MusicUtils.playAll(list, position, -1, false);
+            }
+        }
+
+        @Override
+        public boolean onLongClick(View view) {
+            return false;
         }
     }
 }

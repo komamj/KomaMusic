@@ -44,6 +44,7 @@ import java.util.WeakHashMap;
  * @author Andrew Neal (andrewdneal@gmail.com)
  */
 public final class MusicUtils {
+    private static final String TAG = MusicUtils.class.getSimpleName();
 
     public static IMusicService mService = null;
 
@@ -56,7 +57,7 @@ public final class MusicUtils {
     private static final int MIN_VALID_YEAR = 1900; // used to remove invalid years from metadata
 
     public static final String MUSIC_ONLY_SELECTION = MediaStore.Audio.AudioColumns.IS_MUSIC + "=1"
-            + " AND " + MediaStore.Audio.AudioColumns.TITLE + " != ''"; //$NON-NLS-2$
+            + " AND " + MediaStore.Audio.AudioColumns.TITLE + " != ''";
 
     public static final long UPDATE_FREQUENCY_MS = 500;
     public static final long UPDATE_FREQUENCY_FAST_MS = 30;
@@ -817,7 +818,8 @@ public final class MusicUtils {
             if (position < 0) {
                 position = 0;
             }
-            mService.open(list, forceShuffle ? -1 : position, sourceId/*, sourceType.mId*/);
+            mService.open(list, forceShuffle ? -1 : position, sourceId);
+
             mService.play();
         } catch (final RemoteException ignored) {
         }

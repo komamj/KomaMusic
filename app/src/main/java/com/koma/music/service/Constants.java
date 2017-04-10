@@ -55,7 +55,7 @@ public class Constants {
      * For backwards compatibility reasons, also provide sticky
      * broadcasts under the music package
      */
-    public static final String ELEVEN_PACKAGE_NAME = "com.cyanogenmod.eleven";
+    public static final String KOMA_MUSIC_PACKAGE_NAME = "com.koma.music";
     public static final String MUSIC_PACKAGE_NAME = "com.android.music";
 
     /**

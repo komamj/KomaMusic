@@ -18,8 +18,6 @@ public class MusicPlayerActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         LogUtils.i(TAG, "onCreate");
-
-        setContentView(R.layout.activity_music_player);
     }
 
     @Override

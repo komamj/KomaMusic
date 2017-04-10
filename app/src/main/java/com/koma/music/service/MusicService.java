@@ -33,19 +33,21 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.support.v7.graphics.Palette;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.koma.music.MusicApplication;
 import com.koma.music.R;
 import com.koma.music.data.local.db.MusicPlaybackState;
 import com.koma.music.data.model.MusicPlaybackTrack;
-import com.koma.music.util.ImageLoader;
 import com.koma.music.util.LogUtils;
 import com.koma.music.util.PreferenceUtils;
+import com.koma.music.util.Utils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -816,6 +818,7 @@ public class MusicService extends Service {
      * @param position The position to place the tracks
      */
     private void addToPlayList(final long[] list, int position, long sourceId) {
+        LogUtils.i(TAG, "addToPlayList");
         final int addlen = list.length;
         if (position < 0) {
             mPlaylist.clear();
@@ -1200,7 +1203,7 @@ public class MusicService extends Service {
         sendStickyBroadcast(intent);
 
         final Intent musicIntent = new Intent(intent);
-        musicIntent.setAction(what.replace(Constants.ELEVEN_PACKAGE_NAME, Constants.MUSIC_PACKAGE_NAME));
+        musicIntent.setAction(what.replace(Constants.KOMA_MUSIC_PACKAGE_NAME, Constants.MUSIC_PACKAGE_NAME));
         sendStickyBroadcast(musicIntent);
 
         if (what.equals(Constants.META_CHANGED)) {
@@ -1235,9 +1238,12 @@ public class MusicService extends Service {
         /*mAppWidgetSmall.notifyChange(this, what);
         mAppWidgetLarge.notifyChange(this, what);
         mAppWidgetLargeAlternate.notifyChange(this, what);*/
+
+        LogUtils.i(TAG, "notifyChange finished");
     }
 
     private void updateMediaSession(final String what) {
+        LogUtils.i(TAG, "updateMediaSession what : " + what);
         int playState = mIsSupposedToBePlaying
                 ? PlaybackStateCompat.STATE_PLAYING
                 : PlaybackStateCompat.STATE_PAUSED;
@@ -1256,8 +1262,8 @@ public class MusicService extends Service {
                     .setActiveQueueItemId(getAudioId())
                     .setState(playState, position(), 1.0f).build());
         } else if (what.equals(Constants.META_CHANGED) || what.equals(Constants.QUEUE_CHANGED)) {
-            Bitmap albumArt = ImageLoader.getArtworkByAlbumId(this, getAlbumId());
-            if (albumArt != null) {
+            LogUtils.i(TAG, "sadsadsadsad thread id : " + Thread.currentThread().getId() + "name : " + Thread.currentThread().getName());
+            /*if (albumArt != null) {
                 // RemoteControlClient wants to recycle the bitmaps thrown at it, so we need
                 // to make sure not to hand out our cache copy
                 Bitmap.Config config = albumArt.getConfig();
@@ -1265,9 +1271,9 @@ public class MusicService extends Service {
                     config = Bitmap.Config.ARGB_8888;
                 }
                 albumArt = albumArt.copy(config, false);
-            }
+            }*/
 
-            mSession.setMetadata(new MediaMetadataCompat.Builder()
+            /*mSession.setMetadata(new MediaMetadataCompat.Builder()
                     .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, getArtistName())
                     .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, getAlbumArtistName())
                     .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, getAlbumName())
@@ -1278,7 +1284,7 @@ public class MusicService extends Service {
                     .putString(MediaMetadataCompat.METADATA_KEY_GENRE, getGenreName())
                     .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART,
                             mShowAlbumArtOnLockscreen ? albumArt : null)
-                    .build());
+                    .build());*/
 
             if (what.equals(Constants.QUEUE_CHANGED)) {
                 updateMediaSessionQueue();
@@ -1289,6 +1295,7 @@ public class MusicService extends Service {
                     .setActiveQueueItemId(getAudioId())
                     .setState(playState, position(), 1.0f).build());
         }
+        LogUtils.i(TAG, "updateMediaSession finished");
     }
 
     private synchronized void updateMediaSessionQueue() {
@@ -1315,8 +1322,8 @@ public class MusicService extends Service {
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent clickIntent = PendingIntent.getActivity(this, 0, nowPlayingIntent, 0);
 
-        Bitmap artwork;
-        artwork = ImageLoader.getArtworkByAlbumId(this, getAlbumId());
+        Bitmap artwork = null;
+        //artwork = ImageLoader.getArtworkByAlbumId(this, getAlbumId());
 
         if (artwork == null) {
             //artwork = ImageLoader.getInstance().loadImageSync("drawable://" + R.drawable.icon_album_default);
@@ -1324,10 +1331,9 @@ public class MusicService extends Service {
         if (mNotificationPostTime == 0) {
             mNotificationPostTime = System.currentTimeMillis();
         }
-
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_notification)
-                .setLargeIcon(artwork)
+                //.setLargeIcon(artwork)
                 .setContentIntent(clickIntent)
                 .setContentTitle(getTrackName())
                 .setContentText(text)
@@ -1343,8 +1349,8 @@ public class MusicService extends Service {
                         getString(R.string.notification_next),
                         retrievePlaybackAction(Constants.NEXT_ACTION));
 
-        builder.setColor(Palette.from(artwork).generate().getMutedColor(
-                getResources().getColor(R.color.colorPrimary)));
+       /* builder.setColor(Palette.from(artwork).generate().getMutedColor(
+                getResources().getColor(R.color.colorPrimary)));*/
         builder.setVisibility(Notification.VISIBILITY_PUBLIC);
         android.support.v7.app.NotificationCompat.MediaStyle style =
                 new android.support.v7.app.NotificationCompat.MediaStyle()
@@ -1860,6 +1866,7 @@ public class MusicService extends Service {
             if (mCursor == null) {
                 return -1;
             }
+            LogUtils.i(TAG, "getAlbumId : thread id " + Thread.currentThread().getName());
             return mCursor.getLong(mCursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ALBUM_ID));
         }
     }
@@ -2129,6 +2136,7 @@ public class MusicService extends Service {
             if (oldId != getAudioId()) {
                 notifyChange(Constants.META_CHANGED);
             }
+            LogUtils.i(TAG, "open finished");
         }
     }
 
@@ -2831,6 +2839,5 @@ public class MusicService extends Service {
         public void setLockscreenAlbumArt(boolean enabled) {
             mService.get().setLockscreenAlbumArt(enabled);
         }
-
     }
 }

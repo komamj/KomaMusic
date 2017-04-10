@@ -1,3 +1,15 @@
+/*
+ * Copyright (C) 2017 Koma
+ *
+ * Licensed under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 package com.koma.music.base;
 
 import android.Manifest;
@@ -18,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.koma.music.R;
+import com.koma.music.listener.MusicStateListener;
 import com.koma.music.service.Constants;
 import com.koma.music.service.IMusicService;
 import com.koma.music.util.LogUtils;
@@ -26,6 +39,9 @@ import com.koma.music.util.MusicUtils;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.koma.music.util.MusicUtils.mService;
 
 
@@ -33,25 +49,34 @@ import static com.koma.music.util.MusicUtils.mService;
  * Created by koma on 3/20/17.
  */
 
-public abstract class BaseActivity extends AppCompatActivity implements ServiceConnection {
+public abstract class BaseActivity extends AppCompatActivity implements ServiceConnection, MusicStateListener {
     private static final String TAG = BaseActivity.class.getSimpleName();
+
     private static final int PERMISSION_REQUEST_STORAGE = 1;
+
+    @BindView(R.id.tv_track_name)
+    TextView mTrackName;
+    @BindView(R.id.tv_artist_name)
+    TextView mArtistName;
+    @BindView(R.id.iv_album)
+    ImageView mAlbum;
+    @BindView(R.id.iv_pause)
+    ImageView mPauseOrPlay;
 
     protected Context mContext;
     /**
      * The service token
      */
     private MusicUtils.ServiceToken mToken;
-
-    private TextView mTrackName;
-    private TextView mArtistName;
-
-    private ImageView mAlbumArt;
-
     /**
      * Broadcast receiver
      */
     private PlaybackStatus mPlaybackStatus;
+
+    /**
+     * Playstate and meta change listener
+     */
+    private ArrayList<MusicStateListener> mMusicStateListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +84,17 @@ public abstract class BaseActivity extends AppCompatActivity implements ServiceC
 
         setContentView(getLayoutId());
 
+        ButterKnife.bind(this);
+
         mContext = BaseActivity.this;
 
-        // Fade it in
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        if (!needRequestStoragePermission()) {
+            init();
+        }
+    }
 
+    private void init() {
+        mMusicStateListener = new ArrayList<>();
         // Control the media volume
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
@@ -72,14 +103,6 @@ public abstract class BaseActivity extends AppCompatActivity implements ServiceC
 
         // Initialize the broadcast receiver
         mPlaybackStatus = new PlaybackStatus(this);
-
-        if (!needRequestStoragePermission()) {
-            init();
-        }
-    }
-
-    private void init() {
-
     }
 
     @Override
@@ -155,7 +178,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ServiceC
         // Set the playback drawables
         //// TODO: 4/8/17
         // Current info
-        //// TODO: 4/8/17
+        onMetaChanged();
         // if there were any pending intents while the service was started
         //// TODO: 4/8/17
     }
@@ -185,23 +208,80 @@ public abstract class BaseActivity extends AppCompatActivity implements ServiceC
             BaseActivity baseActivity = mReference.get();
             if (baseActivity != null) {
                 if (action.equals(Constants.META_CHANGED)) {
-                    //// TODO: 4/8/17
                     //meta changed
+                    LogUtils.i(TAG, "meta changed notify all listener");
+                    baseActivity.onMetaChanged();
                 } else if (action.equals(Constants.PLAYSTATE_CHANGED)) {
-                    //// TODO: 4/8/17
                     // Set the play and pause image
-
+                    baseActivity.mPauseOrPlay.setImageResource(MusicUtils.isPlaying() ?
+                            R.drawable.ic_pause : R.drawable.ic_play);
                 } else if (action.equals(Constants.REFRESH)) {
                     //media change so refresh
+                    LogUtils.i(TAG, "media change notify all listener");
+                    baseActivity.refreshData();
                 } else if (action.equals(Constants.PLAYLIST_CHANGED)) {
-
                     //playlist changed
+                    LogUtils.i(TAG, "playlist changed notify all listener");
+                    baseActivity.onPlaylistChanged();
                 } else if (action.equals(Constants.TRACK_ERROR)) {
+                    LogUtils.i(TAG, "track error dislay error message");
                     final String errorMsg = context.getString(R.string.error_playing_track,
                             intent.getStringExtra(Constants.TRACK_NAME));
                     Toast.makeText(baseActivity, errorMsg, Toast.LENGTH_SHORT).show();
                 }
             }
+        }
+    }
+
+    @Override
+    public void onMetaChanged() {
+        // Let the listener know to the meta chnaged
+        for (final MusicStateListener listener : mMusicStateListener) {
+            if (listener != null) {
+                listener.onMetaChanged();
+            }
+        }
+    }
+
+    @Override
+    public void refreshData() {
+        // Let the listener know to update a list
+        for (final MusicStateListener listener : mMusicStateListener) {
+            if (listener != null) {
+                listener.refreshData();
+            }
+        }
+    }
+
+    @Override
+    public void onPlaylistChanged() {
+        // Let the listener know to update a list
+        for (final MusicStateListener listener : mMusicStateListener) {
+            if (listener != null) {
+                listener.onPlaylistChanged();
+            }
+        }
+    }
+
+    /**
+     * @param status The {@link MusicStateListener} to use
+     */
+    public void setMusicStateListenerListener(final MusicStateListener status) {
+        if (status == this) {
+            throw new UnsupportedOperationException("Override the method, don't add a listener");
+        }
+
+        if (status != null) {
+            mMusicStateListener.add(status);
+        }
+    }
+
+    /**
+     * @param status The {@link MusicStateListener} to use
+     */
+    public void removeMusicStateListenerListener(final MusicStateListener status) {
+        if (status != null) {
+            mMusicStateListener.remove(status);
         }
     }
 

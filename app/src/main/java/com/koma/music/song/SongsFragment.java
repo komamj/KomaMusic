@@ -1,8 +1,6 @@
 package com.koma.music.song;
 
-import android.database.ContentObserver;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +11,6 @@ import android.view.ViewGroup;
 import com.koma.music.R;
 import com.koma.music.base.BaseFragment;
 import com.koma.music.data.model.Song;
-import com.koma.music.util.Constants;
 import com.koma.music.util.LogUtils;
 
 import java.util.ArrayList;
@@ -53,17 +50,7 @@ public class SongsFragment extends BaseFragment implements SongsContract.View {
     public void onStart() {
         super.onStart();
         LogUtils.i(TAG, "onStart");
-        mContext.getContentResolver().registerContentObserver(Constants.SONG_URI, true,
-                mSongsObserver);
     }
-
-    private ContentObserver mSongsObserver = new ContentObserver(new Handler()) {
-        @Override
-        public void onChange(boolean selfChange) {
-            mHandler.removeCallbacks(SongsFragment.this);
-            mHandler.postDelayed(SongsFragment.this, Constants.REFRESH_TIME);
-        }
-    };
 
     @Override
     public void onResume() {
@@ -87,13 +74,6 @@ public class SongsFragment extends BaseFragment implements SongsContract.View {
     public void onStop() {
         super.onStop();
         LogUtils.i(TAG, "onStop");
-    }
-
-    @Override
-    public void run() {
-        if (mPresenter != null) {
-            mPresenter.loadSongs();
-        }
     }
 
     @Override

@@ -18,11 +18,6 @@ public class PlaylistsFragment extends BaseFragment implements PlaylistsConstrac
     }
 
     @Override
-    public void run() {
-
-    }
-
-    @Override
     public void setPresenter(@NonNull PlaylistsConstract.Presenter presenter) {
         mPresenter = presenter;
     }

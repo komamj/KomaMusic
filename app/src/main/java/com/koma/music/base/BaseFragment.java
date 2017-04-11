@@ -2,8 +2,6 @@ package com.koma.music.base;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,9 +10,8 @@ import android.view.View;
  * Created by koma on 3/20/17.
  */
 
-public abstract class BaseFragment extends Fragment implements Runnable {
+public abstract class BaseFragment extends Fragment {
     protected Context mContext;
-    protected Handler mHandler;
     protected RecyclerView mRecyclerView;
 
     @Override
@@ -26,7 +23,6 @@ public abstract class BaseFragment extends Fragment implements Runnable {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mHandler = new Handler(Looper.getMainLooper());
     }
 
     @Override

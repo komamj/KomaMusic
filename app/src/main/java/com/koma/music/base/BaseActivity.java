@@ -29,12 +29,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.koma.music.R;
 import com.koma.music.listener.MusicStateListener;
 import com.koma.music.service.Constants;
 import com.koma.music.service.IMusicService;
 import com.koma.music.util.LogUtils;
 import com.koma.music.util.MusicUtils;
+import com.koma.music.util.Utils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -210,6 +212,11 @@ public abstract class BaseActivity extends AppCompatActivity implements ServiceC
                 if (action.equals(Constants.META_CHANGED)) {
                     //meta changed
                     LogUtils.i(TAG, "meta changed notify all listener");
+                    Glide.with(baseActivity).load(Utils.getAlbumArtUri(
+                            MusicUtils.getCurrentAlbumId()))
+                            .into(baseActivity.mAlbum);
+                    baseActivity.mTrackName.setText(MusicUtils.getTrackName());
+                    baseActivity.mArtistName.setText(MusicUtils.getArtistName());
                     baseActivity.onMetaChanged();
                 } else if (action.equals(Constants.PLAYSTATE_CHANGED)) {
                     // Set the play and pause image

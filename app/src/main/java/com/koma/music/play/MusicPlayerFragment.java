@@ -1,15 +1,18 @@
 package com.koma.music.play;
 
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.koma.music.R;
+import com.koma.music.base.BaseActivity;
 import com.koma.music.base.BaseFragment;
+import com.koma.music.listener.MusicStateListener;
 import com.koma.music.util.LogUtils;
 
 import butterknife.BindView;
@@ -20,16 +23,12 @@ import butterknife.OnClick;
  * Created by koma on 4/5/17.
  */
 
-public class MusicPlayerFragment extends BaseFragment implements MusicPlayerContract.View {
+public class MusicPlayerFragment extends BaseFragment implements MusicPlayerContract.View, MusicStateListener {
     private static final String TAG = MusicPlayerFragment.class.getSimpleName();
     @BindView(R.id.iv_blur)
     ImageView mBlurImageView;
     @BindView(R.id.iv_finish)
     ImageView mExitImageView;
-    @BindView(R.id.tv_track_name)
-    TextView mTrackName;
-    @BindView(R.id.tv_artist_name)
-    TextView mArtistName;
 
     @OnClick(R.id.iv_finish)
     void finish() {
@@ -44,6 +43,13 @@ public class MusicPlayerFragment extends BaseFragment implements MusicPlayerCont
         View view = inflater.inflate(R.layout.fragment_player, container, false);
         ButterKnife.bind(this, view);
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        LogUtils.i(TAG, "onActivityCreated");
+        ((BaseActivity) getActivity()).setMusicStateListenerListener(this);
     }
 
     @Override
@@ -66,11 +72,6 @@ public class MusicPlayerFragment extends BaseFragment implements MusicPlayerCont
         if (mPresenter != null) {
             mPresenter.unSubscribe();
         }
-    }
-
-    @Override
-    public void run() {
-
     }
 
     @Override
@@ -100,11 +101,53 @@ public class MusicPlayerFragment extends BaseFragment implements MusicPlayerCont
 
     @Override
     public void updateBlurArtWork() {
+        LogUtils.i(TAG, "updateBlurArtWork");
+        if (mPresenter != null) {
+            mPresenter.doBlurArtWork();
+        }
+    }
 
+    @Override
+    public void setBlurArtWork(Drawable blurArtWork) {
+        if (blurArtWork != null) {
+            if (mBlurImageView.getDrawable() != null) {
+                final TransitionDrawable td = new TransitionDrawable(new Drawable[]{
+                        mBlurImageView.getDrawable(), blurArtWork});
+                mBlurImageView.setImageDrawable(td);
+                td.startTransition(200);
+            } else {
+                mBlurImageView.setImageDrawable(blurArtWork);
+            }
+        }
     }
 
     @Override
     public void updateAlbumImage() {
+        LogUtils.i(TAG, "updateAlbumImage");
+    }
 
+    @Override
+    public void setAlbumImage() {
+
+    }
+
+    @Override
+    public void refreshData() {
+        LogUtils.i(TAG, "refreshData");
+    }
+
+    @Override
+    public void onPlaylistChanged() {
+        LogUtils.i(TAG, "onPlaylistChanged");
+    }
+
+    @Override
+    public void onMetaChanged() {
+        LogUtils.i(TAG, "onMetaChanged");
+        updateBlurArtWork();
+        updateTitle();
+        updateAlbumImage();
+        updatePlayOrPauseView();
+        updateFavoriteView();
     }
 }

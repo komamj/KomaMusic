@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.os.StrictMode;
 
+import com.bumptech.glide.Glide;
 import com.koma.music.util.LogUtils;
 import com.squareup.leakcanary.LeakCanary;
 
@@ -43,6 +44,7 @@ public class MusicApplication extends Application {
         LogUtils.i(TAG, "onLowMemory");
 
         //clear cache
+        Glide.get(sContext).clearMemory();
         super.onLowMemory();
     }
 

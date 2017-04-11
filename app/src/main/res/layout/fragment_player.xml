@@ -63,7 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@android:color/white"
-        android:elevation="20dp"
+        android:elevation="40dp"
         android:scaleType="centerCrop"
         android:src="@mipmap/default_artwork"
         android:transitionName="share_album" />

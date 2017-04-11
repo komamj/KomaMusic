@@ -38,13 +38,13 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/iv_album"
-            android:layout_toStartOf="@+id/iv_play_stop"
+            android:layout_toStartOf="@+id/iv_pause"
             android:orientation="vertical"
             android:paddingEnd="@dimen/activity_horizontal_margin"
             android:paddingStart="@dimen/activity_horizontal_margin">
 
             <TextView
-                android:id="@+id/tv_title"
+                android:id="@+id/tv_track_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:alpha="0.87"
@@ -56,7 +56,7 @@
                 android:textSize="@dimen/title_size" />
 
             <TextView
-                android:id="@+id/tv_info"
+                android:id="@+id/tv_artist_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:alpha="0.54"
@@ -69,7 +69,7 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/iv_play_stop"
+            android:id="@+id/iv_pause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"

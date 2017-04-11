@@ -14,11 +14,6 @@ public class GenresFragment extends BaseFragment implements GenresContract.View 
     private GenresContract.Presenter mPresenter;
 
     @Override
-    public void run() {
-
-    }
-
-    @Override
     public void setPresenter(@NonNull GenresContract.Presenter presenter) {
         mPresenter = presenter;
     }

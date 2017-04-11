@@ -18,11 +18,6 @@ public class AlbumsFragment extends BaseFragment implements AlbumsConstract.View
     }
 
     @Override
-    public void run() {
-
-    }
-
-    @Override
     public void setPresenter(@NonNull AlbumsConstract.Presenter presenter) {
         mPresenter = presenter;
     }

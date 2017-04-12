@@ -32,7 +32,7 @@ public class MusicPlayerFragment extends BaseFragment implements MusicPlayerCont
 
     @OnClick(R.id.iv_finish)
     void finish() {
-        getActivity().finish();
+        getActivity().onBackPressed();
     }
 
     @NonNull

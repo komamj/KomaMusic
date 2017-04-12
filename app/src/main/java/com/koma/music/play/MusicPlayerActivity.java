@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.koma.music.R;
 import com.koma.music.base.BaseActivity;
+import com.koma.music.data.local.MusicRepository;
 import com.koma.music.util.LogUtils;
 
 /**
@@ -18,6 +19,14 @@ public class MusicPlayerActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         LogUtils.i(TAG, "onCreate");
+
+        init();
+    }
+
+    private void init() {
+        MusicPlayerFragment musicPlayerFragment = (MusicPlayerFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.player_fragment);
+        new MusicPlayerPresenter(this, musicPlayerFragment, MusicRepository.getInstance());
     }
 
     @Override

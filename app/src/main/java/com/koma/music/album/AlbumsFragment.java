@@ -3,6 +3,7 @@ package com.koma.music.album;
 import android.support.annotation.NonNull;
 
 import com.koma.music.base.BaseFragment;
+import com.koma.music.util.LogUtils;
 
 /**
  * Created by koma on 3/21/17.
@@ -18,7 +19,19 @@ public class AlbumsFragment extends BaseFragment implements AlbumsConstract.View
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+
+        LogUtils.i(TAG, "onStart");
+    }
+
+    @Override
     public void setPresenter(@NonNull AlbumsConstract.Presenter presenter) {
         mPresenter = presenter;
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return 0;
     }
 }

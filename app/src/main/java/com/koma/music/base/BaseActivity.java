@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Koma
+ * Copyright (C) 2017 Koma MJ
  *
  * Licensed under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -43,6 +43,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.koma.music.util.MusicUtils.mService;
 
@@ -61,9 +62,14 @@ public abstract class BaseActivity extends AppCompatActivity implements ServiceC
     @BindView(R.id.tv_artist_name)
     TextView mArtistName;
     @BindView(R.id.iv_album)
-    ImageView mAlbum;
+    protected ImageView mAlbum;
     @BindView(R.id.iv_pause)
     ImageView mPauseOrPlay;
+
+    @OnClick(R.id.iv_pause)
+    void doPauseOrPlay() {
+        MusicUtils.playOrPause();
+    }
 
     protected Context mContext;
     /**
@@ -214,6 +220,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ServiceC
                     LogUtils.i(TAG, "meta changed notify all listener");
                     Glide.with(baseActivity).load(Utils.getAlbumArtUri(
                             MusicUtils.getCurrentAlbumId()))
+                            .dontAnimate()
                             .into(baseActivity.mAlbum);
                     baseActivity.mTrackName.setText(MusicUtils.getTrackName());
                     baseActivity.mArtistName.setText(MusicUtils.getArtistName());

@@ -10,34 +10,26 @@
  * KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.koma.music.service;
+package com.koma.music.widget;
+
+import android.content.Context;
+import android.support.v7.widget.AppCompatImageButton;
+import android.util.AttributeSet;
+import android.view.View;
 
 /**
- * Created by koma on 3/23/17.
+ * Created by koma on 4/13/17.
  */
 
-public class TrackErrorInfo {
-    private long mId;
-    private String mTrackName;
+public abstract class MusicButton extends AppCompatImageButton implements View.OnClickListener {
+    protected static float ACTIVE_ALPHA = 1.0f;
+    protected static float INACTIVE_ALPHA = 0.4f;
 
-    public TrackErrorInfo(long id, String trackName) {
-        mId = id;
-        mTrackName = trackName;
-    }
+    public MusicButton(final Context context, final AttributeSet attrs) {
+        super(context);
 
-    public void setId(long id) {
-        this.mId = id;
-    }
+        setPadding(0, 0, 0, 0);
 
-    public long getId() {
-        return this.mId;
-    }
-
-    public void setTrackName(String trackName) {
-        this.mTrackName = trackName;
-    }
-
-    public String getTrackName() {
-        return this.mTrackName;
+        setOnClickListener(this);
     }
 }

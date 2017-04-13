@@ -8,7 +8,15 @@
         android:id="@+id/tv_shuffle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/shuffle"/>
+        android:drawablePadding="@dimen/activity_horizontal_margin"
+        android:drawableStart="@drawable/ic_shuffle"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center_vertical"
+        android:paddingBottom="20dp"
+        android:paddingEnd="30dp"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingTop="18dp"
+        android:text="@string/shuffle" />
 
     <include layout="@layout/fragment_base" />
 

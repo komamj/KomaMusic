@@ -1,3 +1,15 @@
+/*
+ * Copyright (C) 2017 Koma MJ
+ *
+ * Licensed under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 package com.koma.music.main;
 
 import android.content.Intent;
@@ -26,13 +38,11 @@ import com.koma.music.util.Utils;
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, MainContract.View {
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final int PAGE_LIMIT = 4;
+    private static final int PAGE_LIMIT = 3;
 
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
     private LinearLayout mHeaderLayout;
-    private ImageView mPlayOrPause, mNext, mAlbum;
-    private TextView mTitle, mInfo;
 
 
     @Override
@@ -66,9 +76,6 @@ public class MainActivity extends BaseActivity
             mViewPager.setCurrentItem(MainPagerAdapter.SONG_TAB_INDEX);
         }
 
-        mTitle = (TextView) findViewById(R.id.tv_title);
-        mInfo = (TextView) findViewById(R.id.tv_info);
-        mAlbum = (ImageView) findViewById(R.id.iv_album);
         mHeaderLayout = (LinearLayout) findViewById(R.id.audio_header);
         mHeaderLayout.setOnClickListener(new View.OnClickListener() {
             @Override

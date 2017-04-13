@@ -39,11 +39,11 @@ android {
             // 不显示Log
             buildConfigField "boolean", "LOG_DEBUG", "true"
             // 去除无用代码
-            minifyEnabled true
+            minifyEnabled false
             // 进行对齐
-            zipAlignEnabled true
+            zipAlignEnabled false
             // 移除无用的资源
-            shrinkResources true
+            shrinkResources false
             // 配置混淆
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             // 配置签名
@@ -68,8 +68,6 @@ android {
     }
 
     lintOptions {
-        disable 'MissingTranslation'
-        disable 'ExtraTranslation'
         //忽略lint error
         abortOnError false
     }
@@ -95,12 +93,17 @@ dependencies {
 
     compile 'com.android.support:cardview-v7:25.0.1'
 
+    compile 'com.android.support:percent:25.0.1'
+
     compile "com.jakewharton:butterknife:$rootProject.ext.butterknife"
     apt "com.jakewharton:butterknife-compiler:$rootProject.ext.butterknife"
 
     compile(name: 'rxandroid-1.2.1', ext: 'aar')
 
     compile 'com.sothree.slidinguppanel:library:3.3.1'
+
+    //imageloader
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
 
     /*compile 'com.jakewharton:butterknife:8.5.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'*/

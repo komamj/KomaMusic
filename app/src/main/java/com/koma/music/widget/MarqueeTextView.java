@@ -10,34 +10,31 @@
  * KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.koma.music.service;
+package com.koma.music.widget;
+
+import android.content.Context;
+import android.support.v7.widget.AppCompatTextView;
+import android.util.AttributeSet;
 
 /**
- * Created by koma on 3/23/17.
+ * Created by koma on 4/13/17.
  */
 
-public class TrackErrorInfo {
-    private long mId;
-    private String mTrackName;
-
-    public TrackErrorInfo(long id, String trackName) {
-        mId = id;
-        mTrackName = trackName;
+public class MarqueeTextView extends AppCompatTextView {
+    public MarqueeTextView(Context context) {
+        super(context);
     }
 
-    public void setId(long id) {
-        this.mId = id;
+    public MarqueeTextView(Context context, AttributeSet attrs) {
+        super(context, attrs);
     }
 
-    public long getId() {
-        return this.mId;
+    public MarqueeTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
     }
 
-    public void setTrackName(String trackName) {
-        this.mTrackName = trackName;
-    }
-
-    public String getTrackName() {
-        return this.mTrackName;
+    @Override
+    public boolean isFocused() {
+        return true;
     }
 }

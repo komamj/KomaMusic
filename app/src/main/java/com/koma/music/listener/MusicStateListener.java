@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Koma
+ * Copyright (C) 2017 Koma MJ
  *
  * Licensed under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with the

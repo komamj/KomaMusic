@@ -21,4 +21,9 @@ public class ArtistsFragment extends BaseFragment implements ArtistsConstract.Vi
     public void setPresenter(@NonNull ArtistsConstract.Presenter presenter) {
         mPresenter = presenter;
     }
+
+    @Override
+    protected int getLayoutId() {
+        return 0;
+    }
 }

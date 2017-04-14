@@ -102,6 +102,12 @@ public class MusicPlayerFragment extends Fragment implements MusicPlayerContract
             final ActionBar ab = ((MusicPlayerActivity) getActivity()).getSupportActionBar();
             ab.setDisplayHomeAsUpEnabled(true);
             ab.setTitle("");
+            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getActivity().onBackPressed();
+                }
+            });
         }
     }
 

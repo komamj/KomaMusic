@@ -77,7 +77,8 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (getRtlPosition(position)) {
             case PLAY_LIST_TAB_INDEX:
-                PlaylistsFragment playlistsFragment = new PlaylistsFragment();
+                PlaylistsFragment playlistsFragment = PlaylistsFragment.newInstance();
+                return playlistsFragment;
             case SONG_TAB_INDEX:
                /* SongsFragment songsFragment = SongsFragment.newInstance();
                 SongsPresenter.newInstance(songsFragment);
@@ -86,7 +87,6 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
             case ALBUM_TAB_INDEX:
             default:
                 SongsFragment songsFragment = SongsFragment.newInstance();
-                SongsPresenter.newInstance(songsFragment, MusicRepository.getInstance());
                 return songsFragment;
         }
     }

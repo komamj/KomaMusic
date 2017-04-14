@@ -19,11 +19,15 @@ import android.view.View;
 
 import com.koma.music.R;
 import com.koma.music.base.BaseFragment;
+import com.koma.music.data.local.MusicRepository;
 import com.koma.music.data.model.Song;
 import com.koma.music.util.LogUtils;
+import com.koma.music.widget.LoadingView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
 
 /**
  * Created by koma on 3/20/17.
@@ -31,13 +35,19 @@ import java.util.List;
 
 public class SongsFragment extends BaseFragment implements SongsContract.View {
     private static final String TAG = SongsFragment.class.getSimpleName();
+
+    @BindView(R.id.loding_view)
+    protected LoadingView mLoadingView;
+
     @NonNull
     private SongsContract.Presenter mPresenter;
 
     private SongsAdapter mAdapter;
 
     public static SongsFragment newInstance() {
-        return new SongsFragment();
+        SongsFragment songsFragment = new SongsFragment();
+        SongsPresenter.newInstance(songsFragment, MusicRepository.getInstance());
+        return songsFragment;
     }
 
     @Override

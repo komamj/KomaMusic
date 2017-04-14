@@ -16,6 +16,9 @@ import android.support.annotation.NonNull;
 
 import com.koma.music.R;
 import com.koma.music.base.BaseFragment;
+import com.koma.music.widget.LoadingView;
+
+import butterknife.BindView;
 
 /**
  * Created by koma on 3/21/17.
@@ -23,6 +26,10 @@ import com.koma.music.base.BaseFragment;
 
 public class PlaylistsFragment extends BaseFragment implements PlaylistsConstract.View {
     private static final String TAG = PlaylistsFragment.class.getSimpleName();
+
+    @BindView(R.id.loding_view)
+    protected LoadingView mLoadingView;
+
     @NonNull
     private PlaylistsConstract.Presenter mPresenter;
 
@@ -37,6 +44,6 @@ public class PlaylistsFragment extends BaseFragment implements PlaylistsConstrac
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_playlist;
+        return R.layout.fragment_base;
     }
 }

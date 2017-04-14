@@ -35,8 +35,6 @@ public abstract class BaseFragment extends Fragment {
 
     @BindView(R.id.recycler_view)
     protected RecyclerView mRecyclerView;
-    @BindView(R.id.loding_view)
-    protected LoadingView mLoadingView;
 
     @Override
     public void onAttach(Context context) {

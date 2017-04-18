@@ -11,4 +11,7 @@
     <!--Seekbar-->
     <color name="progress_tint_color">#FF4C88</color>
     <color name="progress_background_tint">#F2F2F2</color>
+
+    <!--divider-->
+    <color name="divider_color">#0DFFFFFF</color>
 </resources>

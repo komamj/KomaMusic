@@ -4,6 +4,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.koma.music.R;
 import com.koma.music.base.BaseViewHolder;
@@ -11,6 +13,7 @@ import com.koma.music.data.model.Playlist;
 
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
@@ -19,8 +22,6 @@ import butterknife.OnClick;
 
 public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder> {
     private static final String TAG = PlaylistAdapter.class.getSimpleName();
-    private static final int VIEW_TYPE_ONE = 0;
-    private static final int VIEW_TYPE_TWO = VIEW_TYPE_ONE + 1;
 
     private List<Playlist> mData;
 
@@ -39,35 +40,58 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
 
     @Override
     public PlaylistViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view;
-        if (viewType == VIEW_TYPE_ONE) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_playlist, null);
-        } else {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_song, null);
-        }
-        return null;
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_playlist, null);
+        return new PlaylistViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(PlaylistViewHolder holder, int position) {
         holder.itemView.setTag(position);
+        holder.mMoreMenu.setTag(position);
     }
 
     @Override
     public int getItemCount() {
-        return mData == null ? 3 : mData.size() + 3;
+        return mData == null ? 0 : mData.size();
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        if (position < 3) {
-            return VIEW_TYPE_ONE;
-        } else {
-            return VIEW_TYPE_TWO;
+    public static class PlayListHeaderViewHolder extends BaseViewHolder {
+        @BindView(R.id.iv_recently_added)
+        ImageView mRecentlyAdded;
+        @BindView(R.id.iv_recently_played)
+        ImageView mRecentlyPlayed;
+        @BindView(R.id.iv_my_favorite)
+        ImageView mMyFavorite;
+
+        @OnClick(R.id.iv_recently_added)
+        void launchRecentlyAdded() {
+
+        }
+
+        @OnClick(R.id.iv_recently_played)
+        void launchRecentlyPlayed() {
+
+        }
+
+        @OnClick(R.id.iv_my_favorite)
+        void launchMyFavorite() {
+
+        }
+
+
+        public PlayListHeaderViewHolder(View view) {
+            super(view);
         }
     }
 
-    public class PlaylistViewHolder extends BaseViewHolder {
+    public static class PlaylistViewHolder extends BaseViewHolder implements View.OnClickListener {
+        @BindView(R.id.iv_more)
+        ImageView mMoreMenu;
+        @BindView(R.id.iv_album)
+        ImageView mAlbum;
+        @BindView(R.id.tv_title)
+        TextView mTitle;
+
         @OnClick(R.id.iv_more)
         void doMoreAction(View view) {
             int position = (int) view.getTag();
@@ -75,6 +99,12 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
 
         public PlaylistViewHolder(View view) {
             super(view);
+            view.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            int position = (int) view.getTag();
         }
     }
 }

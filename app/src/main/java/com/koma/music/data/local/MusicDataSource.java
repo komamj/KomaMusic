@@ -12,6 +12,7 @@
  */
 package com.koma.music.data.local;
 
+import com.koma.music.data.model.Playlist;
 import com.koma.music.data.model.Song;
 
 import java.util.List;
@@ -24,4 +25,6 @@ import rx.Observable;
 
 public interface MusicDataSource {
     Observable<List<Song>> getAllSongs();
+
+    Observable<List<Playlist>> getAllPlaylists();
 }

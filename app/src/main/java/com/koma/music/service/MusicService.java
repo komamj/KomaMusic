@@ -1344,7 +1344,7 @@ public class MusicService extends Service {
             mNotificationPostTime = System.currentTimeMillis();
         }
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_notification)
+                .setSmallIcon(R.drawable.ic_album)
                 //.setLargeIcon(artwork)
                 .setContentIntent(clickIntent)
                 .setContentTitle(getTrackName())

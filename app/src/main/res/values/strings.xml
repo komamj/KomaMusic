@@ -7,16 +7,16 @@
     <string name="action_settings">Settings</string>
 
     <!--TabLayout-->
-    <string name="tab_playlist">Playlists</string>
-    <string name="tab_song">Songs</string>
-    <string name="tab_artist">Artists</string>
-    <string name="tab_album">Albums</string>
-    <string name="tab_genre">Genres</string>
+    <string-array name="tab_title">
+        <item name="tab_playlist">Playlists</item>
+        <item name="tab_song">Songs</item>
+        <item name="tab_artist">Artists</item>
+        <item name="tab_album">Albums</item>
+    </string-array>
 
     <!--Empty-->
     <string name="no_song">No songs</string>
     <string name="no_artist">No artists</string>
-    <string name="no_genre">No genres</string>
     <string name="no_album">No albums</string>
 
     <!--Shuffle-->

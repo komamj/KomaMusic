@@ -12,12 +12,17 @@
  */
 package com.koma.music.song;
 
+import android.database.Cursor;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 
+import com.koma.music.MusicApplication;
 import com.koma.music.data.local.MusicRepository;
 import com.koma.music.data.model.Song;
+import com.koma.music.util.Constants;
 import com.koma.music.util.LogUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.Subscriber;
@@ -32,6 +37,20 @@ import rx.subscriptions.CompositeSubscription;
 
 public class SongsPresenter implements SongsContract.Presenter {
     private static final String TAG = SongsPresenter.class.getSimpleName();
+    private static final String[] AUDIO_PROJECTION = new String[]{
+                        /* 0 */
+            MediaStore.Audio.Media._ID,
+                        /* 1 */
+            MediaStore.Audio.Media.TITLE,
+                        /* 2 */
+            MediaStore.Audio.Media.ARTIST,
+                        /* 3 */
+            MediaStore.Audio.Media.ALBUM_ID,
+                        /* 4 */
+            MediaStore.Audio.Media.ALBUM,
+                        /* 5 */
+            MediaStore.Audio.Media.DURATION
+    };
     @NonNull
     private SongsContract.View mView;
 
@@ -81,7 +100,6 @@ public class SongsPresenter implements SongsContract.Presenter {
 
                     @Override
                     public void onNext(List<Song> songs) {
-                        LogUtils.i(TAG, "onNext");
                         onLoadSongsFinished(songs);
                     }
                 });
@@ -99,5 +117,50 @@ public class SongsPresenter implements SongsContract.Presenter {
                 mView.showSongs(songs);
             }
         }
+    }
+
+    public static List<Song> getAllSongs() {
+        LogUtils.i(TAG, "getAllSongs");
+        List<Song> songs = new ArrayList<>();
+        Cursor cursor = MusicApplication.getContext().getContentResolver().query(Constants.AUDIO_URI,
+                AUDIO_PROJECTION, Constants.MUSIC_ONLY_SELECTION, null,
+                MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+        // Gather the data
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                // Copy the song Id
+                final long id = cursor.getLong(0);
+
+                // Copy the song name
+                final String songName = cursor.getString(1);
+
+                // Copy the artist name
+                final String artist = cursor.getString(2);
+
+                // Copy the album id
+                final long albumId = cursor.getLong(3);
+
+                // Copy the album name
+                final String album = cursor.getString(4);
+
+                // Copy the duration
+                final long duration = cursor.getLong(5);
+
+                // Convert the duration into seconds
+                final int durationInSecs = (int) duration / 1000;
+
+                // Create a new song
+                final Song song = new Song(id, songName, artist, album, albumId,
+                        durationInSecs);
+
+                songs.add(song);
+            } while (cursor.moveToNext());
+        }
+        // Close the cursor
+        if (cursor != null) {
+            cursor.close();
+            cursor = null;
+        }
+        return songs;
     }
 }

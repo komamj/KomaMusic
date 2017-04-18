@@ -12,17 +12,13 @@
  */
 package com.koma.music.main;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.koma.music.R;
-import com.koma.music.data.local.MusicRepository;
-import com.koma.music.playlist.PlaylistsFragment;
-import com.koma.music.song.SongsFragment;
-import com.koma.music.song.SongsPresenter;
 import com.koma.music.util.Utils;
+
+import java.util.List;
 
 /**
  * Created by koma on 3/21/17.
@@ -58,14 +54,14 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
      */
     private String[] mTitles;
 
-    public MainPagerAdapter(FragmentManager fm, Context context) {
+    private List<Fragment> mFragments;
+
+    public MainPagerAdapter(FragmentManager fm, String[] titles, List<Fragment> fragments) {
         super(fm);
-        mTitles = new String[]{
-                context.getString(R.string.tab_playlist),
-                context.getString(R.string.tab_song),
-                context.getString(R.string.tab_artist),
-                context.getString(R.string.tab_album)
-        };
+
+        mTitles = titles;
+
+        mFragments = fragments;
     }
 
     @Override
@@ -77,17 +73,19 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (getRtlPosition(position)) {
             case PLAY_LIST_TAB_INDEX:
-                PlaylistsFragment playlistsFragment = PlaylistsFragment.newInstance();
-                return playlistsFragment;
+
+                return mFragments.get(0);
             case SONG_TAB_INDEX:
                /* SongsFragment songsFragment = SongsFragment.newInstance();
                 SongsPresenter.newInstance(songsFragment);
                 return songsFragment;*/
+                return mFragments.get(1);
             case ARTIST_TAB_INDEX:
+                return mFragments.get(2);
             case ALBUM_TAB_INDEX:
+                return mFragments.get(3);
             default:
-                SongsFragment songsFragment = SongsFragment.newInstance();
-                return songsFragment;
+                return null;
         }
     }
 

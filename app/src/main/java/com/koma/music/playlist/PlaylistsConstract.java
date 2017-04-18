@@ -14,6 +14,9 @@ package com.koma.music.playlist;
 
 import com.koma.music.base.BasePresenter;
 import com.koma.music.base.BaseView;
+import com.koma.music.data.model.Playlist;
+
+import java.util.List;
 
 /**
  * Created by koma on 3/21/17.
@@ -21,8 +24,16 @@ import com.koma.music.base.BaseView;
 
 public interface PlaylistsConstract {
     interface View extends BaseView<Presenter> {
+        boolean isActive();
+
+        void hideLoadingView();
+
+        void showPlaylist(List<Playlist> playlists);
     }
 
     interface Presenter extends BasePresenter {
+        void loadPlaylists();
+
+        void onLoadPlaylistsFinished(List<Playlist> playlists);
     }
 }

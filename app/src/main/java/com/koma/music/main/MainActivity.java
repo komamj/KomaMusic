@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -26,24 +27,45 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.koma.music.R;
 import com.koma.music.base.BaseActivity;
+import com.koma.music.data.local.MusicRepository;
 import com.koma.music.play.MusicPlayerActivity;
+import com.koma.music.playlist.PlaylistsFragment;
+import com.koma.music.playlist.PlaylistsPresenter;
+import com.koma.music.song.SongsFragment;
+import com.koma.music.song.SongsPresenter;
 import com.koma.music.util.Utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindArray;
+import butterknife.BindView;
+
 public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MainContract.View {
+        implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int PAGE_LIMIT = 3;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.tab_layout)
+    TabLayout mTabLayout;
+    @BindView(R.id.viewPager)
+    ViewPager mViewPager;
+    @BindView(R.id.audio_header)
+    LinearLayout mHeaderLayout;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+    @BindView(R.id.nav_view)
+    NavigationView mNavigationView;
 
-    private TabLayout mTabLayout;
-    private ViewPager mViewPager;
-    private LinearLayout mHeaderLayout;
+    @BindArray(R.array.tab_title)
+    String[] mTitles;
 
+    private List<Fragment> mFragments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,22 +75,36 @@ public class MainActivity extends BaseActivity
     }
 
     private void init() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mToolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+                this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        mNavigationView.setNavigationItemSelectedListener(this);
 
-        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        mViewPager = (ViewPager) findViewById(R.id.viewPager);
+        mFragments = new ArrayList<>();
+
+        PlaylistsFragment playlistsFragment = new PlaylistsFragment();
+        mFragments.add(playlistsFragment);
+        PlaylistsPresenter.newInstance(playlistsFragment, MusicRepository.getInstance());
+
+        SongsFragment songsFragment = new SongsFragment();
+        mFragments.add(songsFragment);
+        SongsPresenter.newInstance(songsFragment, MusicRepository.getInstance());
+
+        SongsFragment artistsFragment = new SongsFragment();
+        mFragments.add(artistsFragment);
+        SongsPresenter.newInstance(artistsFragment, MusicRepository.getInstance());
+
+        SongsFragment albumsFragment = new SongsFragment();
+        mFragments.add(albumsFragment);
+        SongsPresenter.newInstance(albumsFragment, MusicRepository.getInstance());
+
+        mViewPager.setAdapter(new MainPagerAdapter(getSupportFragmentManager(), mTitles, mFragments));
         mViewPager.setOffscreenPageLimit(PAGE_LIMIT);
-        mViewPager.setAdapter(new MainPagerAdapter(getSupportFragmentManager(), mContext));
+
         mTabLayout.setupWithViewPager(mViewPager);
         if (Utils.isRTL()) {
             mViewPager.setCurrentItem(MainPagerAdapter.SONG_TAB_INDEX_RTL);
@@ -76,7 +112,6 @@ public class MainActivity extends BaseActivity
             mViewPager.setCurrentItem(MainPagerAdapter.SONG_TAB_INDEX);
         }
 
-        mHeaderLayout = (LinearLayout) findViewById(R.id.audio_header);
         mHeaderLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,9 +130,8 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
@@ -148,10 +182,5 @@ public class MainActivity extends BaseActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    public void setPresenter(MainContract.Presenter presenter) {
-
     }
 }

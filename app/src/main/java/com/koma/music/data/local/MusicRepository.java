@@ -12,6 +12,7 @@
  */
 package com.koma.music.data.local;
 
+import com.koma.music.data.model.Playlist;
 import com.koma.music.data.model.Song;
 
 import java.util.List;
@@ -47,5 +48,10 @@ public class MusicRepository implements MusicDataSource {
     @Override
     public Observable<List<Song>> getAllSongs() {
         return mLocalDataSource.getAllSongs();
+    }
+
+    @Override
+    public Observable<List<Playlist>> getAllPlaylists() {
+        return mLocalDataSource.getAllPlaylists();
     }
 }

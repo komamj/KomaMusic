@@ -12,6 +12,8 @@
  */
 package com.koma.music.data.local;
 
+import com.koma.music.data.model.Album;
+import com.koma.music.data.model.Artist;
 import com.koma.music.data.model.Playlist;
 import com.koma.music.data.model.Song;
 
@@ -53,5 +55,15 @@ public class MusicRepository implements MusicDataSource {
     @Override
     public Observable<List<Playlist>> getAllPlaylists() {
         return mLocalDataSource.getAllPlaylists();
+    }
+
+    @Override
+    public Observable<List<Album>> getAllAlbums() {
+        return mLocalDataSource.getAllAlbums();
+    }
+
+    @Override
+    public Observable<List<Artist>> getAllArtists() {
+        return mLocalDataSource.getAllArtists();
     }
 }

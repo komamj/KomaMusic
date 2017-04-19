@@ -12,6 +12,8 @@
  */
 package com.koma.music.data.local;
 
+import com.koma.music.data.model.Album;
+import com.koma.music.data.model.Artist;
 import com.koma.music.data.model.Playlist;
 import com.koma.music.data.model.Song;
 
@@ -27,4 +29,8 @@ public interface MusicDataSource {
     Observable<List<Song>> getAllSongs();
 
     Observable<List<Playlist>> getAllPlaylists();
+
+    Observable<List<Album>> getAllAlbums();
+
+    Observable<List<Artist>> getAllArtists();
 }

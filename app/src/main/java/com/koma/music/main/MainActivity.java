@@ -16,9 +16,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -30,6 +28,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.koma.music.R;
+import com.koma.music.album.AlbumsFragment;
+import com.koma.music.album.AlbumsPresenter;
+import com.koma.music.artist.ArtistsFragment;
+import com.koma.music.artist.ArtistsPresenter;
 import com.koma.music.base.BaseActivity;
 import com.koma.music.data.local.MusicRepository;
 import com.koma.music.play.MusicPlayerActivity;
@@ -94,15 +96,18 @@ public class MainActivity extends BaseActivity
         mFragments.add(songsFragment);
         SongsPresenter.newInstance(songsFragment, MusicRepository.getInstance());
 
-        SongsFragment artistsFragment = new SongsFragment();
+        ArtistsFragment artistsFragment = new ArtistsFragment();
         mFragments.add(artistsFragment);
-        SongsPresenter.newInstance(artistsFragment, MusicRepository.getInstance());
+        ArtistsPresenter.newInstance(artistsFragment, MusicRepository.getInstance());
 
-        SongsFragment albumsFragment = new SongsFragment();
+        AlbumsFragment albumsFragment = new AlbumsFragment();
         mFragments.add(albumsFragment);
-        SongsPresenter.newInstance(albumsFragment, MusicRepository.getInstance());
+        AlbumsPresenter.newInstance(albumsFragment, MusicRepository.getInstance());
 
-        mViewPager.setAdapter(new MainPagerAdapter(getSupportFragmentManager(), mTitles, mFragments));
+        MainPagerAdapter mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(), mTitles, mFragments);
+        mViewPager.setAdapter(mainPagerAdapter);
+        mainPagerAdapter.notifyDataSetChanged();
+
         mViewPager.setOffscreenPageLimit(PAGE_LIMIT);
 
         mTabLayout.setupWithViewPager(mViewPager);
@@ -117,8 +122,9 @@ public class MainActivity extends BaseActivity
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, MusicPlayerActivity.class);
 
-                startActivity(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        MainActivity.this, Pair.create((View) mAlbum, "share_album")).toBundle());
+                /*startActivity(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        MainActivity.this, Pair.create((View) mAlbum, "share_album")).toBundle());*/
+                startActivity(intent);
             }
         });
     }

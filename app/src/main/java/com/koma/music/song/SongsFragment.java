@@ -19,7 +19,6 @@ import android.view.View;
 
 import com.koma.music.R;
 import com.koma.music.base.BaseFragment;
-import com.koma.music.data.local.MusicRepository;
 import com.koma.music.data.model.Song;
 import com.koma.music.util.LogUtils;
 import com.koma.music.widget.LoadingView;
@@ -44,15 +43,9 @@ public class SongsFragment extends BaseFragment implements SongsContract.View {
 
     private SongsAdapter mAdapter;
 
-    public static SongsFragment newInstance() {
-        SongsFragment songsFragment = new SongsFragment();
-        SongsPresenter.newInstance(songsFragment, MusicRepository.getInstance());
-        return songsFragment;
-    }
-
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_songs;
+        return R.layout.fragment_base;
     }
 
     @Override

@@ -14,52 +14,6 @@
         android:layout_height="match_parent"
         android:background="#44000000" />
 
-    <!--    <LinearLayout
-            android:id="@+id/song_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:orientation="vertical"
-            android:paddingTop="15dp">
-
-            <com.koma.music.widget.MarqueeTextView
-                android:id="@+id/tv_track_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:alpha="0.87"
-                android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:text="海阔天空"
-                android:textColor="@android:color/black"
-                android:textSize="26sp" />
-
-            <TextView
-                android:id="@+id/tv_artist_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:alpha="0.54"
-                android:ellipsize="end"
-                android:gravity="center_horizontal"
-                android:maxLines="1"
-                android:text="黄家驹"
-                android:textColor="@android:color/black"
-                android:textSize="@dimen/title_size" />
-        </LinearLayout>
-
-        <com.koma.music.widget.SquareImageView
-            android:id="@+id/iv_album"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@android:color/white"
-            android:elevation="40dp"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/default_artwork"
-            android:transitionName="share_album" />-->
-
     <android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"

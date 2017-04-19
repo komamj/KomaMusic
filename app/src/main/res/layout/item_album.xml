@@ -1,58 +1,88 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+    android:layout_marginStart="@dimen/activity_horizontal_margin"
     android:foreground="?selectableItemBackgroundBorderless"
-    app:cardCornerRadius="@dimen/activity_vertical_margin"
-    app:cardElevation="@dimen/activity_vertical_margin"
-    app:cardUseCompatPadding="true">
+    app:cardElevation="@dimen/activity_horizontal_margin">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:foreground="?selectableItemBackground">
 
         <com.koma.music.widget.SquareImageView
             android:id="@+id/iv_album"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_album"
-            android:transitionName="transition_album_art" />
-
-
-        <LinearLayout
-            android:id="@+id/album_info"
-            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/iv_album"
-            android:layout_marginStart="8dp"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:foreground="?selectableItemBackground"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_album" />
 
-            <TextView
-                android:id="@+id/album_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:maxWidth="96dp" />
-
-            <TextView
-                android:id="@+id/album_details"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp" />
-
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/popup_menu"
-            style="@style/Widget.AppCompat.ActionButton.Overflow"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/album_info"
-            android:src="@drawable/ic_more" />
+            android:layout_below="@id/iv_album">
+
+            <ImageView
+                android:id="@+id/iv_more"
+                style="@style/Widget.AppCompat.ActionButton.Overflow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_more" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/iv_more"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/activity_horizontal_margin">
+
+                <TextView
+                    android:id="@+id/tv_item_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10.0dp">
+
+                    <TextView
+                        android:id="@+id/tv_item_subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true" />
+
+                    <View
+                        android:id="@+id/divider_subtitle"
+                        android:layout_width="1.0dip"
+                        android:layout_height="8dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginRight="6dp"
+                        android:layout_toEndOf="@id/tv_item_subtitle"
+                        android:background="#1f000000" />
+
+                    <TextView
+                        android:id="@+id/tv_item_subtitle_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/divider_subtitle" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>

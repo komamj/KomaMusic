@@ -6,7 +6,14 @@ import android.support.v7.widget.GridLayoutManager;
 
 import com.koma.music.R;
 import com.koma.music.base.BaseFragment;
+import com.koma.music.data.model.Album;
 import com.koma.music.util.LogUtils;
+import com.koma.music.widget.LoadingView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
 
 /**
  * Created by koma on 3/21/17.
@@ -14,13 +21,28 @@ import com.koma.music.util.LogUtils;
 
 public class AlbumsFragment extends BaseFragment implements AlbumsConstract.View {
     private static final String TAG = AlbumsFragment.class.getSimpleName();
+    @BindView(R.id.loding_view)
+    protected LoadingView mLoadingView;
+
     @NonNull
     private AlbumsConstract.Presenter mPresenter;
 
     private AlbumsAdapter mAdapter;
 
-    public static AlbumsFragment newInstance() {
-        return new AlbumsFragment();
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        LogUtils.i(TAG, "onActivityCreated");
+
+        mAdapter = new AlbumsAdapter(mContext, new ArrayList<Album>());
+
+        GridLayoutManager layoutManager = new GridLayoutManager(mContext, 2);
+        layoutManager.setOrientation(GridLayoutManager.VERTICAL);
+
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -31,14 +53,32 @@ public class AlbumsFragment extends BaseFragment implements AlbumsConstract.View
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onResume() {
+        super.onResume();
 
-        LogUtils.i(TAG, "onActivityCreated");
+        LogUtils.i(TAG, "onResume");
 
-        GridLayoutManager layoutManager = new GridLayoutManager(mContext, 2);
-        layoutManager.setOrientation(GridLayoutManager.VERTICAL);
+        if (mPresenter != null) {
+            mPresenter.subscribe();
+        }
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        LogUtils.i(TAG, "onPause");
+
+        if (mPresenter != null) {
+            mPresenter.unSubscribe();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        LogUtils.i(TAG, "onStop");
     }
 
     @Override
@@ -49,5 +89,28 @@ public class AlbumsFragment extends BaseFragment implements AlbumsConstract.View
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_base;
+    }
+
+    @Override
+    public boolean isActive() {
+        return isAdded();
+    }
+
+    @Override
+    public void showEmptyView() {
+        LogUtils.i(TAG, "showEmptyView");
+    }
+
+    @Override
+    public void hideLoadingView() {
+        LogUtils.i(TAG, "hideLoadingView");
+
+        mLoadingView.onLoadingFinished();
+    }
+
+    @Override
+    public void showAlbums(List<Album> albums) {
+        LogUtils.i(TAG, "showAlbums");
+        mAdapter.replaceData(albums);
     }
 }

@@ -71,6 +71,17 @@ public class Album {
         mYear = albumYear;
     }
 
+    public void setAlbumId(long albumId) {
+        this.mAlbumId = albumId;
+    }
+
+    public long getAlbumId() {
+        return this.mAlbumId;
+    }
+
+    public void setAlbumName() {
+    }
+
     /**
      * {@inheritDoc}
      */

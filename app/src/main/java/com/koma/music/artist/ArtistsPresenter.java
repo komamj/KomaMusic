@@ -1,7 +1,11 @@
 package com.koma.music.artist;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 
+import com.koma.music.MusicApplication;
 import com.koma.music.data.local.MusicRepository;
 import com.koma.music.data.model.Artist;
 import com.koma.music.util.LogUtils;
@@ -103,6 +107,59 @@ public class ArtistsPresenter implements ArtistsConstract.Presenter {
 
     public static List<Artist> getAllArtists() {
         List<Artist> artistList = new ArrayList<>();
+        Cursor cursor = makeArtistCursor(MusicApplication.getContext());
+        // Gather the data
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                // Copy the artist id
+                final long id = cursor.getLong(0);
+
+                // Copy the artist name
+                final String artistName = cursor.getString(1);
+
+                // Copy the number of albums
+                final int albumCount = cursor.getInt(2);
+
+                // Copy the number of songs
+                final int songCount = cursor.getInt(3);
+
+                // as per designer's request, don't show unknown artist
+                if (MediaStore.UNKNOWN_STRING.equals(artistName)) {
+                    continue;
+                }
+
+                // Create a new artist
+                final Artist artist = new Artist(id, artistName, songCount, albumCount);
+                artistList.add(artist);
+            } while (cursor.moveToNext());
+        }
+        // Close the cursor
+        if (cursor != null) {
+            cursor.close();
+            cursor = null;
+        }
         return artistList;
+    }
+
+    /**
+     * Creates the {@link Cursor} used to run the query.
+     *
+     * @param context The {@link Context} to use.
+     * @return The {@link Cursor} used to run the artist query.
+     */
+    private static final Cursor makeArtistCursor(final Context context) {
+        Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI,
+                new String[]{
+                        /* 0 */
+                        MediaStore.Audio.Artists._ID,
+                        /* 1 */
+                        MediaStore.Audio.Artists.ARTIST,
+                        /* 2 */
+                        MediaStore.Audio.Artists.NUMBER_OF_ALBUMS,
+                        /* 3 */
+                        MediaStore.Audio.Artists.NUMBER_OF_TRACKS
+                }, null, null, MediaStore.Audio.Artists.DEFAULT_SORT_ORDER);
+
+        return cursor;
     }
 }

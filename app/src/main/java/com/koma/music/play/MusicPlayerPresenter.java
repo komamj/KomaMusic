@@ -66,6 +66,10 @@ public class MusicPlayerPresenter implements MusicPlayerContract.Presenter {
     @Override
     public void unSubscribe() {
         LogUtils.i(TAG, "unSubscribe");
+
+        if (mSubscriptions != null) {
+            mSubscriptions.clear();
+        }
     }
 
     @Override

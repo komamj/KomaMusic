@@ -9,4 +9,11 @@
 
     <dimen name="title_size">16sp</dimen>
     <dimen name="subtitle_size">14sp</dimen>
+
+    <!-- overflow menu used on page headers and in list items -->
+    <dimen name="overflow_height">56dp</dimen>
+    <dimen name="overflow_width">48dp</dimen>
+
+    <dimen name="list_item_image_height">50.0dip</dimen>
+    <dimen name="list_item_image_width">50.0dip</dimen>
 </resources>

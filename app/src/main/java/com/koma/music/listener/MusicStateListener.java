@@ -31,4 +31,9 @@ public interface MusicStateListener {
      * Called when {@link com.koma.music.service.Constants#META_CHANGED} is invoked
      */
     public void onMetaChanged();
+
+    /**
+     * Called when {@link com.koma.music.service.Constants#PLAYSTATE_CHANGED} is invoked
+     */
+    public void onPlayStateChanged();
 }

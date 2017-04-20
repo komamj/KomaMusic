@@ -12,6 +12,7 @@
  */
 package com.koma.music.song;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,11 +20,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.koma.music.R;
 import com.koma.music.base.BaseViewHolder;
 import com.koma.music.data.model.Song;
 import com.koma.music.util.LogUtils;
 import com.koma.music.util.MusicUtils;
+import com.koma.music.util.Utils;
 
 import java.util.List;
 
@@ -40,9 +43,13 @@ public class SongsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_NORMAL = TYPE_HEADER + 1;
 
+    private Context mContext;
+
     private List<Song> mData;
 
-    public SongsAdapter(List<Song> songs) {
+    public SongsAdapter(Context context, List<Song> songs) {
+        mContext = context;
+
         setList(songs);
     }
 
@@ -74,8 +81,15 @@ public class SongsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         int viewType = getItemViewType(position);
         if (viewType == TYPE_NORMAL) {
             ((SongsViewHolder) holder).itemView.setTag(position - 1);
+
             ((SongsViewHolder) holder).mMoreMenu.setTag(position - 1);
+
+            Glide.with(mContext).load(Utils.getAlbumArtUri(mData.get(position - 1).mAlbumId))
+                    .placeholder(R.drawable.ic_album)
+                    .into(((SongsViewHolder) holder).mAlbum);
+
             ((SongsViewHolder) holder).mTrackName.setText(mData.get(position - 1).mSongName);
+
             ((SongsViewHolder) holder).mArtistName.setText(mData.get(position - 1).mArtistName);
         }
     }
@@ -120,6 +134,8 @@ public class SongsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     public class SongsViewHolder extends BaseViewHolder implements View.OnClickListener,
             View.OnLongClickListener {
+        @BindView(R.id.iv_song_album)
+        ImageView mAlbum;
         @BindView(R.id.iv_more)
         ImageView mMoreMenu;
         @BindView(R.id.tv_title)

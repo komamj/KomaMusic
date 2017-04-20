@@ -66,7 +66,7 @@ public class SongsFragment extends BaseFragment implements SongsContract.View {
     }
 
     private void init() {
-        mAdapter = new SongsAdapter(new ArrayList<Song>());
+        mAdapter = new SongsAdapter(mContext, new ArrayList<Song>());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);

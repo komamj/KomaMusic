@@ -12,7 +12,6 @@
  */
 package com.koma.music.main;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -24,8 +23,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.LinearLayout;
 
 import com.koma.music.R;
 import com.koma.music.album.AlbumsFragment;
@@ -34,12 +31,13 @@ import com.koma.music.artist.ArtistsFragment;
 import com.koma.music.artist.ArtistsPresenter;
 import com.koma.music.base.BaseActivity;
 import com.koma.music.data.local.MusicRepository;
-import com.koma.music.play.MusicPlayerActivity;
+import com.koma.music.play.quickcontrol.QuickControlFragment;
 import com.koma.music.playlist.PlaylistsFragment;
 import com.koma.music.playlist.PlaylistsPresenter;
 import com.koma.music.song.SongsFragment;
 import com.koma.music.song.SongsPresenter;
 import com.koma.music.util.Utils;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,19 +48,22 @@ import butterknife.BindView;
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = MainActivity.class.getSimpleName();
+
     private static final int PAGE_LIMIT = 3;
+
+    @BindView(R.id.sliding_layout)
+    SlidingUpPanelLayout mPanelLayout;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+    @BindView(R.id.nav_view)
+    NavigationView mNavigationView;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     @BindView(R.id.tab_layout)
     TabLayout mTabLayout;
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
-    @BindView(R.id.audio_header)
-    LinearLayout mHeaderLayout;
-    @BindView(R.id.drawer_layout)
-    DrawerLayout mDrawerLayout;
-    @BindView(R.id.nav_view)
-    NavigationView mNavigationView;
+
 
     @BindArray(R.array.tab_title)
     String[] mTitles;
@@ -78,14 +79,12 @@ public class MainActivity extends BaseActivity
 
     private void init() {
         setSupportActionBar(mToolbar);
-
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
         mNavigationView.setNavigationItemSelectedListener(this);
-
         mFragments = new ArrayList<>();
 
         PlaylistsFragment playlistsFragment = new PlaylistsFragment();
@@ -117,17 +116,11 @@ public class MainActivity extends BaseActivity
             mViewPager.setCurrentItem(MainPagerAdapter.SONG_TAB_INDEX);
         }
 
-        mHeaderLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, MusicPlayerActivity.class);
-
-                /*startActivity(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        MainActivity.this, Pair.create((View) mAlbum, "share_album")).toBundle());*/
-                startActivity(intent);
-            }
-        });
+        QuickControlFragment quickControlFragment = new QuickControlFragment();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.quickcontrols_container, quickControlFragment).commitAllowingStateLoss();
     }
+
 
     @Override
     public int getLayoutId() {
@@ -138,6 +131,8 @@ public class MainActivity extends BaseActivity
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else if (mPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
+            mPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         } else {
             super.onBackPressed();
         }

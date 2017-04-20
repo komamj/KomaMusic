@@ -36,9 +36,11 @@ public class MusicPlayerActivity extends BaseActivity {
     }
 
     private void init() {
-        MusicPlayerFragment musicPlayerFragment = (MusicPlayerFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.player_fragment);
+        MusicPlayerFragment musicPlayerFragment = new MusicPlayerFragment();
         new MusicPlayerPresenter(this, musicPlayerFragment, MusicRepository.getInstance());
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main_player_ui, musicPlayerFragment).commitAllowingStateLoss();
     }
 
     @Override

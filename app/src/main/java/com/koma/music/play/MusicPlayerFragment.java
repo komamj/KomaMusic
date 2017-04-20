@@ -27,11 +27,13 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.koma.music.R;
 import com.koma.music.base.BaseActivity;
 import com.koma.music.listener.MusicStateListener;
 import com.koma.music.util.LogUtils;
 import com.koma.music.util.MusicUtils;
+import com.koma.music.util.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,6 +45,21 @@ import butterknife.OnClick;
 
 public class MusicPlayerFragment extends Fragment implements MusicPlayerContract.View, MusicStateListener {
     private static final String TAG = MusicPlayerFragment.class.getSimpleName();
+
+    @BindView(R.id.tv_track_name)
+    TextView mTrackName;
+    @BindView(R.id.tv_artist_name)
+    TextView mArtistName;
+    @BindView(R.id.iv_album)
+    protected ImageView mAlbum;
+    @BindView(R.id.iv_pause)
+    ImageView mPauseOrPlay;
+
+    @OnClick(R.id.iv_pause)
+    void doPauseOrPlay() {
+        MusicUtils.playOrPause();
+    }
+
     @BindView(R.id.iv_blur)
     ImageView mBlurImageView;
     @BindView(R.id.toolbar)
@@ -85,15 +102,25 @@ public class MusicPlayerFragment extends Fragment implements MusicPlayerContract
 
         ButterKnife.bind(this, view);
 
+        ((BaseActivity) getActivity()).setMusicStateListenerListener(this);
+
         return view;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         LogUtils.i(TAG, "onActivityCreated");
-        ((BaseActivity) getActivity()).setMusicStateListenerListener(this);
+
         init();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        ((BaseActivity) getActivity()).removeMusicStateListenerListener(this);
     }
 
     private void init() {
@@ -193,8 +220,27 @@ public class MusicPlayerFragment extends Fragment implements MusicPlayerContract
     @Override
     public void onMetaChanged() {
         LogUtils.i(TAG, "onMetaChanged");
+
+        Glide.with(this).load(Utils.getAlbumArtUri(
+                MusicUtils.getCurrentAlbumId()))
+                .dontAnimate()
+                .into(mAlbum);
+
+        mTrackName.setText(MusicUtils.getTrackName());
+
+        mArtistName.setText(MusicUtils.getArtistName());
+
+        onPlayStateChanged();
+
         updateBlurArtWork();
         updateAlbumImage();
         updateFavoriteView();
+    }
+
+    @Override
+    public void onPlayStateChanged() {
+        LogUtils.i(TAG, "onPlayStateChanged");
+
+        mPauseOrPlay.setImageResource(MusicUtils.isPlaying() ? R.drawable.ic_pause : R.drawable.ic_play);
     }
 }

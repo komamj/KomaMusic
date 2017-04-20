@@ -15,8 +15,9 @@ package com.koma.music.playlist;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
-import android.view.View;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.koma.music.R;
 import com.koma.music.base.BaseFragment;
 import com.koma.music.data.model.Playlist;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by koma on 3/21/17.
@@ -38,25 +40,52 @@ public class PlaylistsFragment extends BaseFragment implements PlaylistsConstrac
     @BindView(R.id.loding_view)
     protected LoadingView mLoadingView;
 
+    @BindView(R.id.iv_recently_played)
+    ImageView mRecentlyPlayed;
+
+    @BindView(R.id.iv_recently_added)
+    ImageView mRecentlyAdded;
+    @BindView(R.id.iv_my_favorite)
+    ImageView mMyFavorite;
+
+    @OnClick(R.id.iv_my_favorite)
+    void launchFavorite() {
+
+    }
+
+    @OnClick(R.id.iv_recently_added)
+    void launchRecentlyAdded() {
+
+    }
+
+    @OnClick(R.id.iv_recently_played)
+    void launchRecentlyPlayed() {
+    }
+
     @NonNull
     private PlaylistsConstract.Presenter mPresenter;
 
     private PlaylistAdapter mAdapter;
 
-    public static PlaylistsFragment newInstance() {
-        return new PlaylistsFragment();
-    }
-
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        LogUtils.i(TAG, "onViewCreated");
+        LogUtils.i(TAG, "onActivityCreated");
 
         init();
     }
 
     private void init() {
+        Glide.with(this).load("")
+                .placeholder(R.mipmap.ic_default_playlist)
+                .into(mRecentlyAdded);
+        Glide.with(this).load("")
+                .placeholder(R.mipmap.ic_default_playlist)
+                .into(mRecentlyPlayed);
+        Glide.with(this).load("")
+                .placeholder(R.mipmap.ic_default_playlist)
+                .into(mMyFavorite);
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 

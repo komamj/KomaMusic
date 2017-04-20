@@ -2,15 +2,19 @@ package com.koma.music.artist;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 
 import com.koma.music.R;
 import com.koma.music.base.BaseFragment;
 import com.koma.music.data.model.Artist;
 import com.koma.music.util.LogUtils;
+import com.koma.music.widget.LoadingView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
 
 /**
  * Created by koma on 3/21/17.
@@ -18,6 +22,10 @@ import java.util.List;
 
 public class ArtistsFragment extends BaseFragment implements ArtistsConstract.View {
     private static final String TAG = ArtistsFragment.class.getSimpleName();
+
+    @BindView(R.id.loding_view)
+    protected LoadingView mLoadingView;
+
     @NonNull
     private ArtistsConstract.Presenter mPresenter;
 
@@ -33,10 +41,10 @@ public class ArtistsFragment extends BaseFragment implements ArtistsConstract.Vi
     }
 
     private void init() {
-        mAdapter = new ArtistsAdapter(new ArrayList<Artist>());
+        mAdapter = new ArtistsAdapter(mContext, new ArrayList<Artist>());
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        GridLayoutManager layoutManager = new GridLayoutManager(mContext,2);
+        layoutManager.setOrientation(GridLayoutManager.VERTICAL);
 
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
@@ -98,10 +106,14 @@ public class ArtistsFragment extends BaseFragment implements ArtistsConstract.Vi
     @Override
     public void hideLoadingView() {
         LogUtils.i(TAG, "hideLoadingView");
+
+        mLoadingView.onLoadingFinished();
     }
 
     @Override
     public void showArtists(List<Artist> artists) {
         LogUtils.i(TAG, "showArtists");
+
+        mAdapter.replaceData(artists);
     }
 }

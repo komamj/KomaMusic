@@ -25,25 +25,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.koma.music.R;
 import com.koma.music.listener.MusicStateListener;
 import com.koma.music.service.Constants;
 import com.koma.music.service.IMusicService;
 import com.koma.music.util.LogUtils;
 import com.koma.music.util.MusicUtils;
-import com.koma.music.util.Utils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 import static com.koma.music.util.MusicUtils.mService;
 
@@ -56,20 +50,6 @@ public abstract class BaseActivity extends AppCompatActivity implements ServiceC
     private static final String TAG = BaseActivity.class.getSimpleName();
 
     private static final int PERMISSION_REQUEST_STORAGE = 1;
-
-    @BindView(R.id.tv_track_name)
-    TextView mTrackName;
-    @BindView(R.id.tv_artist_name)
-    TextView mArtistName;
-    @BindView(R.id.iv_album)
-    protected ImageView mAlbum;
-    @BindView(R.id.iv_pause)
-    ImageView mPauseOrPlay;
-
-    @OnClick(R.id.iv_pause)
-    void doPauseOrPlay() {
-        MusicUtils.playOrPause();
-    }
 
     protected Context mContext;
     /**
@@ -156,12 +136,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ServiceC
     protected void onStop() {
         super.onStop();
         LogUtils.i(TAG, "onStop");
-        // Unregister the receiver
-        try {
-            unregisterReceiver(mPlaybackStatus);
-        } catch (final Throwable e) {
-            LogUtils.e(TAG, "unregister error : " + e.toString());
-        }
+
     }
 
     /**
@@ -175,8 +150,15 @@ public abstract class BaseActivity extends AppCompatActivity implements ServiceC
             MusicUtils.unbindFromService(mToken);
             mToken = null;
         }
+        // Unregister the receiver
+        try {
+            unregisterReceiver(mPlaybackStatus);
+        } catch (final Throwable e) {
+            LogUtils.e(TAG, "unregister error : " + e.toString());
+        }
+
         // Remove any music status listeners
-        //// TODO: 4/8/17
+        mMusicStateListener.clear();
     }
 
     @Override
@@ -218,17 +200,11 @@ public abstract class BaseActivity extends AppCompatActivity implements ServiceC
                 if (action.equals(Constants.META_CHANGED)) {
                     //meta changed
                     LogUtils.i(TAG, "meta changed notify all listener");
-                    Glide.with(baseActivity).load(Utils.getAlbumArtUri(
-                            MusicUtils.getCurrentAlbumId()))
-                            .dontAnimate()
-                            .into(baseActivity.mAlbum);
-                    baseActivity.mTrackName.setText(MusicUtils.getTrackName());
-                    baseActivity.mArtistName.setText(MusicUtils.getArtistName());
                     baseActivity.onMetaChanged();
                 } else if (action.equals(Constants.PLAYSTATE_CHANGED)) {
                     // Set the play and pause image
-                    baseActivity.mPauseOrPlay.setImageResource(MusicUtils.isPlaying() ?
-                            R.drawable.ic_pause : R.drawable.ic_play);
+                    LogUtils.i(TAG, "play state changed notify all listener");
+                    baseActivity.onPlayStateChanged();
                 } else if (action.equals(Constants.REFRESH)) {
                     //media change so refresh
                     LogUtils.i(TAG, "media change notify all listener");
@@ -253,6 +229,16 @@ public abstract class BaseActivity extends AppCompatActivity implements ServiceC
         for (final MusicStateListener listener : mMusicStateListener) {
             if (listener != null) {
                 listener.onMetaChanged();
+            }
+        }
+    }
+
+    @Override
+    public void onPlayStateChanged() {
+        // Let the listener know to the meta chnaged
+        for (final MusicStateListener listener : mMusicStateListener) {
+            if (listener != null) {
+                listener.onPlayStateChanged();
             }
         }
     }

@@ -8,14 +8,25 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
+    <com.koma.music.widget.SquareImageView
+        android:id="@+id/iv_song_album"
+        android:layout_width="@dimen/list_item_image_width"
+        android:layout_height="@dimen/list_item_image_height"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_album" />
+
     <LinearLayout
         android:id="@+id/song_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toStartOf="@+id/iv_playing_animation"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/iv_song_album"
+        android:layout_toStartOf="@+id/iv_more"
         android:orientation="vertical"
         android:paddingEnd="@dimen/activity_horizontal_margin"
-        android:paddingStart="@dimen/activity_horizontal_margin">
+        android:paddingStart="@dimen/activity_vertical_margin">
 
         <TextView
             android:id="@+id/tv_title"
@@ -39,17 +50,8 @@
             android:maxLines="1"
             android:text="黄家驹"
             android:textColor="@android:color/black"
-            android:textSize="@dimen/title_size" />
+            android:textSize="@dimen/subtitle_size" />
     </LinearLayout>
-
-    <com.koma.music.widget.MusicVisualizer
-        android:id="@+id/iv_playing_animation"
-        android:layout_width="30dp"
-        android:layout_height="40dp"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="16dp"
-        android:layout_toStartOf="@+id/iv_more"
-        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/iv_more"

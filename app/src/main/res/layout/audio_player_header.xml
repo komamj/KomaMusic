@@ -2,15 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/audio_header"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="bottom"
-    android:elevation="4dp"
+    android:layout_height="55dp"
+    android:layout_gravity="top"
     android:orientation="vertical">
 
     <ProgressBar
         android:id="@+id/pb_header"
         style="@android:style/Widget.ProgressBar.Horizontal"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="2dp"
         android:progress="10"
         android:progressBackgroundTint="@color/progress_background_tint"
@@ -73,8 +72,8 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="8dp"
-            android:background="?actionBarItemBackground"
             android:layout_marginTop="10dp"
+            android:background="?actionBarItemBackground"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_play" />
     </RelativeLayout>

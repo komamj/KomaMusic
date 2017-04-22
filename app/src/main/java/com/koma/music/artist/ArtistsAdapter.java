@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.koma.music.R;
 import com.koma.music.base.BaseViewHolder;
 import com.koma.music.data.model.Artist;
+import com.koma.music.util.MusicUtils;
 import com.koma.music.util.Utils;
 
 import java.util.List;
@@ -56,6 +57,12 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
         Glide.with(mContext).load(Utils.getAlbumArtUri(mData.get(position).mArtistId))
                 .placeholder(R.drawable.ic_album)
                 .into(holder.mAlbum);
+        holder.mTitle.setText(mData.get(position).mArtistName);
+        String albumNumber = Utils.makeLabel(mContext,
+                R.plurals.num_albums, mData.get(position).mAlbumNumber);
+        String songNumber = Utils.makeLabel(mContext,
+                R.plurals.num_songs, mData.get(position).mSongNumber);
+        holder.mInfo.setText(MusicUtils.makeCombinedString(mContext, albumNumber, songNumber));
     }
 
     @Override
@@ -68,13 +75,10 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
         ImageView mAlbum;
         @BindView(R.id.tv_item_title)
         TextView mTitle;
-        @BindView(R.id.tv_item_subtitle)
-        TextView mSubTitle;
+        @BindView(R.id.tv_item_info)
+        TextView mInfo;
         @BindView(R.id.iv_more)
         ImageView mMore;
-
-        @BindView(R.id.tv_item_subtitle_2)
-        TextView mSubTitleInfo;
 
         @OnClick(R.id.iv_more)
         void doMoreAction(View view) {

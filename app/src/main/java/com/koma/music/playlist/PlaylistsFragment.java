@@ -89,7 +89,7 @@ public class PlaylistsFragment extends BaseFragment implements PlaylistsConstrac
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        mAdapter = new PlaylistAdapter(new ArrayList<Playlist>());
+        mAdapter = new PlaylistAdapter(mContext, new ArrayList<Playlist>());
 
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);

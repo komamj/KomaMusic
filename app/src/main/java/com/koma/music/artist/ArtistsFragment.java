@@ -3,7 +3,6 @@ package com.koma.music.artist;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 
 import com.koma.music.R;
 import com.koma.music.base.BaseFragment;
@@ -43,7 +42,7 @@ public class ArtistsFragment extends BaseFragment implements ArtistsConstract.Vi
     private void init() {
         mAdapter = new ArtistsAdapter(mContext, new ArrayList<Artist>());
 
-        GridLayoutManager layoutManager = new GridLayoutManager(mContext,2);
+        GridLayoutManager layoutManager = new GridLayoutManager(mContext, 2);
         layoutManager.setOrientation(GridLayoutManager.VERTICAL);
 
         mRecyclerView.setLayoutManager(layoutManager);
@@ -64,7 +63,9 @@ public class ArtistsFragment extends BaseFragment implements ArtistsConstract.Vi
 
         LogUtils.i(TAG, "onResume");
 
-        mPresenter.subscribe();
+        if (mPresenter != null) {
+            mPresenter.subscribe();
+        }
     }
 
     @Override
@@ -73,7 +74,10 @@ public class ArtistsFragment extends BaseFragment implements ArtistsConstract.Vi
 
         LogUtils.i(TAG, "onPause");
 
-        mPresenter.unSubscribe();
+
+        if (mPresenter != null) {
+            mPresenter.unSubscribe();
+        }
     }
 
     @Override

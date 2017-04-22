@@ -12,20 +12,19 @@
  */
 package com.koma.music.playlist;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.koma.music.R;
-import com.koma.music.base.BaseViewHolder;
+import com.koma.music.base.BaseSongInfoViewHolder;
 import com.koma.music.data.model.Playlist;
+import com.koma.music.util.Utils;
 
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
@@ -37,7 +36,11 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
 
     private List<Playlist> mData;
 
-    public PlaylistAdapter(List<Playlist> playlists) {
+    private Context mContext;
+
+    public PlaylistAdapter(Context context, List<Playlist> playlists) {
+        mContext = context;
+
         setList(playlists);
     }
 
@@ -52,7 +55,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
 
     @Override
     public PlaylistViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_playlist, null);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_song_info_base, null);
         return new PlaylistViewHolder(view);
     }
 
@@ -60,6 +63,8 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
     public void onBindViewHolder(PlaylistViewHolder holder, int position) {
         holder.itemView.setTag(position);
         holder.mMoreMenu.setTag(position);
+        holder.mTitle.setText(mData.get(position).mPlaylistName);
+        holder.mInfo.setText(Utils.makeLabel(mContext, R.plurals.num_songs, mData.get(position).mSongCount));
     }
 
     @Override
@@ -67,42 +72,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
         return mData == null ? 0 : mData.size();
     }
 
-    public static class PlayListHeaderViewHolder extends BaseViewHolder {
-        @BindView(R.id.iv_recently_added)
-        ImageView mRecentlyAdded;
-        @BindView(R.id.iv_recently_played)
-        ImageView mRecentlyPlayed;
-        @BindView(R.id.iv_my_favorite)
-        ImageView mMyFavorite;
-
-        @OnClick(R.id.iv_recently_added)
-        void launchRecentlyAdded() {
-
-        }
-
-        @OnClick(R.id.iv_recently_played)
-        void launchRecentlyPlayed() {
-
-        }
-
-        @OnClick(R.id.iv_my_favorite)
-        void launchMyFavorite() {
-
-        }
-
-
-        public PlayListHeaderViewHolder(View view) {
-            super(view);
-        }
-    }
-
-    public static class PlaylistViewHolder extends BaseViewHolder implements View.OnClickListener {
-        @BindView(R.id.iv_more)
-        ImageView mMoreMenu;
-        @BindView(R.id.iv_album)
-        ImageView mAlbum;
-        @BindView(R.id.tv_title)
-        TextView mTitle;
+    public class PlaylistViewHolder extends BaseSongInfoViewHolder {
 
         @OnClick(R.id.iv_more)
         void doMoreAction(View view) {
@@ -111,7 +81,6 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
 
         public PlaylistViewHolder(View view) {
             super(view);
-            view.setOnClickListener(this);
         }
 
         @Override

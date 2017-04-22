@@ -76,13 +76,14 @@ public abstract class BaseActivity extends AppCompatActivity implements ServiceC
 
         mContext = BaseActivity.this;
 
+        mMusicStateListener = new ArrayList<>();
+
         if (!needRequestStoragePermission()) {
             init();
         }
     }
 
     private void init() {
-        mMusicStateListener = new ArrayList<>();
         // Control the media volume
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 

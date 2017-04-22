@@ -57,6 +57,8 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
         Glide.with(mContext).load(Utils.getAlbumArtUri(mData.get(position).mAlbumId))
                 .placeholder(R.drawable.ic_album)
                 .into(holder.mAlbum);
+        holder.mTitle.setText(mData.get(position).mAlbumName);
+        holder.mInfo.setText(mData.get(position).mArtistName);
     }
 
     @Override
@@ -69,12 +71,10 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
         ImageView mAlbum;
         @BindView(R.id.tv_item_title)
         TextView mTitle;
-        @BindView(R.id.tv_item_subtitle)
-        TextView mSubTitle;
+        @BindView(R.id.tv_item_info)
+        TextView mInfo;
         @BindView(R.id.iv_more)
         ImageView mMore;
-        @BindView(R.id.tv_item_subtitle_2)
-        TextView mSubTitleInfo;
 
         @OnClick(R.id.iv_more)
         void doMoreAction(View view) {

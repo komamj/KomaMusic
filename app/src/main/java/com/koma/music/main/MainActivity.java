@@ -15,7 +15,6 @@ package com.koma.music.main;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -38,9 +37,6 @@ import com.koma.music.song.SongsFragment;
 import com.koma.music.song.SongsPresenter;
 import com.koma.music.util.Utils;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindArray;
 import butterknife.BindView;
@@ -68,7 +64,7 @@ public class MainActivity extends BaseActivity
     @BindArray(R.array.tab_title)
     String[] mTitles;
 
-    private List<Fragment> mFragments;
+    private MainPagerAdapter mPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,27 +81,35 @@ public class MainActivity extends BaseActivity
         toggle.syncState();
 
         mNavigationView.setNavigationItemSelectedListener(this);
-        mFragments = new ArrayList<>();
+
+        mPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(), mTitles);
 
         PlaylistsFragment playlistsFragment = new PlaylistsFragment();
-        mFragments.add(playlistsFragment);
+
         PlaylistsPresenter.newInstance(playlistsFragment, MusicRepository.getInstance());
 
+        mPagerAdapter.addFragment(playlistsFragment);
+
         SongsFragment songsFragment = new SongsFragment();
-        mFragments.add(songsFragment);
+
         SongsPresenter.newInstance(songsFragment, MusicRepository.getInstance());
 
+        mPagerAdapter.addFragment(songsFragment);
+
         ArtistsFragment artistsFragment = new ArtistsFragment();
-        mFragments.add(artistsFragment);
+
         ArtistsPresenter.newInstance(artistsFragment, MusicRepository.getInstance());
 
+        mPagerAdapter.addFragment(artistsFragment);
+
         AlbumsFragment albumsFragment = new AlbumsFragment();
-        mFragments.add(albumsFragment);
+
         AlbumsPresenter.newInstance(albumsFragment, MusicRepository.getInstance());
 
-        MainPagerAdapter mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(), mTitles, mFragments);
-        mViewPager.setAdapter(mainPagerAdapter);
-        mainPagerAdapter.notifyDataSetChanged();
+        mPagerAdapter.addFragment(albumsFragment);
+
+        mViewPager.setAdapter(mPagerAdapter);
+        mPagerAdapter.notifyDataSetChanged();
 
         mViewPager.setOffscreenPageLimit(PAGE_LIMIT);
 
@@ -118,7 +122,7 @@ public class MainActivity extends BaseActivity
 
         QuickControlFragment quickControlFragment = new QuickControlFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.quickcontrols_container, quickControlFragment).commitAllowingStateLoss();
+                .add(R.id.quickcontrols_container, quickControlFragment).commit();
     }
 
 

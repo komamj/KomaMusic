@@ -15,9 +15,12 @@ package com.koma.music.main;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.view.ViewGroup;
 
+import com.koma.music.base.BaseFragment;
 import com.koma.music.util.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -56,12 +59,16 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
 
     private List<Fragment> mFragments;
 
-    public MainPagerAdapter(FragmentManager fm, String[] titles, List<Fragment> fragments) {
+    public MainPagerAdapter(FragmentManager fm, String[] titles) {
         super(fm);
 
         mTitles = titles;
 
-        mFragments = fragments;
+        mFragments = new ArrayList<>();
+    }
+
+    public void addFragment(BaseFragment fragment) {
+        mFragments.add(fragment);
     }
 
     @Override
@@ -73,12 +80,8 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (getRtlPosition(position)) {
             case PLAY_LIST_TAB_INDEX:
-
                 return mFragments.get(0);
             case SONG_TAB_INDEX:
-               /* SongsFragment songsFragment = SongsFragment.newInstance();
-                SongsPresenter.newInstance(songsFragment);
-                return songsFragment;*/
                 return mFragments.get(1);
             case ARTIST_TAB_INDEX:
                 return mFragments.get(2);
@@ -97,6 +100,11 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         return mTitles[getRtlPosition(position)];
+    }
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        super.destroyItem(container, position, object);
     }
 
     /**

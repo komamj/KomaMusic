@@ -204,8 +204,8 @@ public final class MusicUtils {
         secs %= 3600;
         mins = secs / 60;
 
-        String hoursString = MusicUtils.makeLabel(context, R.plurals.Nhours, (int) hours);
-        String minutesString = MusicUtils.makeLabel(context, R.plurals.Nminutes, (int) mins);
+        String hoursString = MusicUtils.makeLabel(context, R.plurals.num_hours, (int) hours);
+        String minutesString = MusicUtils.makeLabel(context, R.plurals.num_minutes, (int) mins);
 
         if (hours == 0) {
             return minutesString;
@@ -1100,7 +1100,7 @@ public final class MusicUtils {
             numinserted += resolver.bulkInsert(uri, mContentValuesCache);
         }
         final String message = context.getResources().getQuantityString(
-                R.plurals.NNNtrackstoplaylist, numinserted, numinserted);
+                R.plurals.num_tracks_toplaylist, numinserted, numinserted);
         Toast.makeText((Activity) context, message, Toast.LENGTH_SHORT).show();
         playlistChanged();
     }
@@ -1120,7 +1120,7 @@ public final class MusicUtils {
                 Long.toString(id)
         });
         final String message = context.getResources().getQuantityString(
-                R.plurals.NNNtracksfromplaylist, 1, 1);
+                R.plurals.num_tracksfromplaylist, 1, 1);
         Toast.makeText((Activity) context, message, Toast.LENGTH_SHORT).show();
         playlistChanged();
     }
@@ -1135,7 +1135,7 @@ public final class MusicUtils {
         }
         try {
             mService.enqueue(list, Constants.LAST, sourceId);
-            final String message = makeLabel(context, R.plurals.NNNtrackstoqueue, list.length);
+            final String message = makeLabel(context, R.plurals.num_trackstoqueue, list.length);
             Toast.makeText((Activity) context, message, Toast.LENGTH_SHORT).show();
         } catch (final RemoteException ignored) {
         }
@@ -1595,7 +1595,7 @@ public final class MusicUtils {
             c.close();
         }
 
-        final String message = makeLabel(context, R.plurals.NNNtracksdeleted, list.length);
+        final String message = makeLabel(context, R.plurals.num_tracksdeleted, list.length);
 
         Toast.makeText((Activity) context, message, Toast.LENGTH_SHORT).show();
         // We deleted a number of tracks, which could affect any number of

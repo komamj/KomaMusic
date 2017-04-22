@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- Used to indicate the number of artists -->
+    <plurals name="num_artists">
+        <item quantity="one"><xliff:g id="count">%d</xliff:g> artist</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> artists</item>
+    </plurals>
+
+    <!-- Used to indicate the number of albums for an artist -->
+    <plurals name="num_albums">
+        <item quantity="one"><xliff:g id="count">%d</xliff:g> album</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> albums</item>
+    </plurals>
+
+    <!-- Used to indicate the number of songs for an album -->
+    <plurals name="num_songs">
+        <item quantity="zero"><xliff:g id="count">%d</xliff:g> songs</item>
+        <item quantity="one"><xliff:g id="count">%d</xliff:g> song</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> songs</item>
+    </plurals>
+
+    <!-- Used to indicate the number of genres -->
+    <plurals name="num_genres">
+        <item quantity="one"><xliff:g id="count">%d</xliff:g> genre</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> genres</item>
+    </plurals>
+
+    <!-- Used to show a shortened version of hours-->
+    <plurals name="num_hours">
+        <item quantity="other"><xliff:g id="hours">%d</xliff:g>h</item>
+    </plurals>
+
+    <!-- Used to show a shortened version of minutes -->
+    <plurals name="num_minutes">
+        <item quantity="other"><xliff:g id="minutes">%d</xliff:g>m</item>
+    </plurals>
+
+    <!-- Toasts after adding song(s) to playlists -->
+    <plurals name="num_tracks_toplaylist">
+        <item quantity="one"><xliff:g example="1" id="number">%d</xliff:g> song added to playlist.</item>
+        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> songs added to playlist.</item>
+    </plurals>
+
+    <!-- Toasts after removing song(s) from playlists -->
+    <plurals name="num_tracksfromplaylist">
+        <item quantity="one"><xliff:g example="1" id="number">%d</xliff:g> song removed from playlist.</item>
+        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> songs removed from playlist.</item>
+    </plurals>
+
+    <!-- Toasts after adding song(s) to queue -->
+    <plurals name="num_trackstoqueue">
+        <item quantity="one"><xliff:g example="1" id="number">%d</xliff:g> song added to the queue.</item>
+        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> songs added to the queue.</item>
+    </plurals>
+
+    <!-- Toasts after adding song(s) to the favorites list -->
+    <plurals name="num_trackstofavorites">
+        <item quantity="one"><xliff:g example="1" id="number">%d</xliff:g> song added to favorites.</item>
+        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> songs added to favorites.</item>
+    </plurals>
+
+    <!-- Toast confirming that song(s) was/were deleted. -->
+    <plurals name="num_tracksdeleted">
+        <item quantity="one"><xliff:g example="1" id="songs_to_delete">%d</xliff:g> song was deleted.</item>
+        <item quantity="other"><xliff:g id="songs_to_delete">%d</xliff:g> songs were deleted.</item>
+    </plurals>
+</resources>

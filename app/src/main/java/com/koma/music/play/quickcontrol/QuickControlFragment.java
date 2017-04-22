@@ -140,8 +140,8 @@ public class QuickControlFragment extends Fragment implements MusicStateListener
     public void onPlayStateChanged() {
         LogUtils.i(TAG, "onPlayStateChanged");
 
-        mPauseOrPlay.setImageResource(MusicUtils.isPlaying() ? R.drawable.ic_pause :
-                R.drawable.ic_play);
+        mPauseOrPlay.setImageResource(MusicUtils.isPlaying() ? R.drawable.ic_pause_header :
+                R.drawable.ic_play_header);
     }
 
     @Override

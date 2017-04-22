@@ -65,17 +65,16 @@
                 android:textSize="@dimen/subtitle_size" />
         </LinearLayout>
 
-        <ImageView
+        <com.koma.music.widget.SquareImageView
             android:id="@+id/iv_pause"
             android:layout_width="55dp"
-            android:layout_height="55dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="8dp"
-            android:layout_marginTop="10dp"
             android:background="?actionBarItemBackground"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_play" />
+            android:src="@drawable/ic_play_header" />
     </RelativeLayout>
 
 </LinearLayout>

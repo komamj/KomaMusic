@@ -48,35 +48,12 @@
                     android:ellipsize="end"
                     android:maxLines="1" />
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10.0dp">
-
-                    <TextView
-                        android:id="@+id/tv_item_subtitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true" />
-
-                    <View
-                        android:id="@+id/divider_subtitle"
-                        android:layout_width="1.0dip"
-                        android:layout_height="8dp"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="6dp"
-                        android:layout_marginRight="6dp"
-                        android:layout_toEndOf="@id/tv_item_subtitle"
-                        android:background="#1f000000" />
-
-                    <TextView
-                        android:id="@+id/tv_item_subtitle_2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toEndOf="@id/divider_subtitle" />
-
-                </RelativeLayout>
+                <TextView
+                    android:id="@+id/tv_item_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1" />
 
             </LinearLayout>
 

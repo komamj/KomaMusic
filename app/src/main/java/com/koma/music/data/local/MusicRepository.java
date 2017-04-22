@@ -26,8 +26,6 @@ import rx.Observable;
  */
 
 public class MusicRepository implements MusicDataSource {
-    private static final String TAG = MusicRepository.class.getSimpleName();
-
     private static MusicRepository mRepostory;
 
     private LocalDataSource mLocalDataSource;

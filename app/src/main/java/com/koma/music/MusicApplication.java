@@ -57,6 +57,7 @@ public class MusicApplication extends Application {
 
         //clear cache
         Glide.get(sContext).clearMemory();
+
         super.onLowMemory();
     }
 

@@ -13,6 +13,9 @@
 package com.koma.music.song;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -139,6 +142,25 @@ public class SongsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         SongsViewHolder(View view) {
             super(view);
+
+            mHandler = new Handler(Looper.getMainLooper()) {
+                @Override
+                public void handleMessage(Message msg) {
+                    switch (msg.what) {
+                        case MESSAGE_ITEM_CLICK:
+
+                            LogUtils.i(TAG, "myHandler");
+                            final long[] list = getSongIds();
+
+                            if (list != null) {
+                                MusicUtils.playAll(list, msg.arg1, -1, false);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            };
         }
 
         @Override
@@ -147,11 +169,12 @@ public class SongsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
             LogUtils.i(TAG, "onClick position : " + position);
 
-            final long[] list = getSongIds();
-
-            if (list != null) {
-                MusicUtils.playAll(list, position, -1, false);
+            if (mHandler.hasMessages(MESSAGE_ITEM_CLICK)) {
+                mHandler.removeMessages(MESSAGE_ITEM_CLICK);
             }
+
+            Message message = mHandler.obtainMessage(MESSAGE_ITEM_CLICK, (int) view.getTag());
+            mHandler.sendMessageDelayed(message, DOUBLE_CLICK_TIME);
         }
     }
 }

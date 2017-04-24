@@ -12,6 +12,7 @@
  */
 package com.koma.music.base;
 
+import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +26,8 @@ import butterknife.BindView;
  */
 
 public abstract class BaseSongInfoViewHolder extends BaseViewHolder implements View.OnClickListener {
+    protected static final int DOUBLE_CLICK_TIME = 1000;
+    protected static final int MESSAGE_ITEM_CLICK = 0x00;
     @BindView(R.id.iv_album)
     public ImageView mAlbum;
     @BindView(R.id.iv_more)
@@ -34,7 +37,11 @@ public abstract class BaseSongInfoViewHolder extends BaseViewHolder implements V
     @BindView(R.id.tv_info)
     public TextView mInfo;
 
+    protected Handler mHandler;
+
     public BaseSongInfoViewHolder(View view) {
         super(view);
+
+        this.itemView.setOnClickListener(this);
     }
 }

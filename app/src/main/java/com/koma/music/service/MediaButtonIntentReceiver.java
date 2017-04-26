@@ -32,7 +32,7 @@ public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
         LogUtils.i(TAG, "Received intent: " + intent);
         final String intentAction = intent.getAction();
         if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intentAction)) {
-            startService(context, Constants.CMDPAUSE, System.currentTimeMillis());
+            startService(context, MusicServiceConstants.CMDPAUSE, System.currentTimeMillis());
         } else if (Intent.ACTION_MEDIA_BUTTON.equals(intentAction)) {
             final KeyEvent event = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
             if (event == null || event.getAction() != KeyEvent.ACTION_UP) {
@@ -42,25 +42,25 @@ public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
             String command = null;
             switch (event.getKeyCode()) {
                 case KeyEvent.KEYCODE_HEADSETHOOK:
-                    command = Constants.CMDHEADSETHOOK;
+                    command = MusicServiceConstants.CMDHEADSETHOOK;
                     break;
                 case KeyEvent.KEYCODE_MEDIA_STOP:
-                    command = Constants.CMDSTOP;
+                    command = MusicServiceConstants.CMDSTOP;
                     break;
                 case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-                    command = Constants.CMDTOGGLEPAUSE;
+                    command = MusicServiceConstants.CMDTOGGLEPAUSE;
                     break;
                 case KeyEvent.KEYCODE_MEDIA_NEXT:
-                    command = Constants.CMDNEXT;
+                    command = MusicServiceConstants.CMDNEXT;
                     break;
                 case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-                    command = Constants.CMDPREVIOUS;
+                    command = MusicServiceConstants.CMDPREVIOUS;
                     break;
                 case KeyEvent.KEYCODE_MEDIA_PAUSE:
-                    command = Constants.CMDPAUSE;
+                    command = MusicServiceConstants.CMDPAUSE;
                     break;
                 case KeyEvent.KEYCODE_MEDIA_PLAY:
-                    command = Constants.CMDPLAY;
+                    command = MusicServiceConstants.CMDPLAY;
                     break;
             }
             if (command != null) {
@@ -74,10 +74,10 @@ public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
 
     private static void startService(Context context, String command, long timestamp) {
         final Intent i = new Intent(context, MusicService.class);
-        i.setAction(Constants.SERVICECMD);
-        i.putExtra(Constants.CMDNAME, command);
-        i.putExtra(Constants.FROM_MEDIA_BUTTON, true);
-        i.putExtra(Constants.TIMESTAMP, timestamp);
+        i.setAction(MusicServiceConstants.SERVICECMD);
+        i.putExtra(MusicServiceConstants.CMDNAME, command);
+        i.putExtra(MusicServiceConstants.FROM_MEDIA_BUTTON, true);
+        i.putExtra(MusicServiceConstants.TIMESTAMP, timestamp);
         startWakefulService(context, i);
     }
 }

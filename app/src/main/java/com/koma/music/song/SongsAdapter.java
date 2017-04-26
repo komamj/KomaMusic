@@ -148,10 +148,8 @@ public class SongsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 public void handleMessage(Message msg) {
                     switch (msg.what) {
                         case MESSAGE_ITEM_CLICK:
-
-                            LogUtils.i(TAG, "myHandler");
                             final long[] list = getSongIds();
-
+                            LogUtils.i(TAG, "myHandler list size : " + list.length + "msg : " + msg.arg1);
                             if (list != null) {
                                 MusicUtils.playAll(list, msg.arg1, -1, false);
                             }
@@ -165,15 +163,12 @@ public class SongsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         @Override
         public void onClick(View view) {
-            int position = (int) view.getTag();
-
-            LogUtils.i(TAG, "onClick position : " + position);
+            Message message = mHandler.obtainMessage(MESSAGE_ITEM_CLICK, (int) view.getTag(), -1);
 
             if (mHandler.hasMessages(MESSAGE_ITEM_CLICK)) {
                 mHandler.removeMessages(MESSAGE_ITEM_CLICK);
             }
 
-            Message message = mHandler.obtainMessage(MESSAGE_ITEM_CLICK, (int) view.getTag());
             mHandler.sendMessageDelayed(message, DOUBLE_CLICK_TIME);
         }
     }

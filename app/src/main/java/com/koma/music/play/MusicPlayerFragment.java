@@ -16,6 +16,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -43,7 +44,8 @@ import butterknife.OnClick;
  * Created by koma on 4/5/17.
  */
 
-public class MusicPlayerFragment extends Fragment implements MusicPlayerContract.View, MusicStateListener {
+public class MusicPlayerFragment extends Fragment implements MusicPlayerContract.View,
+        MusicStateListener, SeekBar.OnSeekBarChangeListener {
     private static final String TAG = MusicPlayerFragment.class.getSimpleName();
 
     @BindView(R.id.tv_track_name)
@@ -62,14 +64,26 @@ public class MusicPlayerFragment extends Fragment implements MusicPlayerContract
 
     @BindView(R.id.iv_blur)
     ImageView mBlurImageView;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
     @BindView(R.id.song_progress)
     SeekBar mSongProgress;
     @BindView(R.id.song_elapsed_time)
     TextView mSongElapsedTime;
     @BindView(R.id.song_duration)
     TextView mDuration;
+    @BindView(R.id.iv_my_favorite)
+    ImageView mFavorite;
+
+    @OnClick(R.id.iv_my_favorite)
+    void doMyFavorite() {
+    }
+
+    @BindView(R.id.iv_play_mode)
+    ImageView mPlayMode;
+
+    @OnClick(R.id.iv_play_mode)
+    void switchPlayMode() {
+
+    }
 
     @OnClick(R.id.iv_previous)
     void doPrev() {
@@ -86,6 +100,9 @@ public class MusicPlayerFragment extends Fragment implements MusicPlayerContract
     @NonNull
     private MusicPlayerContract.Presenter mPresenter;
 
+    private Runnable mUpdateProgress;
+    private Handler mHandler;
+
     public MusicPlayerFragment() {
     }
 
@@ -97,10 +114,19 @@ public class MusicPlayerFragment extends Fragment implements MusicPlayerContract
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mHandler = new Handler();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_player, container, false);
 
         ButterKnife.bind(this, view);
+
+        mSongProgress.setOnSeekBarChangeListener(this);
 
         ((BaseActivity) getActivity()).setMusicStateListenerListener(this);
 
@@ -121,21 +147,11 @@ public class MusicPlayerFragment extends Fragment implements MusicPlayerContract
         super.onDestroyView();
 
         ((BaseActivity) getActivity()).removeMusicStateListenerListener(this);
+
+        removeUpdate();
     }
 
     private void init() {
-        if (mToolbar != null) {
-            ((MusicPlayerActivity) getActivity()).setSupportActionBar(mToolbar);
-            final ActionBar ab = ((MusicPlayerActivity) getActivity()).getSupportActionBar();
-            ab.setDisplayHomeAsUpEnabled(true);
-            ab.setTitle("");
-            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getActivity().onBackPressed();
-                }
-            });
-        }
     }
 
     @Override
@@ -200,11 +216,94 @@ public class MusicPlayerFragment extends Fragment implements MusicPlayerContract
     @Override
     public void updateAlbumImage() {
         LogUtils.i(TAG, "updateAlbumImage");
+
+        Glide.with(this).load(Utils.getAlbumArtUri(
+                MusicUtils.getCurrentAlbumId()))
+                .placeholder(R.drawable.ic_album)
+                .into(mAlbum);
     }
 
     @Override
-    public void setAlbumImage() {
+    public void updateTitle() {
+        mTrackName.setText(MusicUtils.getTrackName());
 
+        mArtistName.setText(MusicUtils.getArtistName());
+    }
+
+    @Override
+    public void updateProgressAndElapsedTime(int progress) {
+        mSongElapsedTime.setText(MusicUtils.makeShortTimeString(getActivity(), MusicUtils.position() / 1000));
+        mSongProgress.setProgress(progress);
+    }
+
+    /**
+     * Creates and posts the update runnable to the handler
+     */
+    private void postUpdate() {
+        if (mUpdateProgress == null) {
+            mUpdateProgress = new Runnable() {
+                @Override
+                public void run() {
+                    long currentSongDuration = MusicUtils.duration();
+                    long currentSongProgress = MusicUtils.position();
+
+                    int progress = 0;
+
+                    if (currentSongDuration > 0) {
+                        progress = (int) (mSongProgress.getMax() * currentSongProgress / currentSongDuration);
+                    }
+
+
+                    updateProgressAndElapsedTime(progress);
+                    mHandler.postDelayed(mUpdateProgress, MusicUtils.UPDATE_FREQUENCY_MS);
+                }
+            };
+        }
+
+        // remove any existing callbacks
+        mHandler.removeCallbacks(mUpdateProgress);
+
+        // post ourselves as a delayed
+        mHandler.post(mUpdateProgress);
+    }
+
+    /**
+     * Removes the runnable from the handler
+     */
+    private void removeUpdate() {
+        if (mUpdateProgress != null) {
+            mHandler.removeCallbacks(mUpdateProgress);
+        }
+    }
+
+    /**
+     * update duration time
+     */
+    @Override
+    public void updateDuration() {
+        String duration = MusicUtils.makeShortTimeString(mContext, MusicUtils.duration() / 1000);
+        if (!mDuration.getText().equals(duration)) {
+            mDuration.setText(duration);
+        }
+    }
+
+    @Override
+    public void updateNowPlayingInfo() {
+        updateAlbumImage();
+
+        updateTitle();
+
+        postUpdate();
+
+        updateDuration();
+
+        onPlayStateChanged();
+
+        updateBlurArtWork();
+
+        updateAlbumImage();
+
+        updateFavoriteView();
     }
 
     @Override
@@ -221,26 +320,40 @@ public class MusicPlayerFragment extends Fragment implements MusicPlayerContract
     public void onMetaChanged() {
         LogUtils.i(TAG, "onMetaChanged");
 
-        Glide.with(this).load(Utils.getAlbumArtUri(
-                MusicUtils.getCurrentAlbumId()))
-                .dontAnimate()
-                .into(mAlbum);
+        mSongProgress.setMax((int) MusicUtils.duration());
 
-        mTrackName.setText(MusicUtils.getTrackName());
-
-        mArtistName.setText(MusicUtils.getArtistName());
-
-        onPlayStateChanged();
-
-        updateBlurArtWork();
-        updateAlbumImage();
-        updateFavoriteView();
+        updateNowPlayingInfo();
     }
 
     @Override
     public void onPlayStateChanged() {
         LogUtils.i(TAG, "onPlayStateChanged");
 
-        mPauseOrPlay.setImageResource(MusicUtils.isPlaying() ? R.drawable.ic_pause : R.drawable.ic_play);
+        boolean isPlaying = MusicUtils.isPlaying();
+
+        mPauseOrPlay.setImageResource(isPlaying ? R.drawable.ic_pause : R.drawable.ic_play);
+
+        if (isPlaying) {
+            postUpdate();
+        } else {
+            removeUpdate();
+        }
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+        if (b) {
+            MusicUtils.seek((long) i);
+        }
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
     }
 }

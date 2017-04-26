@@ -29,8 +29,9 @@ import android.widget.Toast;
 
 import com.koma.music.R;
 import com.koma.music.listener.MusicStateListener;
-import com.koma.music.service.Constants;
+import com.koma.music.main.MainActivity;
 import com.koma.music.service.IMusicService;
+import com.koma.music.service.MusicServiceConstants;
 import com.koma.music.util.LogUtils;
 import com.koma.music.util.MusicUtils;
 
@@ -78,6 +79,9 @@ public abstract class BaseActivity extends AppCompatActivity implements ServiceC
 
         mMusicStateListener = new ArrayList<>();
 
+        // Initialize the broadcast receiver
+        mPlaybackStatus = new PlaybackStatus(this);
+
         if (!needRequestStoragePermission()) {
             init();
         }
@@ -88,10 +92,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ServiceC
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         // Bind Music service
-        mToken = MusicUtils.bindToService(this, this);
-
-        // Initialize the broadcast receiver
-        mPlaybackStatus = new PlaybackStatus(this);
+        mToken = MusicUtils.bindToService(mContext, this);
     }
 
     @Override
@@ -101,15 +102,15 @@ public abstract class BaseActivity extends AppCompatActivity implements ServiceC
 
         final IntentFilter filter = new IntentFilter();
         // Play and pause changes
-        filter.addAction(Constants.PLAYSTATE_CHANGED);
+        filter.addAction(MusicServiceConstants.PLAYSTATE_CHANGED);
         // Track changes
-        filter.addAction(Constants.META_CHANGED);
+        filter.addAction(MusicServiceConstants.META_CHANGED);
         // Update a list, probably the playlist fragment's
-        filter.addAction(Constants.REFRESH);
+        filter.addAction(MusicServiceConstants.REFRESH);
         // If a playlist has changed, notify us
-        filter.addAction(Constants.PLAYLIST_CHANGED);
+        filter.addAction(MusicServiceConstants.PLAYLIST_CHANGED);
         // If there is an error playing a track
-        filter.addAction(Constants.TRACK_ERROR);
+        filter.addAction(MusicServiceConstants.TRACK_ERROR);
         registerReceiver(mPlaybackStatus, filter);
     }
 
@@ -198,26 +199,26 @@ public abstract class BaseActivity extends AppCompatActivity implements ServiceC
             final String action = intent.getAction();
             BaseActivity baseActivity = mReference.get();
             if (baseActivity != null) {
-                if (action.equals(Constants.META_CHANGED)) {
+                if (action.equals(MusicServiceConstants.META_CHANGED)) {
                     //meta changed
                     LogUtils.i(TAG, "meta changed notify all listener");
                     baseActivity.onMetaChanged();
-                } else if (action.equals(Constants.PLAYSTATE_CHANGED)) {
+                } else if (action.equals(MusicServiceConstants.PLAYSTATE_CHANGED)) {
                     // Set the play and pause image
                     LogUtils.i(TAG, "play state changed notify all listener");
                     baseActivity.onPlayStateChanged();
-                } else if (action.equals(Constants.REFRESH)) {
+                } else if (action.equals(MusicServiceConstants.REFRESH)) {
                     //media change so refresh
                     LogUtils.i(TAG, "media change notify all listener");
                     baseActivity.refreshData();
-                } else if (action.equals(Constants.PLAYLIST_CHANGED)) {
+                } else if (action.equals(MusicServiceConstants.PLAYLIST_CHANGED)) {
                     //playlist changed
                     LogUtils.i(TAG, "playlist changed notify all listener");
                     baseActivity.onPlaylistChanged();
-                } else if (action.equals(Constants.TRACK_ERROR)) {
+                } else if (action.equals(MusicServiceConstants.TRACK_ERROR)) {
                     LogUtils.i(TAG, "track error dislay error message");
                     final String errorMsg = context.getString(R.string.error_playing_track,
-                            intent.getStringExtra(Constants.TRACK_NAME));
+                            intent.getStringExtra(MusicServiceConstants.TRACK_NAME));
                     Toast.makeText(baseActivity, errorMsg, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -227,6 +228,10 @@ public abstract class BaseActivity extends AppCompatActivity implements ServiceC
     @Override
     public void onMetaChanged() {
         // Let the listener know to the meta chnaged
+        if (this instanceof MainActivity) {
+            ((MainActivity) this).refreshPanelHeight();
+        }
+
         for (final MusicStateListener listener : mMusicStateListener) {
             if (listener != null) {
                 listener.onMetaChanged();

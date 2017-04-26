@@ -246,7 +246,7 @@ public class MultiPlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
                 mIsInitialized = false;
                 mCurrentMediaPlayer.release();
                 mCurrentMediaPlayer = new MediaPlayer();
-                Message msg = mHandler.obtainMessage(Constants.SERVER_DIED, errorInfo);
+                Message msg = mHandler.obtainMessage(MusicServiceConstants.SERVER_DIED, errorInfo);
                 mHandler.sendMessageDelayed(msg, 2000);
                 return true;
             default:
@@ -265,9 +265,9 @@ public class MultiPlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
             mCurrentMediaPlayer = mNextMediaPlayer;
             mNextMediaPath = null;
             mNextMediaPlayer = null;
-            mHandler.sendEmptyMessage(Constants.TRACK_WENT_TO_NEXT);
+            mHandler.sendEmptyMessage(MusicServiceConstants.TRACK_WENT_TO_NEXT);
         } else {
-            mHandler.sendEmptyMessage(Constants.TRACK_ENDED);
+            mHandler.sendEmptyMessage(MusicServiceConstants.TRACK_ENDED);
         }
     }
 }

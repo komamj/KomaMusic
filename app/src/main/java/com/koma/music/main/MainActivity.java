@@ -20,6 +20,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -35,6 +36,7 @@ import com.koma.music.playlist.PlaylistsFragment;
 import com.koma.music.playlist.PlaylistsPresenter;
 import com.koma.music.song.SongsFragment;
 import com.koma.music.song.SongsPresenter;
+import com.koma.music.util.MusicUtils;
 import com.koma.music.util.Utils;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -66,6 +68,8 @@ public class MainActivity extends BaseActivity
 
     private MainPagerAdapter mPagerAdapter;
 
+    private float mHeaderHeight;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +85,9 @@ public class MainActivity extends BaseActivity
         toggle.syncState();
 
         mNavigationView.setNavigationItemSelectedListener(this);
+
+        mHeaderHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 55,
+                getResources().getDisplayMetrics());
 
         mPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(), mTitles);
 
@@ -123,6 +130,38 @@ public class MainActivity extends BaseActivity
         QuickControlFragment quickControlFragment = new QuickControlFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.quickcontrols_container, quickControlFragment).commit();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (MusicUtils.getQueueSize() == 0) {
+            mPanelLayout.setPanelHeight(0);
+        } else {
+            mPanelLayout.setPanelHeight((int) mHeaderHeight);
+        }
+    }
+
+    private Runnable mPlayHeaderRunnable;
+
+    public void refreshPanelHeight() {
+        if (mPlayHeaderRunnable == null) {
+            mPlayHeaderRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    if (MusicUtils.getQueueSize() == 0) {
+                        mPanelLayout.setPanelHeight(0);
+                    } else {
+                        mPanelLayout.setPanelHeight((int) mHeaderHeight);
+                    }
+                }
+            };
+        }
+        if (mPanelLayout != null) {
+            mPanelLayout.removeCallbacks(mPlayHeaderRunnable);
+            mPanelLayout.postDelayed(mPlayHeaderRunnable, 50);
+        }
     }
 
 

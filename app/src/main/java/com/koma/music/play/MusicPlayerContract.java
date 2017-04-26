@@ -33,7 +33,13 @@ public interface MusicPlayerContract {
 
         void updateAlbumImage();
 
-        void setAlbumImage();
+        void updateTitle();
+
+        void updateProgressAndElapsedTime(int progress);
+
+        void updateDuration();
+
+        void updateNowPlayingInfo();
     }
 
     interface Presenter extends BasePresenter {

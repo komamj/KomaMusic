@@ -17,7 +17,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.koma.music.R;
-import com.koma.music.service.Constants;
+import com.koma.music.service.MusicServiceConstants;
 import com.koma.music.util.MusicUtils;
 
 /**
@@ -40,15 +40,15 @@ public class RepeatButton extends MusicButton {
      */
     public void updateRepeatState() {
         switch (MusicUtils.getRepeatMode()) {
-            case Constants.REPEAT_ALL:
+            case MusicServiceConstants.REPEAT_ALL:
                 setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_all, null));
                 setAlpha(ACTIVE_ALPHA);
                 break;
-            case Constants.REPEAT_CURRENT:
+            case MusicServiceConstants.REPEAT_CURRENT:
                 setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one, null));
                 setAlpha(ACTIVE_ALPHA);
                 break;
-            case Constants.REPEAT_NONE:
+            case MusicServiceConstants.REPEAT_NONE:
                 setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_all, null));
                 setAlpha(INACTIVE_ALPHA);
                 break;

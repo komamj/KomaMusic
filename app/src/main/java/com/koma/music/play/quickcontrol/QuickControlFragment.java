@@ -104,6 +104,13 @@ public class QuickControlFragment extends Fragment implements MusicStateListener
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        onMetaChanged();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
 
@@ -126,7 +133,7 @@ public class QuickControlFragment extends Fragment implements MusicStateListener
     public void onMetaChanged() {
         Glide.with(this).load(Utils.getAlbumArtUri(
                 MusicUtils.getCurrentAlbumId()))
-                .dontAnimate()
+                .placeholder(R.drawable.ic_album)
                 .into(mAlbum);
 
         mTrackName.setText(MusicUtils.getTrackName());
@@ -146,7 +153,7 @@ public class QuickControlFragment extends Fragment implements MusicStateListener
 
     @Override
     public void onPanelSlide(View panel, float slideOffset) {
-
+        mHeaderLayout.setAlpha(1 - slideOffset);
     }
 
     @Override

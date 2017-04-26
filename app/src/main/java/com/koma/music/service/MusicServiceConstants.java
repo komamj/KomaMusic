@@ -18,7 +18,7 @@ import android.provider.MediaStore;
  * Created by koma on 3/23/17.
  */
 
-public class Constants {
+public class MusicServiceConstants {
     /**
      * Indicates that the music has paused or resumed
      */

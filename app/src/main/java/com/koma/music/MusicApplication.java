@@ -53,7 +53,7 @@ public class MusicApplication extends Application {
 
     @Override
     public void onLowMemory() {
-        LogUtils.i(TAG, "onLowMemory");
+        LogUtils.e(TAG, "onLowMemory");
 
         //clear cache
         Glide.get(sContext).clearMemory();

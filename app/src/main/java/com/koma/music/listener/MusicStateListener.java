@@ -12,28 +12,30 @@
  */
 package com.koma.music.listener;
 
+import com.koma.music.service.MusicServiceConstants;
+
 /**
  * Created by koma on 4/10/17.
  */
 
 public interface MusicStateListener {
     /**
-     * Called when {@link com.koma.music.service.Constants#REFRESH} is invoked
+     * Called when {@link MusicServiceConstants#REFRESH} is invoked
      */
     public void refreshData();
 
     /**
-     * Called when {@link com.koma.music.service.Constants#PLAYLIST_CHANGED} is invoked
+     * Called when {@link MusicServiceConstants#PLAYLIST_CHANGED} is invoked
      */
     public void onPlaylistChanged();
 
     /**
-     * Called when {@link com.koma.music.service.Constants#META_CHANGED} is invoked
+     * Called when {@link MusicServiceConstants#META_CHANGED} is invoked
      */
     public void onMetaChanged();
 
     /**
-     * Called when {@link com.koma.music.service.Constants#PLAYSTATE_CHANGED} is invoked
+     * Called when {@link MusicServiceConstants#PLAYSTATE_CHANGED} is invoked
      */
     public void onPlayStateChanged();
 }

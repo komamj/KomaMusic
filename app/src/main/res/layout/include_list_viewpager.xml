@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
-    sothree:umanoDragView="@+id/quickcontrols_container"
-    sothree:umanoOverlay="false"
-    sothree:umanoPanelHeight="55dp"
-    sothree:umanoShadowHeight="5dp">
+    app:umanoDragView="@+id/quickcontrols_container"
+    app:umanoOverlay="false"
+    app:umanoPanelHeight="55dp"
+    app:umanoShadowHeight="5dp">
 
     <include
         layout="@layout/app_bar_main"

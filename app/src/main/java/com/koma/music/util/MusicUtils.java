@@ -28,7 +28,7 @@ import android.widget.Toast;
 
 import com.koma.music.R;
 import com.koma.music.data.model.MusicPlaybackTrack;
-import com.koma.music.service.Constants;
+import com.koma.music.service.MusicServiceConstants;
 import com.koma.music.service.IMusicService;
 import com.koma.music.service.MusicService;
 
@@ -272,7 +272,7 @@ public final class MusicUtils {
      */
     public static void asyncNext(final Context context) {
         final Intent previous = new Intent(context, MusicService.class);
-        previous.setAction(com.koma.music.service.Constants.NEXT_ACTION);
+        previous.setAction(MusicServiceConstants.NEXT_ACTION);
         context.startService(previous);
     }
 
@@ -282,9 +282,9 @@ public final class MusicUtils {
     public static void previous(final Context context, final boolean force) {
         final Intent previous = new Intent(context, MusicService.class);
         if (force) {
-            previous.setAction(com.koma.music.service.Constants.PREVIOUS_FORCE_ACTION);
+            previous.setAction(MusicServiceConstants.PREVIOUS_FORCE_ACTION);
         } else {
-            previous.setAction(com.koma.music.service.Constants.PREVIOUS_ACTION);
+            previous.setAction(MusicServiceConstants.PREVIOUS_ACTION);
         }
         context.startService(previous);
     }
@@ -312,17 +312,17 @@ public final class MusicUtils {
         try {
             if (mService != null) {
                 switch (mService.getRepeatMode()) {
-                    case Constants.REPEAT_NONE:
-                        mService.setRepeatMode(Constants.REPEAT_ALL);
+                    case MusicServiceConstants.REPEAT_NONE:
+                        mService.setRepeatMode(MusicServiceConstants.REPEAT_ALL);
                         break;
-                    case Constants.REPEAT_ALL:
-                        mService.setRepeatMode(Constants.REPEAT_CURRENT);
-                        if (mService.getShuffleMode() != Constants.SHUFFLE_NONE) {
-                            mService.setShuffleMode(Constants.SHUFFLE_NONE);
+                    case MusicServiceConstants.REPEAT_ALL:
+                        mService.setRepeatMode(MusicServiceConstants.REPEAT_CURRENT);
+                        if (mService.getShuffleMode() != MusicServiceConstants.SHUFFLE_NONE) {
+                            mService.setShuffleMode(MusicServiceConstants.SHUFFLE_NONE);
                         }
                         break;
                     default:
-                        mService.setRepeatMode(Constants.REPEAT_NONE);
+                        mService.setRepeatMode(MusicServiceConstants.REPEAT_NONE);
                         break;
                 }
             }
@@ -337,17 +337,17 @@ public final class MusicUtils {
         try {
             if (mService != null) {
                 switch (mService.getShuffleMode()) {
-                    case Constants.SHUFFLE_NONE:
-                        mService.setShuffleMode(Constants.SHUFFLE_NORMAL);
-                        if (mService.getRepeatMode() == Constants.REPEAT_CURRENT) {
-                            mService.setRepeatMode(Constants.REPEAT_ALL);
+                    case MusicServiceConstants.SHUFFLE_NONE:
+                        mService.setShuffleMode(MusicServiceConstants.SHUFFLE_NORMAL);
+                        if (mService.getRepeatMode() == MusicServiceConstants.REPEAT_CURRENT) {
+                            mService.setRepeatMode(MusicServiceConstants.REPEAT_ALL);
                         }
                         break;
-                    case Constants.SHUFFLE_NORMAL:
-                        mService.setShuffleMode(Constants.SHUFFLE_NONE);
+                    case MusicServiceConstants.SHUFFLE_NORMAL:
+                        mService.setShuffleMode(MusicServiceConstants.SHUFFLE_NONE);
                         break;
-                    case Constants.SHUFFLE_AUTO:
-                        mService.setShuffleMode(Constants.SHUFFLE_NONE);
+                    case MusicServiceConstants.SHUFFLE_AUTO:
+                        mService.setShuffleMode(MusicServiceConstants.SHUFFLE_NONE);
                         break;
                     default:
                         break;
@@ -813,7 +813,7 @@ public final class MusicUtils {
         }
         try {
             if (forceShuffle) {
-                mService.setShuffleMode(Constants.SHUFFLE_NORMAL);
+                mService.setShuffleMode(MusicServiceConstants.SHUFFLE_NORMAL);
             }
             if (position < 0) {
                 position = 0;
@@ -833,7 +833,7 @@ public final class MusicUtils {
             return;
         }
         try {
-            mService.enqueue(list, Constants.NEXT, sourceId);
+            mService.enqueue(list, MusicServiceConstants.NEXT, sourceId);
         } catch (final RemoteException ignored) {
         }
     }
@@ -848,7 +848,7 @@ public final class MusicUtils {
             return;
         }
         try {
-            mService.setShuffleMode(Constants.SHUFFLE_NORMAL);
+            mService.setShuffleMode(MusicServiceConstants.SHUFFLE_NORMAL);
             final long mCurrentId = mService.getAudioId();
             final int mCurrentQueuePosition = getQueuePosition();
             if (mCurrentQueuePosition == 0
@@ -1134,7 +1134,7 @@ public final class MusicUtils {
             return;
         }
         try {
-            mService.enqueue(list, Constants.LAST, sourceId);
+            mService.enqueue(list, MusicServiceConstants.LAST, sourceId);
             final String message = makeLabel(context, R.plurals.num_trackstoqueue, list.length);
             Toast.makeText((Activity) context, message, Toast.LENGTH_SHORT).show();
         } catch (final RemoteException ignored) {

@@ -14,4 +14,11 @@
 
     <!--divider-->
     <color name="divider_color">#0DFFFFFF</color>
+    <!--ViewPagerIndicator-->
+    <color name="default_line_indicator_selected_color">#FF33B5E5</color>
+    <color name="default_line_indicator_unselected_color">#FFBBBBBB</color>
+
+    <!--Song Info-->
+    <color name="song_title_color">#DE000000</color>
+    <color name="song_subtitle_color">#8A000000</color>
 </resources>

@@ -10,29 +10,30 @@
  * KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.koma.music.data.local;
+package com.koma.music.play.playqueue;
 
-import com.koma.music.data.model.Album;
-import com.koma.music.data.model.Artist;
-import com.koma.music.data.model.Playlist;
+import com.koma.music.base.BasePresenter;
+import com.koma.music.base.BaseView;
 import com.koma.music.data.model.Song;
 
 import java.util.List;
 
-import rx.Observable;
-
 /**
- * Created by koma on 3/20/17.
+ * Created by koma on 4/28/17.
  */
 
-public interface MusicDataSource {
-    Observable<List<Song>> getAllSongs();
+public interface PlayQueueContract {
+    interface View extends BaseView<Presenter> {
+        boolean isActive();
 
-    Observable<List<Playlist>> getAllPlaylists();
+        void hideLoadingView();
 
-    Observable<List<Album>> getAllAlbums();
+        void showPlayQueueSongs(List<Song> songs);
+    }
 
-    Observable<List<Artist>> getAllArtists();
+    interface Presenter extends BasePresenter {
+        void loadPlayQueue();
 
-    Observable<List<Song>> getQueueSongs();
+        void onLoadPlayQueueFinished(List<Song> songs);
+    }
 }

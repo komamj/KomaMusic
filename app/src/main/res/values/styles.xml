@@ -17,34 +17,17 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="MusicPlayerTheme" parent="AppTheme.NoActionBar"></style>
-
-    <!-- The list item main text style/color -->
-    <style name="ListItemMainText">
-        <item name="android:textColor">@android:color/black</item>
-        <item name="android:textSize">@dimen/title_size</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:alpha">0.87</item>
-        <item name="android:ellipsize">end</item>
+    <style name="MusicPlayerTheme" parent="AppTheme.NoActionBar">
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="vpiLinePageIndicatorStyle">@style/CustomLinePageIndicator</item>
     </style>
 
-    <style name="ListItemMainText.Single" parent="ListItemMainText">
-        <item name="android:singleLine">true</item>
-        <item name="android:maxLines">1</item>
+    <style name="CustomLinePageIndicator">
+        <item name="strokeWidth">4dp</item>
+        <item name="lineWidth">30dp</item>
+        <item name="unselectedColor">#FF888888</item>
+        <item name="selectedColor">@color/colorAccent</item>
     </style>
-
-    <!-- The list item secondary text style/color -->
-    <style name="ListItemSecondaryText">
-        <item name="android:textColor">@android:color/black</item>
-        <item name="android:textSize">@dimen/subtitle_size</item>
-        <item name="android:alpha">0.54</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:ellipsize">end</item>
-    </style>
-
-    <style name="ListItemSecondaryText.Single" parent="ListItemSecondaryText">
-        <item name="android:singleLine">true</item>
-    </style>
-
-
 </resources>

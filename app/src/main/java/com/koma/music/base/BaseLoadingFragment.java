@@ -10,29 +10,30 @@
  * KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.koma.music.data.local;
+package com.koma.music.base;
 
-import com.koma.music.data.model.Album;
-import com.koma.music.data.model.Artist;
-import com.koma.music.data.model.Playlist;
-import com.koma.music.data.model.Song;
+import android.support.v7.widget.RecyclerView;
 
-import java.util.List;
+import com.koma.music.R;
+import com.koma.music.widget.LoadingView;
 
-import rx.Observable;
+import butterknife.BindView;
 
 /**
- * Created by koma on 3/20/17.
+ * Created by koma on 4/27/17.
  */
 
-public interface MusicDataSource {
-    Observable<List<Song>> getAllSongs();
+public abstract class BaseLoadingFragment extends BaseMusicStateFragment {
+    @BindView(R.id.recycler_view)
+    protected RecyclerView mRecyclerView;
+    @BindView(R.id.loding_view)
+    protected LoadingView mLoadingView;
 
-    Observable<List<Playlist>> getAllPlaylists();
+    protected void showEmptyView() {
 
-    Observable<List<Album>> getAllAlbums();
+    }
 
-    Observable<List<Artist>> getAllArtists();
-
-    Observable<List<Song>> getQueueSongs();
+    protected void hideLoadingView() {
+        mLoadingView.onLoadingFinished();
+    }
 }

@@ -18,42 +18,38 @@ import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v4.view.ViewPager;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.koma.music.R;
-import com.koma.music.base.BaseActivity;
-import com.koma.music.listener.MusicStateListener;
+import com.koma.music.base.BaseMusicStateFragment;
 import com.koma.music.util.LogUtils;
 import com.koma.music.util.MusicUtils;
-import com.koma.music.util.Utils;
+import com.koma.music.widget.viewpagerindicator.LinePageIndicator;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
  * Created by koma on 4/5/17.
  */
 
-public class MusicPlayerFragment extends Fragment implements MusicPlayerContract.View,
-        MusicStateListener, SeekBar.OnSeekBarChangeListener {
+public class MusicPlayerFragment extends BaseMusicStateFragment implements MusicPlayerContract.View,
+        SeekBar.OnSeekBarChangeListener {
     private static final String TAG = MusicPlayerFragment.class.getSimpleName();
+
+    @BindView(R.id.view_pager)
+    ViewPager mViewPager;
+
+    @BindView(R.id.indicator)
+    LinePageIndicator mIndicator;
 
     @BindView(R.id.tv_track_name)
     TextView mTrackName;
     @BindView(R.id.tv_artist_name)
     TextView mArtistName;
-    @BindView(R.id.iv_album)
-    protected ImageView mAlbum;
     @BindView(R.id.iv_pause)
     ImageView mPauseOrPlay;
 
@@ -97,6 +93,8 @@ public class MusicPlayerFragment extends Fragment implements MusicPlayerContract
 
     private Context mContext;
 
+    private MusicPlayerPagerAdapter mAdapter;
+
     @NonNull
     private MusicPlayerContract.Presenter mPresenter;
 
@@ -121,17 +119,10 @@ public class MusicPlayerFragment extends Fragment implements MusicPlayerContract
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_player, container, false);
-
-        ButterKnife.bind(this, view);
-
-        mSongProgress.setOnSeekBarChangeListener(this);
-
-        ((BaseActivity) getActivity()).setMusicStateListenerListener(this);
-
-        return view;
+    protected int getLayoutId() {
+        return R.layout.fragment_player;
     }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -146,12 +137,18 @@ public class MusicPlayerFragment extends Fragment implements MusicPlayerContract
     public void onDestroyView() {
         super.onDestroyView();
 
-        ((BaseActivity) getActivity()).removeMusicStateListenerListener(this);
-
         removeUpdate();
     }
 
     private void init() {
+        mSongProgress.setOnSeekBarChangeListener(this);
+
+        mAdapter = new MusicPlayerPagerAdapter(getChildFragmentManager());
+
+        mViewPager.setAdapter(mAdapter);
+
+        mIndicator.setViewPager(mViewPager);
+        mIndicator.setCurrentItem(1);
     }
 
     @Override
@@ -216,11 +213,6 @@ public class MusicPlayerFragment extends Fragment implements MusicPlayerContract
     @Override
     public void updateAlbumImage() {
         LogUtils.i(TAG, "updateAlbumImage");
-
-        Glide.with(this).load(Utils.getAlbumArtUri(
-                MusicUtils.getCurrentAlbumId()))
-                .placeholder(R.drawable.ic_album)
-                .into(mAlbum);
     }
 
     @Override

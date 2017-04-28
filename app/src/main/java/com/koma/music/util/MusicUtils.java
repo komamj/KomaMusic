@@ -28,9 +28,9 @@ import android.widget.Toast;
 
 import com.koma.music.R;
 import com.koma.music.data.model.MusicPlaybackTrack;
-import com.koma.music.service.MusicServiceConstants;
 import com.koma.music.service.IMusicService;
 import com.koma.music.service.MusicService;
+import com.koma.music.service.MusicServiceConstants;
 
 import java.io.File;
 import java.util.Arrays;
@@ -839,12 +839,10 @@ public final class MusicUtils {
     }
 
     /**
-     * @param context The {@link Context} to use.
+     * @param trackList The tracks
      */
-    public static void shuffleAll(final Context context) {
-        Cursor cursor = null;//SongLoader.makeSongCursor(context, null);
-        final long[] mTrackList = getSongListForCursor(cursor);
-        if (mTrackList.length == 0 || mService == null) {
+    public static void shuffleAll(final long[] trackList) {
+        if (trackList.length == 0 || mService == null) {
             return;
         }
         try {
@@ -852,17 +850,15 @@ public final class MusicUtils {
             final long mCurrentId = mService.getAudioId();
             final int mCurrentQueuePosition = getQueuePosition();
             if (mCurrentQueuePosition == 0
-                    && mCurrentId == mTrackList[0]) {
+                    && mCurrentId == trackList[0]) {
                 final long[] mPlaylist = getQueue();
-                if (Arrays.equals(mTrackList, mPlaylist)) {
+                if (Arrays.equals(trackList, mPlaylist)) {
                     mService.play();
                     return;
                 }
             }
-            mService.open(mTrackList, -1, -1);
+            mService.open(trackList, -1, -1);
             mService.play();
-            cursor.close();
-            cursor = null;
         } catch (final RemoteException ignored) {
         }
     }

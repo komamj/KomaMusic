@@ -64,4 +64,9 @@ public class MusicRepository implements MusicDataSource {
     public Observable<List<Artist>> getAllArtists() {
         return mLocalDataSource.getAllArtists();
     }
+
+    @Override
+    public Observable<List<Song>> getQueueSongs() {
+        return mLocalDataSource.getQueueSongs();
+    }
 }

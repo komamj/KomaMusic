@@ -10,62 +10,66 @@
  * KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.koma.music.artist;
+package com.koma.music.play.playqueue;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.view.View;
 
 import com.koma.music.R;
-import com.koma.music.base.BaseFragment;
 import com.koma.music.base.BaseLoadingFragment;
-import com.koma.music.data.model.Artist;
+import com.koma.music.data.local.MusicRepository;
+import com.koma.music.data.model.Song;
+import com.koma.music.song.SongsAdapter;
 import com.koma.music.util.LogUtils;
-import com.koma.music.widget.LoadingView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 
 /**
- * Created by koma on 3/21/17.
+ * Created by koma on 4/27/17.
  */
 
-public class ArtistsFragment extends BaseLoadingFragment implements ArtistsConstract.View {
-    private static final String TAG = ArtistsFragment.class.getSimpleName();
+public class PlayQueueFragment extends BaseLoadingFragment implements PlayQueueContract.View {
+    private static final String TAG = PlayQueueFragment.class.getSimpleName();
 
     @NonNull
-    private ArtistsConstract.Presenter mPresenter;
+    private PlayQueueContract.Presenter mPresenter;
 
-    private ArtistsAdapter mAdapter;
+    private SongsAdapter mAdapter;
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    protected int getLayoutId() {
+        return R.layout.fragment_base;
+    }
 
-        LogUtils.i(TAG, "onActivityCreated");
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        new PlayQueuePresenter(this, MusicRepository.getInstance());
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         init();
     }
 
     private void init() {
-        mAdapter = new ArtistsAdapter(mContext, new ArrayList<Artist>());
+        mRecyclerView.setHasFixedSize(true);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(mContext, 2);
-        layoutManager.setOrientation(GridLayoutManager.VERTICAL);
+        mAdapter = new SongsAdapter(mContext, new ArrayList<Song>());
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        LogUtils.i(TAG, "onStart");
     }
 
     @Override
@@ -85,27 +89,14 @@ public class ArtistsFragment extends BaseLoadingFragment implements ArtistsConst
 
         LogUtils.i(TAG, "onPause");
 
-
         if (mPresenter != null) {
             mPresenter.unSubscribe();
         }
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-
-        LogUtils.i(TAG, "onStop");
-    }
-
-    @Override
-    public void setPresenter(@NonNull ArtistsConstract.Presenter presenter) {
+    public void setPresenter(@NonNull PlayQueueContract.Presenter presenter) {
         mPresenter = presenter;
-    }
-
-    @Override
-    protected int getLayoutId() {
-        return R.layout.fragment_base;
     }
 
     @Override
@@ -114,39 +105,42 @@ public class ArtistsFragment extends BaseLoadingFragment implements ArtistsConst
     }
 
     @Override
-    public void showEmptyView() {
-        LogUtils.i(TAG, "showEmptyView");
-
-        super.showEmptyView();
-    }
-
-    @Override
     public void hideLoadingView() {
-        LogUtils.i(TAG, "hideLoadingView");
-
         super.hideLoadingView();
     }
 
     @Override
-    public void showArtists(List<Artist> artists) {
-        LogUtils.i(TAG, "showArtists");
+    public void showPlayQueueSongs(List<Song> songs) {
+        LogUtils.i(TAG, "showPlayQueue size : " + songs.size());
 
-        mAdapter.replaceData(artists);
+        mAdapter.replaceData(songs);
     }
 
     @Override
     public void refreshData() {
+        LogUtils.i(TAG, "refreshData");
 
+        if (mPresenter != null) {
+            mPresenter.loadPlayQueue();
+        }
     }
 
     @Override
     public void onPlaylistChanged() {
+        LogUtils.i(TAG, "onPlaylistChanged");
 
+        if (mPresenter != null) {
+            mPresenter.loadPlayQueue();
+        }
     }
 
     @Override
     public void onMetaChanged() {
+        LogUtils.i(TAG, "onMetaChanged");
 
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override

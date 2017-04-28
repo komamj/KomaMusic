@@ -29,7 +29,7 @@ import com.koma.music.album.AlbumsFragment;
 import com.koma.music.album.AlbumsPresenter;
 import com.koma.music.artist.ArtistsFragment;
 import com.koma.music.artist.ArtistsPresenter;
-import com.koma.music.base.BaseActivity;
+import com.koma.music.base.BaseMusicStateActivity;
 import com.koma.music.data.local.MusicRepository;
 import com.koma.music.play.quickcontrol.QuickControlFragment;
 import com.koma.music.playlist.PlaylistsFragment;
@@ -43,7 +43,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import butterknife.BindArray;
 import butterknife.BindView;
 
-public class MainActivity extends BaseActivity
+public class MainActivity extends BaseMusicStateActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -145,7 +145,7 @@ public class MainActivity extends BaseActivity
 
     private Runnable mPlayHeaderRunnable;
 
-    public void refreshPanelHeight() {
+    private void refreshPanelHeight() {
         if (mPlayHeaderRunnable == null) {
             mPlayHeaderRunnable = new Runnable() {
                 @Override
@@ -226,5 +226,25 @@ public class MainActivity extends BaseActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void refreshData() {
+
+    }
+
+    @Override
+    public void onPlaylistChanged() {
+
+    }
+
+    @Override
+    public void onMetaChanged() {
+        refreshPanelHeight();
+    }
+
+    @Override
+    public void onPlayStateChanged() {
+
     }
 }

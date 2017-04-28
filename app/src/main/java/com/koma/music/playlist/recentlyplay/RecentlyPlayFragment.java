@@ -16,13 +16,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.koma.music.base.BaseFragment;
+import com.koma.music.base.BaseLoadingFragment;
 import com.koma.music.util.LogUtils;
 
 /**
  * Created by koma on 4/20/17.
  */
 
-public class RecentlyPlayFragment extends BaseFragment implements RecentlyPlayContract.View {
+public class RecentlyPlayFragment extends BaseLoadingFragment implements RecentlyPlayContract.View {
     private static final String TAG = RecentlyPlayFragment.class.getSimpleName();
 
     @NonNull
@@ -65,5 +66,25 @@ public class RecentlyPlayFragment extends BaseFragment implements RecentlyPlayCo
     @Override
     public void setPresenter(@NonNull RecentlyPlayContract.Presenter presenter) {
         mPresenter = presenter;
+    }
+
+    @Override
+    public void refreshData() {
+
+    }
+
+    @Override
+    public void onPlaylistChanged() {
+
+    }
+
+    @Override
+    public void onMetaChanged() {
+
+    }
+
+    @Override
+    public void onPlayStateChanged() {
+
     }
 }

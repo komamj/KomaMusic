@@ -33,9 +33,6 @@ import butterknife.ButterKnife;
 public abstract class BaseFragment extends Fragment {
     protected Context mContext;
 
-    @BindView(R.id.recycler_view)
-    protected RecyclerView mRecyclerView;
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -57,14 +54,4 @@ public abstract class BaseFragment extends Fragment {
     }
 
     protected abstract int getLayoutId();
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
 }

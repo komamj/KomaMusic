@@ -5,24 +5,19 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 
 import com.koma.music.R;
-import com.koma.music.base.BaseFragment;
+import com.koma.music.base.BaseLoadingFragment;
 import com.koma.music.data.model.Album;
 import com.koma.music.util.LogUtils;
-import com.koma.music.widget.LoadingView;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.BindView;
 
 /**
  * Created by koma on 3/21/17.
  */
 
-public class AlbumsFragment extends BaseFragment implements AlbumsConstract.View {
+public class AlbumsFragment extends BaseLoadingFragment implements AlbumsConstract.View {
     private static final String TAG = AlbumsFragment.class.getSimpleName();
-    @BindView(R.id.loding_view)
-    protected LoadingView mLoadingView;
 
     @NonNull
     private AlbumsConstract.Presenter mPresenter;
@@ -99,18 +94,40 @@ public class AlbumsFragment extends BaseFragment implements AlbumsConstract.View
     @Override
     public void showEmptyView() {
         LogUtils.i(TAG, "showEmptyView");
+
+        super.showEmptyView();
     }
 
     @Override
     public void hideLoadingView() {
         LogUtils.i(TAG, "hideLoadingView");
 
-        mLoadingView.onLoadingFinished();
+        super.hideLoadingView();
     }
 
     @Override
     public void showAlbums(List<Album> albums) {
         LogUtils.i(TAG, "showAlbums");
         mAdapter.replaceData(albums);
+    }
+
+    @Override
+    public void refreshData() {
+
+    }
+
+    @Override
+    public void onPlaylistChanged() {
+
+    }
+
+    @Override
+    public void onMetaChanged() {
+
+    }
+
+    @Override
+    public void onPlayStateChanged() {
+
     }
 }

@@ -32,24 +32,22 @@
             android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:alpha="0.87"
             android:ellipsize="end"
             android:gravity="start"
             android:maxLines="1"
             android:text="海阔天空"
-            android:textColor="@android:color/black"
+            android:textColor="@color/song_title_color"
             android:textSize="@dimen/title_size" />
 
         <TextView
             android:id="@+id/tv_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:alpha="0.54"
             android:ellipsize="end"
             android:gravity="start"
             android:maxLines="1"
             android:text="黄家驹"
-            android:textColor="@android:color/black"
+            android:textColor="@color/song_subtitle_color"
             android:textSize="@dimen/subtitle_size" />
     </LinearLayout>
 

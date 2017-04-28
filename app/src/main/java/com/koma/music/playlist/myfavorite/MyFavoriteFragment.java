@@ -4,13 +4,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.koma.music.base.BaseFragment;
+import com.koma.music.base.BaseLoadingFragment;
 import com.koma.music.util.LogUtils;
 
 /**
  * Created by koma on 4/20/17.
  */
 
-public class MyFavoriteFragment extends BaseFragment implements MyFavoriteContract.View {
+public class MyFavoriteFragment extends BaseLoadingFragment implements MyFavoriteContract.View {
     private static final String TAG = MyFavoriteFragment.class.getSimpleName();
 
     @NonNull
@@ -53,5 +54,25 @@ public class MyFavoriteFragment extends BaseFragment implements MyFavoriteContra
     @Override
     public void setPresenter(@NonNull MyFavoriteContract.Presenter presenter) {
         mPresenter = presenter;
+    }
+
+    @Override
+    public void refreshData() {
+
+    }
+
+    @Override
+    public void onPlaylistChanged() {
+
+    }
+
+    @Override
+    public void onMetaChanged() {
+
+    }
+
+    @Override
+    public void onPlayStateChanged() {
+
     }
 }

@@ -12,21 +12,19 @@
  */
 package com.koma.music.play.quickcontrol;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
+import android.util.Pair;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.koma.music.R;
-import com.koma.music.base.BaseActivity;
-import com.koma.music.listener.MusicStateListener;
+import com.koma.music.base.BaseMusicStateFragment;
 import com.koma.music.play.MusicPlayerActivity;
 import com.koma.music.util.LogUtils;
 import com.koma.music.util.MusicUtils;
@@ -34,14 +32,13 @@ import com.koma.music.util.Utils;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
  * Created by koma on 4/20/17.
  */
 
-public class QuickControlFragment extends Fragment implements MusicStateListener,
+public class QuickControlFragment extends BaseMusicStateFragment implements
         SlidingUpPanelLayout.PanelSlideListener {
     private static final String TAG = QuickControlFragment.class.getSimpleName();
 
@@ -50,7 +47,7 @@ public class QuickControlFragment extends Fragment implements MusicStateListener
     @BindView(R.id.tv_artist_name)
     TextView mArtistName;
     @BindView(R.id.iv_album)
-    protected ImageView mAlbum;
+    ImageView mAlbum;
     @BindView(R.id.audio_header)
     LinearLayout mHeaderLayout;
     @BindView(R.id.iv_pause)
@@ -71,14 +68,8 @@ public class QuickControlFragment extends Fragment implements MusicStateListener
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.audio_player_header, container, false);
-
-        ButterKnife.bind(this, view);
-
-        ((BaseActivity) getActivity()).setMusicStateListenerListener(this);
-
-        return view;
+    protected int getLayoutId() {
+        return R.layout.audio_player_header;
     }
 
     @Override
@@ -96,9 +87,9 @@ public class QuickControlFragment extends Fragment implements MusicStateListener
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, MusicPlayerActivity.class);
 
-               /*startActivity(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(
-                MainActivity.this, Pair.create((View) mAlbum, "share_album")).toBundle());*/
-                startActivity(intent);
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(
+                        getActivity(), Pair.create((View) mTrackName, "share_track_name"),
+                        Pair.create((View) mArtistName, "share_artist_name")).toBundle());
             }
         });
     }
@@ -115,8 +106,6 @@ public class QuickControlFragment extends Fragment implements MusicStateListener
         super.onDestroyView();
 
         LogUtils.i(TAG, "onDestroyView");
-
-        ((BaseActivity) getActivity()).removeMusicStateListenerListener(this);
     }
 
     @Override
@@ -131,6 +120,8 @@ public class QuickControlFragment extends Fragment implements MusicStateListener
 
     @Override
     public void onMetaChanged() {
+        LogUtils.i(TAG, "onMetaChanged");
+
         Glide.with(this).load(Utils.getAlbumArtUri(
                 MusicUtils.getCurrentAlbumId()))
                 .placeholder(R.drawable.ic_album)
@@ -153,7 +144,7 @@ public class QuickControlFragment extends Fragment implements MusicStateListener
 
     @Override
     public void onPanelSlide(View panel, float slideOffset) {
-        mHeaderLayout.setAlpha(1 - slideOffset);
+        LogUtils.i(TAG, "onPanelSlide slideOffeset :" + slideOffset);
     }
 
     @Override

@@ -18,6 +18,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
 import com.koma.music.base.BaseFragment;
+import com.koma.music.util.LogUtils;
 import com.koma.music.util.Utils;
 
 import java.util.ArrayList;
@@ -105,6 +106,8 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         super.destroyItem(container, position, object);
+
+        LogUtils.i("MainPagerAdapter", "destroyItem");
     }
 
     /**

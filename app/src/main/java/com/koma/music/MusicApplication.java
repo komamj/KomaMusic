@@ -18,6 +18,8 @@ import android.os.StrictMode;
 
 import com.bumptech.glide.Glide;
 import com.koma.music.util.LogUtils;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.squareup.leakcanary.LeakCanary;
 
 /**
@@ -38,6 +40,9 @@ public class MusicApplication extends Application {
         enableStrictMode();
 
         sContext = getApplicationContext();
+
+        ImageLoaderConfiguration localImageLoaderConfiguration = new ImageLoaderConfiguration.Builder(this).build();
+        ImageLoader.getInstance().init(localImageLoaderConfiguration);
 
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.

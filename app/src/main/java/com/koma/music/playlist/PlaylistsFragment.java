@@ -19,10 +19,9 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.koma.music.R;
-import com.koma.music.base.BaseFragment;
+import com.koma.music.base.BaseLoadingFragment;
 import com.koma.music.data.model.Playlist;
 import com.koma.music.util.LogUtils;
-import com.koma.music.widget.LoadingView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,11 +33,8 @@ import butterknife.OnClick;
  * Created by koma on 3/21/17.
  */
 
-public class PlaylistsFragment extends BaseFragment implements PlaylistsConstract.View {
+public class PlaylistsFragment extends BaseLoadingFragment implements PlaylistsConstract.View {
     private static final String TAG = PlaylistsFragment.class.getSimpleName();
-
-    @BindView(R.id.loding_view)
-    protected LoadingView mLoadingView;
 
     @BindView(R.id.iv_recently_played)
     ImageView mRecentlyPlayed;
@@ -145,7 +141,7 @@ public class PlaylistsFragment extends BaseFragment implements PlaylistsConstrac
     public void hideLoadingView() {
         LogUtils.i(TAG, "showLoadingView");
 
-        mLoadingView.onLoadingFinished();
+        super.hideLoadingView();
     }
 
     @Override
@@ -153,6 +149,25 @@ public class PlaylistsFragment extends BaseFragment implements PlaylistsConstrac
         LogUtils.i(TAG, "showPlaylist");
 
         mAdapter.replaceData(Playlists);
-        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void refreshData() {
+
+    }
+
+    @Override
+    public void onPlaylistChanged() {
+
+    }
+
+    @Override
+    public void onMetaChanged() {
+
+    }
+
+    @Override
+    public void onPlayStateChanged() {
+
     }
 }

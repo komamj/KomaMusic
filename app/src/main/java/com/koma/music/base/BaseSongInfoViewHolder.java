@@ -26,7 +26,7 @@ import butterknife.BindView;
  */
 
 public abstract class BaseSongInfoViewHolder extends BaseViewHolder implements View.OnClickListener {
-    protected static final int DOUBLE_CLICK_TIME = 1000;
+    protected static final int DOUBLE_CLICK_TIME = 600;
     protected static final int MESSAGE_ITEM_CLICK = 0x00;
     @BindView(R.id.iv_album)
     public ImageView mAlbum;

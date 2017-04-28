@@ -18,25 +18,19 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 
 import com.koma.music.R;
-import com.koma.music.base.BaseFragment;
+import com.koma.music.base.BaseLoadingFragment;
 import com.koma.music.data.model.Song;
 import com.koma.music.util.LogUtils;
-import com.koma.music.widget.LoadingView;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.BindView;
 
 /**
  * Created by koma on 3/20/17.
  */
 
-public class SongsFragment extends BaseFragment implements SongsContract.View {
+public class SongsFragment extends BaseLoadingFragment implements SongsContract.View {
     private static final String TAG = SongsFragment.class.getSimpleName();
-
-    @BindView(R.id.loding_view)
-    protected LoadingView mLoadingView;
 
     @NonNull
     private SongsContract.Presenter mPresenter;
@@ -115,13 +109,15 @@ public class SongsFragment extends BaseFragment implements SongsContract.View {
     @Override
     public void showEmptyView() {
         LogUtils.i(TAG, "showEmptyView");
+
+        super.showEmptyView();
     }
 
     @Override
     public void hideLoadingView() {
         LogUtils.i(TAG, "showLoadingView");
 
-        mLoadingView.onLoadingFinished();
+        super.hideLoadingView();
     }
 
     @Override
@@ -129,6 +125,33 @@ public class SongsFragment extends BaseFragment implements SongsContract.View {
         LogUtils.i(TAG, "showSongs");
 
         mAdapter.replaceData(songs);
-        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void refreshData() {
+        LogUtils.i(TAG, "refreshData");
+
+        if (mPresenter != null) {
+            mPresenter.loadSongs();
+        }
+    }
+
+    @Override
+    public void onPlaylistChanged() {
+
+    }
+
+    @Override
+    public void onMetaChanged() {
+        LogUtils.i(TAG, "onMetaChanged");
+
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onPlayStateChanged() {
+
     }
 }

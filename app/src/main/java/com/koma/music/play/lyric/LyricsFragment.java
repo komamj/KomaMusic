@@ -10,29 +10,17 @@
  * KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.koma.music.data.local;
+package com.koma.music.play.lyric;
 
-import com.koma.music.data.model.Album;
-import com.koma.music.data.model.Artist;
-import com.koma.music.data.model.Playlist;
-import com.koma.music.data.model.Song;
-
-import java.util.List;
-
-import rx.Observable;
+import com.koma.music.base.BaseFragment;
 
 /**
- * Created by koma on 3/20/17.
+ * Created by koma on 4/27/17.
  */
 
-public interface MusicDataSource {
-    Observable<List<Song>> getAllSongs();
-
-    Observable<List<Playlist>> getAllPlaylists();
-
-    Observable<List<Album>> getAllAlbums();
-
-    Observable<List<Artist>> getAllArtists();
-
-    Observable<List<Song>> getQueueSongs();
+public class LyricsFragment extends BaseFragment {
+    @Override
+    protected int getLayoutId() {
+        return 0;
+    }
 }

@@ -26,12 +26,12 @@ import com.koma.music.R;
 import com.koma.music.base.BaseSongInfoViewHolder;
 import com.koma.music.base.BaseViewHolder;
 import com.koma.music.data.model.Song;
-import com.koma.music.util.LogUtils;
 import com.koma.music.util.MusicUtils;
 import com.koma.music.util.Utils;
 
 import java.util.List;
 
+import butterknife.BindColor;
 import butterknife.OnClick;
 
 /**
@@ -92,6 +92,12 @@ public class SongsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             ((SongsViewHolder) holder).mTitle.setText(mData.get(position - 1).mSongName);
 
             ((SongsViewHolder) holder).mInfo.setText(mData.get(position - 1).mArtistName);
+
+            if (MusicUtils.getCurrentAudioId() == mData.get(position - 1).mSongId) {
+                ((SongsViewHolder) holder).mTitle.setTextColor(((SongsViewHolder) holder).mPlayingColor);
+            } else {
+                ((SongsViewHolder) holder).mTitle.setTextColor(((SongsViewHolder) holder).mNormalColor);
+            }
         }
     }
 
@@ -122,22 +128,55 @@ public class SongsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         return ret;
     }
 
-    static class SongsHeaderViewHolder extends BaseViewHolder implements View.OnClickListener {
+    public class SongsHeaderViewHolder extends BaseViewHolder implements View.OnClickListener {
+        private static final int PLAY_ALL_MESSAGE = 0x00;
+        private Handler mHandler;
+
         public SongsHeaderViewHolder(View view) {
             super(view);
+
+            itemView.setOnClickListener(this);
+
+            mHandler = new Handler(Looper.getMainLooper()) {
+                @Override
+                public void handleMessage(Message msg) {
+                    switch (msg.what) {
+                        case PLAY_ALL_MESSAGE:
+                            final long[] list = getSongIds();
+
+                            if (list != null) {
+                                MusicUtils.shuffleAll(list);
+                            }
+
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            };
         }
 
         @Override
         public void onClick(View view) {
+            Message message = mHandler.obtainMessage(PLAY_ALL_MESSAGE);
 
+            if (mHandler.hasMessages(PLAY_ALL_MESSAGE)) {
+                mHandler.removeMessages(PLAY_ALL_MESSAGE);
+            }
+
+            mHandler.sendMessageDelayed(message, 600);
         }
     }
 
     public class SongsViewHolder extends BaseSongInfoViewHolder {
+        @BindColor(R.color.colorAccent)
+        int mPlayingColor;
+        @BindColor(R.color.song_title_color)
+        int mNormalColor;
+
         @OnClick(R.id.iv_more)
         void doMoreAction(View view) {
             int position = (int) view.getTag();
-            LogUtils.i(TAG, "position : " + position);
         }
 
         SongsViewHolder(View view) {
@@ -149,7 +188,7 @@ public class SongsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                     switch (msg.what) {
                         case MESSAGE_ITEM_CLICK:
                             final long[] list = getSongIds();
-                            LogUtils.i(TAG, "myHandler list size : " + list.length + "msg : " + msg.arg1);
+
                             if (list != null) {
                                 MusicUtils.playAll(list, msg.arg1, -1, false);
                             }

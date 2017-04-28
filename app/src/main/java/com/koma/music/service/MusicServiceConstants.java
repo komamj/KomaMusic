@@ -22,43 +22,43 @@ public class MusicServiceConstants {
     /**
      * Indicates that the music has paused or resumed
      */
-    public static final String PLAYSTATE_CHANGED = "com.cyanogenmod.eleven.playstatechanged";
+    public static final String PLAYSTATE_CHANGED = "com.koma.music.playstatechanged";
 
     /**
      * Indicates that music playback position within
      * a title was changed
      */
-    public static final String POSITION_CHANGED = "com.cyanogenmod.eleven.positionchanged";
+    public static final String POSITION_CHANGED = "com.koma.music.positionchanged";
 
     /**
      * Indicates the meta data has changed in some way, like a track change
      */
-    public static final String META_CHANGED = "com.cyanogenmod.eleven.metachanged";
+    public static final String META_CHANGED = "com.koma.music.metachanged";
 
     /**
      * Indicates the queue has been updated
      */
-    public static final String QUEUE_CHANGED = "com.cyanogenmod.eleven.queuechanged";
+    public static final String QUEUE_CHANGED = "com.koma.music.queuechanged";
 
     /**
      * Indicates the queue has been updated
      */
-    public static final String PLAYLIST_CHANGED = "com.cyanogenmod.eleven.playlistchanged";
+    public static final String PLAYLIST_CHANGED = "com.koma.music.playlistchanged";
 
     /**
      * Indicates the repeat mode changed
      */
-    public static final String REPEATMODE_CHANGED = "com.cyanogenmod.eleven.repeatmodechanged";
+    public static final String REPEATMODE_CHANGED = "com.koma.music.repeatmodechanged";
 
     /**
      * Indicates the shuffle mode changed
      */
-    public static final String SHUFFLEMODE_CHANGED = "com.cyanogenmod.eleven.shufflemodechanged";
+    public static final String SHUFFLEMODE_CHANGED = "com.koma.music.shufflemodechanged";
 
     /**
      * Indicates the track fails to play
      */
-    public static final String TRACK_ERROR = "com.cyanogenmod.eleven.trackerror";
+    public static final String TRACK_ERROR = "com.koma.music.trackerror";
     /**
      * Name of the track that was unable to play
      */
@@ -74,47 +74,47 @@ public class MusicServiceConstants {
      * Called to indicate a general service commmand. Used in
      * {@link MediaButtonIntentReceiver}
      */
-    public static final String SERVICECMD = "com.cyanogenmod.eleven.musicservicecommand";
+    public static final String SERVICECMD = "com.koma.music.musicservicecommand";
 
     /**
      * Called to go toggle between pausing and playing the music
      */
-    public static final String TOGGLEPAUSE_ACTION = "com.cyanogenmod.eleven.togglepause";
+    public static final String TOGGLEPAUSE_ACTION = "com.koma.music.togglepause";
 
     /**
      * Called to go to pause the playback
      */
-    public static final String PAUSE_ACTION = "com.cyanogenmod.eleven.pause";
+    public static final String PAUSE_ACTION = "com.koma.music.pause";
 
     /**
      * Called to go to stop the playback
      */
-    public static final String STOP_ACTION = "com.cyanogenmod.eleven.stop";
+    public static final String STOP_ACTION = "com.koma.music.stop";
 
     /**
      * Called to go to the previous track or the beginning of the track if partway through the track
      */
-    public static final String PREVIOUS_ACTION = "com.cyanogenmod.eleven.previous";
+    public static final String PREVIOUS_ACTION = "com.koma.music.previous";
 
     /**
      * Called to go to the previous track regardless of how far in the current track the playback is
      */
-    public static final String PREVIOUS_FORCE_ACTION = "com.cyanogenmod.eleven.previous.force";
+    public static final String PREVIOUS_FORCE_ACTION = "com.koma.music.previous.force";
 
     /**
      * Called to go to the next track
      */
-    public static final String NEXT_ACTION = "com.cyanogenmod.eleven.next";
+    public static final String NEXT_ACTION = "com.koma.music.next";
 
     /**
      * Called to change the repeat mode
      */
-    public static final String REPEAT_ACTION = "com.cyanogenmod.eleven.repeat";
+    public static final String REPEAT_ACTION = "com.koma.music.repeat";
 
     /**
      * Called to change the shuffle mode
      */
-    public static final String SHUFFLE_ACTION = "com.cyanogenmod.eleven.shuffle";
+    public static final String SHUFFLE_ACTION = "com.koma.music.shuffle";
 
     public static final String FROM_MEDIA_BUTTON = "frommediabutton";
 
@@ -124,22 +124,22 @@ public class MusicServiceConstants {
      * Used to easily notify a list that it should refresh. i.e. A playlist
      * changes
      */
-    public static final String REFRESH = "com.cyanogenmod.eleven.refresh";
+    public static final String REFRESH = "com.koma.music.refresh";
 
     /**
      * Used by the alarm intent to shutdown the service after being idle
      */
-    public static final String SHUTDOWN = "com.cyanogenmod.eleven.shutdown";
+    public static final String SHUTDOWN = "com.koma.music.shutdown";
 
     /**
      * Called to notify of a timed text
      */
-    public static final String NEW_LYRICS = "com.cyanogenmod.eleven.lyrics";
+    public static final String NEW_LYRICS = "com.koma.music.lyrics";
 
     /**
      * Called to update the remote control client
      */
-    public static final String UPDATE_LOCKSCREEN = "com.cyanogenmod.eleven.updatelockscreen";
+    public static final String UPDATE_LOCKSCREEN = "com.koma.music.updatelockscreen";
 
     public static final String CMDNAME = "command";
 

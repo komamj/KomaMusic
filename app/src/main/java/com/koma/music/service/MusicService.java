@@ -30,6 +30,7 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.audiofx.AudioEffect;
@@ -48,6 +49,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.graphics.Palette;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 
@@ -56,6 +58,8 @@ import com.koma.music.data.local.db.MusicPlaybackState;
 import com.koma.music.data.model.MusicPlaybackTrack;
 import com.koma.music.util.LogUtils;
 import com.koma.music.util.PreferenceUtils;
+import com.koma.music.util.Utils;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -1328,27 +1332,34 @@ public class MusicService extends Service {
         int playButtonTitleResId = isPlaying
                 ? R.string.notification_pause : R.string.notification_play;
 
+        Notification.MediaStyle style = new Notification.MediaStyle()
+                .setMediaSession(mSession.getSessionToken())
+                .setShowActionsInCompactView(0, 1, 2);
+
         Intent nowPlayingIntent = new Intent("com.koma.music.notification.AUDIO_PLAYER")
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent clickIntent = PendingIntent.getActivity(this, 0, nowPlayingIntent, 0);
 
-        Bitmap artwork = null;
-        //artwork = ImageLoader.getArtworkByAlbumId(this, getAlbumId());
+        Bitmap artwork;
+        artwork = ImageLoader.getInstance().loadImageSync(Utils.getAlbumArtUri(getAlbumId()).toString());
 
         if (artwork == null) {
-            //artwork = ImageLoader.getInstance().loadImageSync("drawable://" + R.drawable.icon_album_default);
+            artwork = ImageLoader.getInstance().loadImageSync("drawable://" + R.drawable.ic_album);
         }
+
         if (mNotificationPostTime == 0) {
             mNotificationPostTime = System.currentTimeMillis();
         }
+
         Notification.Builder builder = new Notification.Builder(this)
-                .setSmallIcon(R.drawable.ic_album)
-                //.setLargeIcon(artwork)
+                .setSmallIcon(R.drawable.ic_notification)
+                .setLargeIcon(artwork)
                 .setContentIntent(clickIntent)
                 .setContentTitle(getTrackName())
                 .setContentText(text)
                 .setWhen(mNotificationPostTime)
                 .setShowWhen(false)
+                .setStyle(style)
                 .setVisibility(Notification.VISIBILITY_PUBLIC)
                 .addAction(R.drawable.ic_previous_notification,
                         getString(R.string.notification_prev),
@@ -1359,14 +1370,14 @@ public class MusicService extends Service {
                         getString(R.string.notification_next),
                         retrievePlaybackAction(MusicServiceConstants.NEXT_ACTION));
 
-       /* builder.setColor(Palette.from(artwork).generate().getMutedColor(
-                getResources().getColor(R.color.colorPrimary)));*/
+        if (artwork != null) {
+           // builder.setColor(Palette.from(artwork).generate().getVibrantColor(Color.parseColor("#403f4d")));
+
+            builder.setColor(Palette.from(artwork).generate().getMutedColor(
+                    getResources().getColor(R.color.colorPrimary)));
+        }
         builder.setVisibility(Notification.VISIBILITY_PUBLIC);
-        Notification.MediaStyle style =
-                new Notification.MediaStyle()
-                        .setMediaSession(mSession.getSessionToken())
-                        .setShowActionsInCompactView(0, 1, 2, 3);
-        builder.setStyle(style);
+
         return builder.build();
     }
 

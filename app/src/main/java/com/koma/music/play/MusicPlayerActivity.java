@@ -15,7 +15,7 @@ package com.koma.music.play;
 import android.os.Bundle;
 
 import com.koma.music.R;
-import com.koma.music.base.BaseActivity;
+import com.koma.music.base.BaseMusicStateActivity;
 import com.koma.music.data.local.MusicRepository;
 import com.koma.music.util.LogUtils;
 
@@ -23,7 +23,7 @@ import com.koma.music.util.LogUtils;
  * Created by koma on 3/20/17.
  */
 
-public class MusicPlayerActivity extends BaseActivity {
+public class MusicPlayerActivity extends BaseMusicStateActivity {
     private static final String TAG = MusicPlayerActivity.class.getSimpleName();
 
     @Override
@@ -67,5 +67,25 @@ public class MusicPlayerActivity extends BaseActivity {
     @Override
     public int getLayoutId() {
         return R.layout.activity_music_player;
+    }
+
+    @Override
+    public void refreshData() {
+
+    }
+
+    @Override
+    public void onPlaylistChanged() {
+
+    }
+
+    @Override
+    public void onMetaChanged() {
+
+    }
+
+    @Override
+    public void onPlayStateChanged() {
+
     }
 }

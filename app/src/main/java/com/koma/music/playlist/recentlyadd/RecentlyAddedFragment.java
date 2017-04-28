@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.koma.music.base.BaseFragment;
+import com.koma.music.base.BaseLoadingFragment;
 import com.koma.music.playlist.myfavorite.MyFavoriteContract;
 import com.koma.music.util.LogUtils;
 
@@ -23,7 +24,7 @@ import com.koma.music.util.LogUtils;
  * Created by koma on 4/20/17.
  */
 
-public class RecentlyAddedFragment extends BaseFragment implements RecentlyAddedContract.View {
+public class RecentlyAddedFragment extends BaseLoadingFragment implements RecentlyAddedContract.View {
     private static final String TAG = RecentlyAddedFragment.class.getSimpleName();
 
     @NonNull
@@ -66,5 +67,25 @@ public class RecentlyAddedFragment extends BaseFragment implements RecentlyAdded
     @Override
     public void setPresenter(@NonNull MyFavoriteContract.Presenter presenter) {
         mPresenter = presenter;
+    }
+
+    @Override
+    public void refreshData() {
+
+    }
+
+    @Override
+    public void onPlaylistChanged() {
+
+    }
+
+    @Override
+    public void onMetaChanged() {
+
+    }
+
+    @Override
+    public void onPlayStateChanged() {
+
     }
 }

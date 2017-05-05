@@ -12,8 +12,10 @@
  */
 package com.koma.music.artist;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,10 +27,12 @@ import com.koma.music.R;
 import com.koma.music.base.BaseViewHolder;
 import com.koma.music.data.model.Artist;
 import com.koma.music.util.MusicUtils;
+import com.koma.music.util.NavigationUtils;
 import com.koma.music.util.Utils;
 
 import java.util.List;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -75,6 +79,8 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
         String songNumber = Utils.makeLabel(mContext,
                 R.plurals.num_songs, mData.get(position).mSongNumber);
         holder.mInfo.setText(MusicUtils.makeCombinedString(mContext, albumNumber, songNumber));
+
+        holder.mAlbum.setTransitionName(holder.mTransitionName + position);
     }
 
     @Override
@@ -83,6 +89,8 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
     }
 
     public class ArtistsViewHolder extends BaseViewHolder implements View.OnClickListener {
+        @BindString(R.string.transition_album)
+        String mTransitionName;
         @BindView(R.id.iv_album)
         ImageView mAlbum;
         @BindView(R.id.tv_item_title)
@@ -105,6 +113,13 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
         @Override
         public void onClick(View view) {
             int position = (int) view.getTag();
+
+            long artistId = mData.get(position).mArtistId;
+
+            String artistName = mData.get(position).mArtistName;
+
+            NavigationUtils.navigateToArtist((Activity) mContext, artistId, artistName,
+                    new Pair<View, String>(mAlbum, mTransitionName + position));
         }
     }
 }

@@ -40,4 +40,8 @@ public class Constants {
     public static final String TRANSITION_NAME = "transition_name";
     public static final String ALBUM_ID = "album_id";
     public static final String ALBUM_NAME = "album_name";
+
+    //ArtistDetail
+    public static final String ARTIST_ID = "artist_id";
+    public static final String ARTIST_NAME = "artist_name";
 }

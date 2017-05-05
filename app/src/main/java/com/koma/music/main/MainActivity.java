@@ -13,62 +13,54 @@
 package com.koma.music.main;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.koma.music.R;
-import com.koma.music.album.AlbumsFragment;
-import com.koma.music.album.AlbumsPresenter;
-import com.koma.music.artist.ArtistsFragment;
-import com.koma.music.artist.ArtistsPresenter;
 import com.koma.music.base.BaseMusicStateActivity;
-import com.koma.music.data.local.MusicRepository;
 import com.koma.music.play.quickcontrol.QuickControlFragment;
-import com.koma.music.playlist.PlaylistsFragment;
-import com.koma.music.playlist.PlaylistsPresenter;
-import com.koma.music.song.SongsFragment;
-import com.koma.music.song.SongsPresenter;
+import com.koma.music.play.quickcontrol.QuickControlPresenter;
 import com.koma.music.util.MusicUtils;
 import com.koma.music.util.Utils;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import butterknife.BindArray;
+import butterknife.BindString;
 import butterknife.BindView;
 
 public class MainActivity extends BaseMusicStateActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private static final int PAGE_LIMIT = 3;
-
-    @BindView(R.id.sliding_layout)
-    SlidingUpPanelLayout mPanelLayout;
+    @BindString(R.string.unknown)
+    String mDefaultName;
+    ImageView mNavAlbum;
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
-    @BindView(R.id.tab_layout)
-    TabLayout mTabLayout;
-    @BindView(R.id.viewPager)
-    ViewPager mViewPager;
 
+    private Handler mHandler;
 
-    @BindArray(R.array.tab_title)
-    String[] mTitles;
-
-    private MainPagerAdapter mPagerAdapter;
-
-    private float mHeaderHeight;
+    private Runnable mNavigateMusicLibrary = new Runnable() {
+        public void run() {
+            mNavigationView.getMenu().findItem(R.id.nav_library).setChecked(true);
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+            if (fragment == null) {
+                fragment = new MainFragment();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, fragment).commit();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,91 +69,39 @@ public class MainActivity extends BaseMusicStateActivity
         init();
     }
 
+    public DrawerLayout getDrawerLayout() {
+        return mDrawerLayout;
+    }
+
     private void init() {
-        setSupportActionBar(mToolbar);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mDrawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
+        mHandler = new Handler(Looper.getMainLooper());
 
         mNavigationView.setNavigationItemSelectedListener(this);
 
-        mHeaderHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 55,
-                getResources().getDisplayMetrics());
+        View navHeadView = mNavigationView.inflateHeaderView(R.layout.nav_header_main);
+        mNavAlbum = (ImageView) navHeadView.findViewById(R.id.iv_nav_album);
 
-        mPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(), mTitles);
-
-        PlaylistsFragment playlistsFragment = new PlaylistsFragment();
-
-        PlaylistsPresenter.newInstance(playlistsFragment, MusicRepository.getInstance());
-
-        mPagerAdapter.addFragment(playlistsFragment);
-
-        SongsFragment songsFragment = new SongsFragment();
-
-        SongsPresenter.newInstance(songsFragment, MusicRepository.getInstance());
-
-        mPagerAdapter.addFragment(songsFragment);
-
-        ArtistsFragment artistsFragment = new ArtistsFragment();
-
-        ArtistsPresenter.newInstance(artistsFragment, MusicRepository.getInstance());
-
-        mPagerAdapter.addFragment(artistsFragment);
-
-        AlbumsFragment albumsFragment = new AlbumsFragment();
-
-        AlbumsPresenter.newInstance(albumsFragment, MusicRepository.getInstance());
-
-        mPagerAdapter.addFragment(albumsFragment);
-
-        mViewPager.setAdapter(mPagerAdapter);
-        mPagerAdapter.notifyDataSetChanged();
-
-        mViewPager.setOffscreenPageLimit(PAGE_LIMIT);
-
-        mTabLayout.setupWithViewPager(mViewPager);
-        if (Utils.isRTL()) {
-            mViewPager.setCurrentItem(MainPagerAdapter.SONG_TAB_INDEX_RTL);
-        } else {
-            mViewPager.setCurrentItem(MainPagerAdapter.SONG_TAB_INDEX);
+        mNavigationView.getMenu().findItem(R.id.nav_library).setChecked(true);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (fragment == null) {
+            fragment = new MainFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, fragment).commit();
         }
 
-        QuickControlFragment quickControlFragment = new QuickControlFragment();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.quickcontrols_container, quickControlFragment).commit();
+        QuickControlFragment quickControlFragment = (QuickControlFragment)
+                getSupportFragmentManager().findFragmentById(R.id.quickcontrols_container);
+        if (quickControlFragment == null) {
+            quickControlFragment = new QuickControlFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.quickcontrols_container, quickControlFragment).commit();
+        }
+        new QuickControlPresenter(this, quickControlFragment);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        if (MusicUtils.getQueueSize() == 0) {
-            mPanelLayout.setPanelHeight(0);
-        } else {
-            mPanelLayout.setPanelHeight((int) mHeaderHeight);
-        }
-    }
-
-    private Runnable mPlayHeaderRunnable;
-
-    private void refreshPanelHeight() {
-        if (mPlayHeaderRunnable == null) {
-            mPlayHeaderRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    if (MusicUtils.getQueueSize() == 0) {
-                        mPanelLayout.setPanelHeight(0);
-                    } else {
-                        mPanelLayout.setPanelHeight((int) mHeaderHeight);
-                    }
-                }
-            };
-        }
-        if (mPanelLayout != null) {
-            mPanelLayout.removeCallbacks(mPlayHeaderRunnable);
-            mPanelLayout.postDelayed(mPlayHeaderRunnable, 50);
-        }
     }
 
 
@@ -174,8 +114,6 @@ public class MainActivity extends BaseMusicStateActivity
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
-        } else if (mPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
-            mPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         } else {
             super.onBackPressed();
         }
@@ -196,7 +134,7 @@ public class MainActivity extends BaseMusicStateActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_search) {
             return true;
         }
 
@@ -209,17 +147,13 @@ public class MainActivity extends BaseMusicStateActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_library) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_settings) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_help) {
 
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_exit) {
 
         }
 
@@ -240,7 +174,9 @@ public class MainActivity extends BaseMusicStateActivity
 
     @Override
     public void onMetaChanged() {
-        refreshPanelHeight();
+        Glide.with(this).load(Utils.getAlbumArtUri(MusicUtils.getCurrentAlbumId()))
+                .error(R.drawable.ic_notification)
+                .into(mNavAlbum);
     }
 
     @Override

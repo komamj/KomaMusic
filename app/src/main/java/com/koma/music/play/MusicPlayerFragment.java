@@ -207,6 +207,8 @@ public class MusicPlayerFragment extends BaseMusicStateFragment implements Music
             } else {
                 mBlurImageView.setImageDrawable(blurArtWork);
             }
+        } else {
+            mBlurImageView.setImageDrawable(null);
         }
     }
 

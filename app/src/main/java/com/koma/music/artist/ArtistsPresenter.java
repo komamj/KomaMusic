@@ -44,7 +44,7 @@ public class ArtistsPresenter implements ArtistsConstract.Presenter {
 
     private MusicRepository mRepository;
 
-    private ArtistsPresenter(ArtistsConstract.View view, MusicRepository repository) {
+    public ArtistsPresenter(ArtistsConstract.View view, MusicRepository repository) {
         mView = view;
         mView.setPresenter(this);
 
@@ -52,11 +52,6 @@ public class ArtistsPresenter implements ArtistsConstract.Presenter {
 
         mRepository = repository;
     }
-
-    public static ArtistsPresenter newInstance(ArtistsConstract.View view, MusicRepository repository) {
-        return new ArtistsPresenter(view, repository);
-    }
-
 
     @Override
     public void subscribe() {

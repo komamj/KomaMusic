@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.koma.music.R;
 import com.koma.music.base.BaseLoadingFragment;
+import com.koma.music.data.local.MusicRepository;
 import com.koma.music.data.model.Playlist;
 import com.koma.music.util.LogUtils;
 
@@ -62,6 +63,13 @@ public class PlaylistsFragment extends BaseLoadingFragment implements PlaylistsC
     private PlaylistsConstract.Presenter mPresenter;
 
     private PlaylistAdapter mAdapter;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        new PlaylistsPresenter(this, MusicRepository.getInstance());
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

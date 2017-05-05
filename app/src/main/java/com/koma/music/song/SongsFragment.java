@@ -19,6 +19,7 @@ import android.view.View;
 
 import com.koma.music.R;
 import com.koma.music.base.BaseLoadingFragment;
+import com.koma.music.data.local.MusicRepository;
 import com.koma.music.data.model.Song;
 import com.koma.music.util.LogUtils;
 
@@ -36,6 +37,13 @@ public class SongsFragment extends BaseLoadingFragment implements SongsContract.
     private SongsContract.Presenter mPresenter;
 
     private SongsAdapter mAdapter;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        new SongsPresenter(this, MusicRepository.getInstance());
+    }
 
     @Override
     protected int getLayoutId() {

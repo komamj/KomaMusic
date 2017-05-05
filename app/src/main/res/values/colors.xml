@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#FF5722</color>
+    <color name="colorPrimaryDark">#D1471C</color>
     <color name="colorAccent">#FF4081</color>
     <!--Tablayout-->
-    <color name="tab_indicator_color">#FF4C88</color>
-    <color name="tab_selected_text_color">#FF4C88</color>
-    <color name="tab_text_color">#61000000</color>
+    <color name="tab_indicator_color">#FFFFFFFF</color>
+    <color name="tab_selected_text_color">#FFFFFFFF</color>
+    <color name="tab_text_color">#FFFFFFFF</color>
 
     <!--Seekbar-->
     <color name="progress_tint_color">#FF4C88</color>

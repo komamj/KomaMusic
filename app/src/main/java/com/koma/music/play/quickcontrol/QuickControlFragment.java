@@ -12,11 +12,12 @@
  */
 package com.koma.music.play.quickcontrol;
 
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Pair;
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,8 +30,8 @@ import com.koma.music.play.MusicPlayerActivity;
 import com.koma.music.util.LogUtils;
 import com.koma.music.util.MusicUtils;
 import com.koma.music.util.Utils;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -38,9 +39,11 @@ import butterknife.OnClick;
  * Created by koma on 4/20/17.
  */
 
-public class QuickControlFragment extends BaseMusicStateFragment implements
-        SlidingUpPanelLayout.PanelSlideListener {
+public class QuickControlFragment extends BaseMusicStateFragment implements QuickControlContract.View {
     private static final String TAG = QuickControlFragment.class.getSimpleName();
+
+    @BindString(R.string.unknown)
+    String mDefaultName;
 
     @BindView(R.id.tv_track_name)
     TextView mTrackName;
@@ -58,13 +61,12 @@ public class QuickControlFragment extends BaseMusicStateFragment implements
         MusicUtils.playOrPause();
     }
 
-    private Context mContext;
+    @NonNull
+    private QuickControlContract.Presenter mPresenter;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
-        mContext = context;
     }
 
     @Override
@@ -82,14 +84,13 @@ public class QuickControlFragment extends BaseMusicStateFragment implements
     }
 
     private void init() {
+        new QuickControlPresenter(mContext, this);
         mHeaderLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, MusicPlayerActivity.class);
 
-                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(
-                        getActivity(), Pair.create((View) mTrackName, "share_track_name"),
-                        Pair.create((View) mArtistName, "share_artist_name")).toBundle());
+                startActivity(intent);
             }
         });
     }
@@ -127,9 +128,19 @@ public class QuickControlFragment extends BaseMusicStateFragment implements
                 .placeholder(R.drawable.ic_album)
                 .into(mAlbum);
 
-        mTrackName.setText(MusicUtils.getTrackName());
-
-        mArtistName.setText(MusicUtils.getArtistName());
+        updateBlurArtWork();
+        String trackName = MusicUtils.getTrackName();
+        String artistName = MusicUtils.getArtistName();
+        if (TextUtils.isEmpty(trackName)) {
+            mTrackName.setText(mDefaultName);
+        } else {
+            mTrackName.setText(trackName);
+        }
+        if (TextUtils.isEmpty(artistName)) {
+            mArtistName.setText(mDefaultName);
+        } else {
+            mArtistName.setText(artistName);
+        }
 
         onPlayStateChanged();
     }
@@ -143,13 +154,18 @@ public class QuickControlFragment extends BaseMusicStateFragment implements
     }
 
     @Override
-    public void onPanelSlide(View panel, float slideOffset) {
-        LogUtils.i(TAG, "onPanelSlide slideOffeset :" + slideOffset);
+    public void updateBlurArtWork() {
+        if (mPresenter != null) {
+            mPresenter.doBlurArtWork();
+        }
     }
 
     @Override
-    public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState,
-                                    SlidingUpPanelLayout.PanelState newState) {
+    public void setBlurArtWork(Drawable blurArtWork) {
+    }
 
+    @Override
+    public void setPresenter(@NonNull QuickControlContract.Presenter presenter) {
+        mPresenter = presenter;
     }
 }

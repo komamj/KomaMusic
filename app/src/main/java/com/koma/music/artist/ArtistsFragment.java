@@ -15,19 +15,15 @@ package com.koma.music.artist;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 
 import com.koma.music.R;
-import com.koma.music.base.BaseFragment;
 import com.koma.music.base.BaseLoadingFragment;
+import com.koma.music.data.local.MusicRepository;
 import com.koma.music.data.model.Artist;
 import com.koma.music.util.LogUtils;
-import com.koma.music.widget.LoadingView;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.BindView;
 
 /**
  * Created by koma on 3/21/17.
@@ -40,6 +36,13 @@ public class ArtistsFragment extends BaseLoadingFragment implements ArtistsConst
     private ArtistsConstract.Presenter mPresenter;
 
     private ArtistsAdapter mAdapter;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        new ArtistsPresenter(this, MusicRepository.getInstance());
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

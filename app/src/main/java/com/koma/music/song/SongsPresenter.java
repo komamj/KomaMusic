@@ -58,16 +58,11 @@ public class SongsPresenter implements SongsContract.Presenter {
 
     private MusicRepository mRepository;
 
-    private SongsPresenter(@NonNull SongsContract.View view, MusicRepository repository) {
+    public SongsPresenter(@NonNull SongsContract.View view, MusicRepository repository) {
         mSubscriptions = new CompositeSubscription();
         mRepository = repository;
         mView = view;
         mView.setPresenter(this);
-    }
-
-    public static SongsPresenter newInstance(@NonNull SongsContract.View view,
-                                             MusicRepository repository) {
-        return new SongsPresenter(view, repository);
     }
 
     @Override

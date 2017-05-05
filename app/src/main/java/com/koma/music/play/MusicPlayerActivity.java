@@ -13,6 +13,7 @@
 package com.koma.music.play;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.koma.music.R;
 import com.koma.music.base.BaseMusicStateActivity;
@@ -28,6 +29,9 @@ public class MusicPlayerActivity extends BaseMusicStateActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+
         super.onCreate(savedInstanceState);
 
         LogUtils.i(TAG, "onCreate");
@@ -46,8 +50,6 @@ public class MusicPlayerActivity extends BaseMusicStateActivity {
         }
 
         new MusicPlayerPresenter(this, musicPlayerFragment, MusicRepository.getInstance());
-
-
     }
 
     @Override

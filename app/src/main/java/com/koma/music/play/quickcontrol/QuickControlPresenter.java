@@ -1,16 +1,4 @@
-/*
- * Copyright (C) 2017 Koma MJ
- *
- * Licensed under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with the
- * License. You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
- * or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
- */
-package com.koma.music.play;
+package com.koma.music.play.quickcontrol;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -20,7 +8,6 @@ import android.support.annotation.NonNull;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.koma.music.data.local.MusicRepository;
 import com.koma.music.util.ImageLoader;
 import com.koma.music.util.LogUtils;
 import com.koma.music.util.MusicUtils;
@@ -34,68 +21,40 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
- * Created by koma on 4/8/17.
+ * Created by koma on 5/3/17.
  */
 
-public class MusicPlayerPresenter implements MusicPlayerContract.Presenter {
-    private static final String TAG = MusicPlayerPresenter.class.getSimpleName();
-    private Context mContext;
+public class QuickControlPresenter implements QuickControlContract.Presenter {
+    private static final String TAG = QuickControlPresenter.class.getSimpleName();
     @NonNull
-    private MusicPlayerContract.View mView;
+    private QuickControlContract.View mView;
 
     private CompositeSubscription mSubscriptions;
 
-    private MusicRepository mRepository;
+    private Context mContext;
 
-    public MusicPlayerPresenter(Context context, @NonNull MusicPlayerContract.View view,
-                                MusicRepository repository) {
+    public QuickControlPresenter(Context context, @NonNull QuickControlContract.View view) {
+        mView = view;
+        mView.setPresenter(this);
+
         mContext = context;
 
         mSubscriptions = new CompositeSubscription();
-
-        mRepository = repository;
-
-        mView = view;
-        mView.setPresenter(this);
-    }
-
-    @Override
-    public void subscribe() {
-        LogUtils.i(TAG, "subscribe");
-    }
-
-    @Override
-    public void unSubscribe() {
-        LogUtils.i(TAG, "unSubscribe");
-
-        if (mSubscriptions != null) {
-            mSubscriptions.clear();
-        }
     }
 
     @Override
     public void doPlayOrPause() {
-        LogUtils.i(TAG, "doPlayOrPause");
+        MusicUtils.playOrPause();
     }
 
     @Override
     public void doPrev() {
-        LogUtils.i(TAG, "doPrev");
+        MusicUtils.previous(mContext, false);
     }
 
     @Override
     public void doNext() {
-        LogUtils.i(TAG, "doNext");
-    }
-
-    @Override
-    public void doFavorite() {
-        LogUtils.i(TAG, "doFavorite");
-    }
-
-    @Override
-    public void onFavoriteFinished() {
-
+        MusicUtils.asyncNext(mContext);
     }
 
     @Override
@@ -142,5 +101,17 @@ public class MusicPlayerPresenter implements MusicPlayerContract.Presenter {
                         mSubscriptions.add(subscription);
                     }
                 });
+    }
+
+    @Override
+    public void subscribe() {
+
+    }
+
+    @Override
+    public void unSubscribe() {
+        if (mSubscriptions != null) {
+            mSubscriptions.clear();
+        }
     }
 }

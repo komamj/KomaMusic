@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.koma.music">
+
     <!-- Used for caching and creating new playlists -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- Used to check for a network connection -->
@@ -36,25 +37,22 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".splash.SplashActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/MusicPlayerTheme"></activity>
+            android:theme="@style/FullScreenTheme" />
         <activity
             android:name=".main.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/FullScreenTheme"
             android:windowSoftInputMode="adjustPan">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="com.koma.music.notification.AUDIO_PLAYER" />
 
@@ -62,13 +60,11 @@
             </intent-filter>
         </activity>
 
-        <!--MusicPlayerActivity-->
+        <!-- MusicPlayerActivity -->
         <activity
             android:name=".play.MusicPlayerActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/MusicPlayerTheme">
-
-        </activity>
+            android:theme="@style/MusicPlayerTheme"></activity>
         <!-- Audio Preview -->
         <activity
             android:name=".audiopreview.AudioPreviewActivity"
@@ -109,6 +105,15 @@
                 <data android:mimeType="application/itunes" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".setting.SettingsActivity"
+            android:label="@string/nav_setting"></activity>
+
+        <activity
+            android:name=".album.detail.AlbumDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullScreenTheme"></activity>
         <!-- Music service -->
         <service
             android:name=".service.MusicService"

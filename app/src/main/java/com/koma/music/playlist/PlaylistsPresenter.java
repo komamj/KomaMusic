@@ -47,17 +47,13 @@ public class PlaylistsPresenter implements PlaylistsConstract.Presenter {
 
     private CompositeSubscription mSubscriptions;
 
-    private PlaylistsPresenter(@NonNull PlaylistsConstract.View view, MusicRepository repository) {
+    public PlaylistsPresenter(@NonNull PlaylistsConstract.View view, MusicRepository repository) {
         mView = view;
         mView.setPresenter(this);
 
         mRepository = repository;
 
         mSubscriptions = new CompositeSubscription();
-    }
-
-    public static PlaylistsPresenter newInstance(PlaylistsConstract.View view, MusicRepository repository) {
-        return new PlaylistsPresenter(view, repository);
     }
 
     @Override

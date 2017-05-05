@@ -10,40 +10,30 @@
  * KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.koma.music.setting;
+package com.koma.music.base;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+
+import butterknife.ButterKnife;
 
 /**
- * Created by koma on 4/24/17.
+ * Created by koma on 5/4/17.
  */
 
-public class SettingActivity extends AppCompatActivity {
-    private static final String TAG = SettingActivity.class.getSimpleName();
-
+public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+
+        setContentView(getLayoutId());
+
+        ButterKnife.bind(this);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
+    public abstract int getLayoutId();
 }

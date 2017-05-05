@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -14,8 +15,7 @@
         android:layout_height="match_parent"
         android:background="#44000000" />
 
-    <android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <android.support.percent.PercentRelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -39,9 +39,9 @@
                     android:gravity="center"
                     android:marqueeRepeatLimit="marquee_forever"
                     android:maxLines="1"
+                    android:text="@string/unknown"
                     android:textColor="@android:color/white"
-                    android:textSize="22sp"
-                    android:transitionName="share_track_name" />
+                    android:textSize="22sp" />
 
                 <com.koma.music.widget.MarqueeTextView
                     android:id="@+id/tv_artist_name"
@@ -52,9 +52,9 @@
                     android:marqueeRepeatLimit="marquee_forever"
                     android:maxLines="1"
                     android:paddingTop="3dp"
+                    android:text="@string/unknown"
                     android:textColor="@android:color/white"
-                    android:textSize="11sp"
-                    android:transitionName="share_artist_name" />
+                    android:textSize="11sp" />
 
                 <android.support.v4.view.ViewPager
                     android:id="@+id/view_pager"
@@ -122,7 +122,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <com.koma.music.widget.SquareImageView

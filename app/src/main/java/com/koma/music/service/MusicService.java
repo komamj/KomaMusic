@@ -1887,7 +1887,6 @@ public class MusicService extends Service {
             if (mCursor == null) {
                 return -1;
             }
-            LogUtils.i(TAG, "getAlbumId : thread id " + Thread.currentThread().getName());
             return mCursor.getLong(mCursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ALBUM_ID));
         }
     }

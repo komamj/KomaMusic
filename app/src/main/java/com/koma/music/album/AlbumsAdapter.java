@@ -1,6 +1,22 @@
+/*
+ * Copyright (C) 2017 Koma MJ
+ *
+ * Licensed under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 package com.koma.music.album;
 
+import android.app.ActivityOptions;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +28,12 @@ import com.bumptech.glide.Glide;
 import com.koma.music.R;
 import com.koma.music.base.BaseViewHolder;
 import com.koma.music.data.model.Album;
+import com.koma.music.util.Constants;
 import com.koma.music.util.Utils;
 
 import java.util.List;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -24,6 +42,7 @@ import butterknife.OnClick;
  */
 
 public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsViewHolder> {
+    private static final String PACKAFE_ALBUM_DETAIL_ACTIVITY = "com.koma.music.album.detail.AlbumDetailActivity";
 
     private List<Album> mData;
 
@@ -54,6 +73,7 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
     public void onBindViewHolder(AlbumsViewHolder holder, int position) {
         holder.itemView.setTag(position);
         holder.mMore.setTag(position);
+        holder.mAlbum.setTransitionName(holder.mTransitionName + position);
         Glide.with(mContext).load(Utils.getAlbumArtUri(mData.get(position).mAlbumId))
                 .placeholder(R.drawable.ic_album)
                 .into(holder.mAlbum);
@@ -66,7 +86,9 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
         return mData == null ? 0 : mData.size();
     }
 
-    static class AlbumsViewHolder extends BaseViewHolder implements View.OnClickListener {
+    public class AlbumsViewHolder extends BaseViewHolder implements View.OnClickListener {
+        @BindString(R.string.transition_album)
+        String mTransitionName;
         @BindView(R.id.iv_album)
         ImageView mAlbum;
         @BindView(R.id.tv_item_title)
@@ -88,7 +110,25 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
 
         @Override
         public void onClick(View view) {
+            Intent intent = new Intent();
+
             int position = (int) view.getTag();
+
+            long albumId = mData.get(position).mAlbumId;
+
+            String albumName = mData.get(position).mAlbumName;
+
+            intent.putExtra(Constants.ALBUM_ID, albumId);
+            intent.putExtra(Constants.ALBUM_NAME, albumName);
+            intent.putExtra(Constants.TRANSITION_NAME, mTransitionName + position);
+
+            ComponentName componentName = new ComponentName(Constants.MUSIC_PACKAGE_NAME,
+                    PACKAFE_ALBUM_DETAIL_ACTIVITY);
+
+            intent.setComponent(componentName);
+
+            mContext.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(
+                    ((AppCompatActivity) mContext), view, mTransitionName + position).toBundle());
         }
     }
 }

@@ -18,7 +18,7 @@ import android.graphics.drawable.Drawable;
 
 import com.koma.music.base.BasePresenter;
 import com.koma.music.base.BaseView;
-import com.koma.music.data.model.Song;
+import com.koma.music.data.model.Album;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public interface ArtistDetailContract {
 
         long getArtistId();
 
-        void showArtistSongs(List<Song> songList);
+        void showArtistAlbums(List<Album> albumList);
 
         void showArtwork(Drawable albumArt);
 
@@ -41,7 +41,7 @@ public interface ArtistDetailContract {
 
 
     interface Presenter extends BasePresenter {
-        void loadArtistSongs(long artistId);
+        void loadArtistAlbums(long artistId);
 
         void loadArtWork(long artistId);
     }

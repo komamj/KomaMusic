@@ -37,10 +37,16 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="com.koma.music.helper.KomaMusicGlideModule"
+            android:value="GlideModule" />
+
         <activity
             android:name=".splash.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/FullScreenTheme" />
+
         <activity
             android:name=".main.MainActivity"
             android:label="@string/app_name"

@@ -22,9 +22,15 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.koma.music.R;
 import com.koma.music.data.local.MusicRepository;
+import com.koma.music.data.model.Album;
 import com.koma.music.util.LogUtils;
-import com.koma.music.util.Utils;
 
+import java.util.List;
+
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -54,7 +60,7 @@ public class ArtistDetailPresenter implements ArtistDetailContract.Presenter {
         LogUtils.i(TAG, "subscribe");
 
         if (mView != null) {
-            loadArtistSongs(mView.getArtistId());
+            loadArtistAlbums(mView.getArtistId());
 
             loadArtWork(mView.getArtistId());
         }
@@ -71,8 +77,38 @@ public class ArtistDetailPresenter implements ArtistDetailContract.Presenter {
     }
 
     @Override
-    public void loadArtistSongs(long artistId) {
+    public void loadArtistAlbums(long artistId) {
         LogUtils.i(TAG, "loadArtistSongs atistId : " + artistId);
+
+        if (mSubscriptions != null) {
+            mSubscriptions.clear();
+        }
+
+        if (mView != null) {
+            Subscription subscription = mRepository.getArtistAlbums(mView.getArtistId())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<List<Album>>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable throwable) {
+                            LogUtils.e(TAG, "loadArtistAlbums onError : " + throwable.toString());
+                        }
+
+                        @Override
+                        public void onNext(List<Album> albums) {
+                            if (mView != null) {
+                                mView.showArtistAlbums(albums);
+                            }
+                        }
+                    });
+
+            mSubscriptions.add(subscription);
+        }
     }
 
     @Override
@@ -80,9 +116,7 @@ public class ArtistDetailPresenter implements ArtistDetailContract.Presenter {
         LogUtils.i(TAG, "loadArtWork");
 
         if (mView != null) {
-            Glide.with(mView.getContext()).load(Utils.getAlbumArtUri(artistId))
-                    .asBitmap()
-                    .error(R.drawable.ic_album)
+            Glide.with(mView.getContext()).load(artistId).asBitmap().error(R.drawable.ic_album)
                     .priority(Priority.IMMEDIATE)
                     .into(new SimpleTarget<Bitmap>() {
                         @Override

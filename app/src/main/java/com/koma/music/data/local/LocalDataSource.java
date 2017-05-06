@@ -67,6 +67,17 @@ public class LocalDataSource implements MusicDataSource {
     }
 
     @Override
+    public Observable<List<Album>> getArtistAlbums(final long artistId) {
+        return Observable.create(new Observable.OnSubscribe<List<Album>>() {
+            @Override
+            public void call(Subscriber<? super List<Album>> subscriber) {
+                subscriber.onNext(AlbumsPresenter.getArtistAlbums(artistId));
+                subscriber.onCompleted();
+            }
+        });
+    }
+
+    @Override
     public Observable<List<Artist>> getAllArtists() {
         return Observable.create(new Observable.OnSubscribe<List<Artist>>() {
             @Override

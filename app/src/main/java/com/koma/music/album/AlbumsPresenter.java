@@ -115,9 +115,21 @@ public class AlbumsPresenter implements AlbumsConstract.Presenter {
     }
 
     public static List<Album> getAllAlbums() {
-        List<Album> albumList = new ArrayList<>();
         // Create the Cursor
         Cursor cursor = makeAlbucursor(MusicApplication.getContext(), null);
+
+        return getAlbums(cursor);
+    }
+
+    public static List<Album> getArtistAlbums(long artistId) {
+        Cursor cursor = makeAlbucursor(MusicApplication.getContext(), artistId);
+
+        return getAlbums(cursor);
+    }
+
+    private static List<Album> getAlbums(Cursor cursor) {
+        List<Album> albumList = new ArrayList<>();
+
         // Gather the data
         if (cursor != null && cursor.moveToFirst()) {
             do {
@@ -143,7 +155,6 @@ public class AlbumsPresenter implements AlbumsConstract.Presenter {
 
                 // Create a new album
                 final Album album = new Album(id, albumName, artist, songCount, year);
-
                 // Add everything up
                 albumList.add(album);
             } while (cursor.moveToNext());

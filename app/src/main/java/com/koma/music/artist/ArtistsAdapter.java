@@ -70,9 +70,14 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
     public void onBindViewHolder(ArtistsViewHolder holder, int position) {
         holder.itemView.setTag(position);
         holder.mMore.setTag(position);
-        Glide.with(mContext).load(Utils.getAlbumArtUri(mData.get(position).mArtistId))
+        /*Glide.with(mContext).load(Utils.getAlbumArtUri(mData.get(position).mArtistId))
+                .placeholder(R.drawable.ic_album)
+                .into(holder.mAlbum);*/
+
+        Glide.with(mContext).load(mData.get(position).mArtistId).centerCrop()
                 .placeholder(R.drawable.ic_album)
                 .into(holder.mAlbum);
+
         holder.mTitle.setText(mData.get(position).mArtistName);
         String albumNumber = Utils.makeLabel(mContext,
                 R.plurals.num_albums, mData.get(position).mAlbumNumber);

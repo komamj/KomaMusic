@@ -20,6 +20,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -27,10 +28,10 @@ import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.koma.music.R;
+import com.koma.music.album.AlbumsAdapter;
 import com.koma.music.base.BaseFragment;
 import com.koma.music.data.local.MusicRepository;
-import com.koma.music.data.model.Song;
-import com.koma.music.song.SongsAdapter;
+import com.koma.music.data.model.Album;
 import com.koma.music.util.Constants;
 import com.koma.music.util.LogUtils;
 
@@ -73,7 +74,7 @@ public class ArtistDetailFragment extends BaseFragment implements ArtistDetailCo
     @NonNull
     private ArtistDetailContract.Presenter mPresenter;
 
-    private SongsAdapter mAdapter;
+    private AlbumsAdapter mAdapter;
 
     public static ArtistDetailFragment newInstance(long id, String name, String transitionName) {
         ArtistDetailFragment fragment = new ArtistDetailFragment();
@@ -106,13 +107,12 @@ public class ArtistDetailFragment extends BaseFragment implements ArtistDetailCo
 
         mAlbum.setTransitionName(getArguments().getString(Constants.TRANSITION_NAME));
 
-        LogUtils.i(TAG, "transiiton name : " + mAlbum.getTransitionName());
         new ArtistDetailPresenter(this, MusicRepository.getInstance());
 
-        mAdapter = new SongsAdapter(mContext, new ArrayList<Song>());
+        mAdapter = new AlbumsAdapter(mContext, new ArrayList<Album>());
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        GridLayoutManager layoutManager = new GridLayoutManager(mContext,2);
+        layoutManager.setOrientation(GridLayoutManager.VERTICAL);
 
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
@@ -160,8 +160,10 @@ public class ArtistDetailFragment extends BaseFragment implements ArtistDetailCo
     }
 
     @Override
-    public void showArtistSongs(List<Song> songList) {
-
+    public void showArtistAlbums(List<Album> albumList) {
+        if (mAdapter != null) {
+            mAdapter.replaceData(albumList);
+        }
     }
 
     @Override

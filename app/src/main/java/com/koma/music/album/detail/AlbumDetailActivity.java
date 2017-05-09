@@ -20,10 +20,13 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.koma.music.R;
@@ -83,6 +86,13 @@ public class AlbumDetailActivity extends BaseActivity implements AlbumDetailCont
     }
 
     private void init() {
+        setSupportActionBar(mToolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         if (getIntent() != null) {
             mAlbumId = getIntent().getLongExtra(Constants.ALBUM_ID, -1);
             mAlbumName = getIntent().getStringExtra(Constants.ALBUM_NAME);
@@ -162,5 +172,29 @@ public class AlbumDetailActivity extends BaseActivity implements AlbumDetailCont
     @Override
     public void showAlbum(Bitmap bitmap) {
         mAlbum.setImageBitmap(bitmap);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_search) {
+            return true;
+        } else if (id == android.R.id.home) {
+            this.onBackPressed();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

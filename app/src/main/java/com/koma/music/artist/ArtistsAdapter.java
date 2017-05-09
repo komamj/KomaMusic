@@ -12,8 +12,8 @@
  */
 package com.koma.music.artist;
 
-import android.app.Activity;
 import android.content.Context;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.koma.music.R;
 import com.koma.music.base.BaseViewHolder;
 import com.koma.music.data.model.Artist;
@@ -69,12 +70,14 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
     @Override
     public void onBindViewHolder(ArtistsViewHolder holder, int position) {
         holder.itemView.setTag(position);
+
         holder.mMore.setTag(position);
-        /*Glide.with(mContext).load(Utils.getAlbumArtUri(mData.get(position).mArtistId))
-                .placeholder(R.drawable.ic_album)
-                .into(holder.mAlbum);*/
+
+        holder.mAlbum.setTransitionName(holder.mTransitionName + position);
 
         Glide.with(mContext).load(mData.get(position).mArtistId).centerCrop()
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .error(R.drawable.ic_album)
                 .placeholder(R.drawable.ic_album)
                 .into(holder.mAlbum);
 
@@ -84,8 +87,6 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
         String songNumber = Utils.makeLabel(mContext,
                 R.plurals.num_songs, mData.get(position).mSongNumber);
         holder.mInfo.setText(MusicUtils.makeCombinedString(mContext, albumNumber, songNumber));
-
-        holder.mAlbum.setTransitionName(holder.mTransitionName + position);
     }
 
     @Override
@@ -123,8 +124,8 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
 
             String artistName = mData.get(position).mArtistName;
 
-            NavigationUtils.navigateToArtist((Activity) mContext, artistId, artistName,
-                    new Pair<View, String>(mAlbum, mTransitionName + position));
+            NavigationUtils.navigateToArtist((AppCompatActivity) mContext, artistId, artistName,
+                    new Pair<View, String>(mAlbum, mAlbum.getTransitionName()));
         }
     }
 }

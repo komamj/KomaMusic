@@ -59,6 +59,12 @@ public class PlaylistsFragment extends BaseLoadingFragment implements PlaylistsC
     void launchRecentlyPlayed() {
     }
 
+    @OnClick(R.id.tv_new_playlist)
+    void newPlaylist() {
+        NewPlaylistDialog newPlaylistDialog = new NewPlaylistDialog();
+        newPlaylistDialog.show(getChildFragmentManager(), NewPlaylistDialog.DIALOG_TAG);
+    }
+
     @NonNull
     private PlaylistsConstract.Presenter mPresenter;
 
@@ -82,13 +88,13 @@ public class PlaylistsFragment extends BaseLoadingFragment implements PlaylistsC
 
     private void init() {
         Glide.with(this).load("")
-                .placeholder(R.mipmap.ic_default_playlist)
+                .placeholder(R.drawable.ic_album)
                 .into(mRecentlyAdded);
         Glide.with(this).load("")
-                .placeholder(R.mipmap.ic_default_playlist)
+                .placeholder(R.drawable.ic_album)
                 .into(mRecentlyPlayed);
         Glide.with(this).load("")
-                .placeholder(R.mipmap.ic_default_playlist)
+                .placeholder(R.drawable.ic_album)
                 .into(mMyFavorite);
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);

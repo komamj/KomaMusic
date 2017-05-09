@@ -12,36 +12,70 @@
  */
 package com.koma.music.splash;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+
+import com.koma.music.R;
+import com.koma.music.base.BaseActivity;
+import com.koma.music.main.MainActivity;
+
+import java.util.concurrent.TimeUnit;
+
+import rx.Observable;
+import rx.functions.Action1;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by koma on 4/21/17.
  */
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseActivity {
+    private static final int TIME_TO_MAINACTIVITY = 2000;
+
+    private CompositeSubscription mSubsriptions;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mSubsriptions = new CompositeSubscription();
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_splash;
+    }
+
+    private void launchMainActivity() {
+        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+        startActivity(intent);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        SplashActivity.this.finish();
     }
 
     @Override
     public void onStart() {
         super.onStart();
+
+        mSubsriptions.add(Observable.timer(TIME_TO_MAINACTIVITY, TimeUnit.MILLISECONDS)
+                .subscribe(new Action1<Long>() {
+                    @Override
+                    public void call(Long aLong) {
+                        launchMainActivity();
+                    }
+                }));
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
 
     @Override
     public void onStop() {
         super.onStop();
+
+        mSubsriptions.clear();
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 }

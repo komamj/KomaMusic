@@ -39,6 +39,10 @@
     <string name="my_playlist">My playlists</string>
     <string name="add_playlist">New playlist</string>
     <string name="add_song">Add songs</string>
+    <!--Dialog-->
+    <string name="playlist_title">New playlist</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
 
     <!--Notification-->
     <string name="notification_pause">Pause</string>
@@ -57,6 +61,7 @@
     <string name="durationformatlong" translatable="false"><xliff:g id="format">%1$d:%2$02d:%3$02d</xliff:g></string>
     <!--Transition name-->
     <string name="transition_album" translatable="false">transition_album</string>
+    <string name="transition_fab_play" translatable="false">transition_fab_play</string>
 
     <!-- Toast messages -->
     <string name="set_as_ringtone">\'<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\' set as ringtone</string>

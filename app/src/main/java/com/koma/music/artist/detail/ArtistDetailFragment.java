@@ -21,10 +21,10 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.koma.music.R;
@@ -61,7 +61,6 @@ public class ArtistDetailFragment extends BaseFragment implements ArtistDetailCo
 
     @OnClick(R.id.fab_play)
     void doPlayAlbum() {
-
     }
 
     @BindView(R.id.recycler_view)
@@ -87,10 +86,10 @@ public class ArtistDetailFragment extends BaseFragment implements ArtistDetailCo
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        LogUtils.i(TAG, "onActivityCreated");
+        LogUtils.i(TAG, "onViewCreated");
 
         init();
     }
@@ -107,11 +106,13 @@ public class ArtistDetailFragment extends BaseFragment implements ArtistDetailCo
 
         mAlbum.setTransitionName(getArguments().getString(Constants.TRANSITION_NAME));
 
+        LogUtils.i(TAG, "transition name : " + mAlbum.getTransitionName());
+
         new ArtistDetailPresenter(this, MusicRepository.getInstance());
 
         mAdapter = new AlbumsAdapter(mContext, new ArrayList<Album>());
 
-        GridLayoutManager layoutManager = new GridLayoutManager(mContext,2);
+        GridLayoutManager layoutManager = new GridLayoutManager(mContext, 2);
         layoutManager.setOrientation(GridLayoutManager.VERTICAL);
 
         mRecyclerView.setLayoutManager(layoutManager);

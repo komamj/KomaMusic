@@ -12,12 +12,12 @@
  */
 package com.koma.music.main;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -31,6 +31,7 @@ import com.koma.music.R;
 import com.koma.music.base.BaseMusicStateActivity;
 import com.koma.music.play.quickcontrol.QuickControlFragment;
 import com.koma.music.play.quickcontrol.QuickControlPresenter;
+import com.koma.music.util.LogUtils;
 import com.koma.music.util.MusicUtils;
 import com.koma.music.util.Utils;
 
@@ -98,6 +99,18 @@ public class MainActivity extends BaseMusicStateActivity
                     .replace(R.id.quickcontrols_container, quickControlFragment).commit();
         }
         new QuickControlPresenter(this, quickControlFragment);
+
+        addBackstackListener();
+    }
+
+    private void addBackstackListener() {
+        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                LogUtils.i(TAG, "onBackStackChanged");
+               // getSupportFragmentManager().findFragmentById(R.id.fragment_container).onResume();
+            }
+        });
     }
 
     @Override

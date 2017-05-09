@@ -12,18 +12,35 @@
         android:layout_height="wrap_content"
         android:foreground="?selectableItemBackground">
 
-        <com.koma.music.widget.SquareImageView
-            android:id="@+id/iv_album"
+        <FrameLayout
+            android:id="@+id/album_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:foreground="?selectableItemBackground"
-            android:transitionName="@string/transition_album"
-            android:scaleType="centerCrop" />
+            android:layout_height="wrap_content">
+
+            <com.koma.music.widget.SquareImageView
+                android:id="@+id/iv_album"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:foreground="?selectableItemBackground"
+                android:transitionName="@string/transition_album" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fabSize="mini"
+                app:borderWidth="0dp"
+                android:transitionName="@string/transition_fab_play"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:src="@drawable/ic_play_white"
+                app:layout_anchorGravity="bottom|end" />
+        </FrameLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/iv_album">
+            android:layout_below="@id/album_layout">
 
             <ImageView
                 android:id="@+id/iv_more"

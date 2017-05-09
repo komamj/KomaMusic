@@ -12,8 +12,6 @@
  */
 package com.koma.music.util;
 
-import android.app.Activity;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.Transition;
@@ -29,16 +27,25 @@ import com.koma.music.artist.detail.ArtistDetailFragment;
  */
 
 public class NavigationUtils {
-    public static void navigateToArtist(Activity context, long artistID, String name, Pair<View, String> transitionViews) {
-        FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
-        Fragment fragment;
-        Transition changeImage = TransitionInflater.from(context).inflateTransition(R.transition.image_transform);
+    public static void navigateToArtist(AppCompatActivity appCompatActivity, long artistID, String name, Pair<View, String> transitionViews) {
+        FragmentTransaction transaction = appCompatActivity.getSupportFragmentManager().beginTransaction();
+
+        ArtistDetailFragment fragment;
+
+        Transition changeImage = TransitionInflater.from(appCompatActivity).inflateTransition(R.transition.image_transform);
+
         transaction.addSharedElement(transitionViews.first, transitionViews.second);
+
         fragment = ArtistDetailFragment.newInstance(artistID, name, transitionViews.second);
+
         fragment.setSharedElementEnterTransition(changeImage);
+
         fragment.setSharedElementReturnTransition(changeImage);
-        transaction.hide(((AppCompatActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container));
+
+        transaction.hide(appCompatActivity.getSupportFragmentManager().findFragmentById(R.id.fragment_container));
+
         transaction.add(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null).commitAllowingStateLoss();
+
+        transaction.addToBackStack(null).commit();
     }
 }

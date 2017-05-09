@@ -36,6 +36,13 @@ public class Constants {
     public static final String MUSIC_ONLY_SELECTION = MediaStore.Audio.AudioColumns.IS_MUSIC + "=1"
             + " AND " + MediaStore.Audio.AudioColumns.TITLE + " != ''";
 
+    //Detail
+    public static final String RECENTLY_ADDED = "recently_added";
+    public static final String RECENTLY_PLAYED = "recently_played";
+    public static final String MY_FAVORITE = "my_favorite";
+    public static final String ALBUM_DETAIL = "album";
+    public static final String ARTIST_DETAIL = "artist";
+
     //AlbumDetail
     public static final String TRANSITION_NAME = "transition_name";
     public static final String ALBUM_ID = "album_id";

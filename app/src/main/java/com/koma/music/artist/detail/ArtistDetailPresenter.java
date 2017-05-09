@@ -116,8 +116,10 @@ public class ArtistDetailPresenter implements ArtistDetailContract.Presenter {
         LogUtils.i(TAG, "loadArtWork");
 
         if (mView != null) {
-            Glide.with(mView.getContext()).load(artistId).asBitmap().error(R.drawable.ic_album)
+            Glide.with(mView.getContext()).load(artistId).asBitmap()
+                    .error(R.drawable.ic_album)
                     .priority(Priority.IMMEDIATE)
+                    .dontAnimate()
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onLoadFailed(Exception e, Drawable errorDrawable) {

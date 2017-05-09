@@ -16,8 +16,10 @@ import android.app.ActivityOptions;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,7 +75,7 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
     public void onBindViewHolder(AlbumsViewHolder holder, int position) {
         holder.itemView.setTag(position);
         holder.mMore.setTag(position);
-        holder.mAlbum.setTransitionName(holder.mTransitionName + position);
+        holder.mAlbum.setTransitionName(holder.mAlbumTransitionName + position);
         Glide.with(mContext).load(Utils.getAlbumArtUri(mData.get(position).mAlbumId))
                 .placeholder(R.drawable.ic_album)
                 .into(holder.mAlbum);
@@ -88,7 +90,7 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
 
     public class AlbumsViewHolder extends BaseViewHolder implements View.OnClickListener {
         @BindString(R.string.transition_album)
-        String mTransitionName;
+        String mAlbumTransitionName;
         @BindView(R.id.iv_album)
         ImageView mAlbum;
         @BindView(R.id.tv_item_title)
@@ -97,6 +99,10 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
         TextView mInfo;
         @BindView(R.id.iv_more)
         ImageView mMore;
+        @BindView(R.id.fab_play)
+        FloatingActionButton mFabPlay;
+        @BindString(R.string.transition_fab_play)
+        String mFabTransitionName;
 
         @OnClick(R.id.iv_more)
         void doMoreAction(View view) {
@@ -120,7 +126,7 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
 
             intent.putExtra(Constants.ALBUM_ID, albumId);
             intent.putExtra(Constants.ALBUM_NAME, albumName);
-            intent.putExtra(Constants.TRANSITION_NAME, mTransitionName + position);
+            intent.putExtra(Constants.TRANSITION_NAME, mAlbumTransitionName + position);
 
             ComponentName componentName = new ComponentName(Constants.MUSIC_PACKAGE_NAME,
                     PACKAFE_ALBUM_DETAIL_ACTIVITY);
@@ -128,7 +134,9 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
             intent.setComponent(componentName);
 
             mContext.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(
-                    ((AppCompatActivity) mContext), view, mTransitionName + position).toBundle());
+                    ((AppCompatActivity) mContext), new Pair<View, String>(mAlbum,
+                            mAlbumTransitionName + position),
+                    new Pair<View, String>(mFabPlay, mFabTransitionName)).toBundle());
         }
     }
 }

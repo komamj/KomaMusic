@@ -98,7 +98,12 @@ dependencies {
     compile "com.jakewharton:butterknife:$rootProject.ext.butterknife"
     apt "com.jakewharton:butterknife-compiler:$rootProject.ext.butterknife"
 
-    compile(name: 'rxandroid-1.2.1', ext: 'aar')
+    compile "com.github.bumptech.glide:glide:$rootProject.ext.glideVersion"
+
+    compile "io.reactivex:rxandroid:$rootProject.ext.rxandroidVersion"
+    // Because RxAndroid releases are few and far between, it is recommended you also
+    // explicitly depend on RxJava's latest version for bug fixes and new features.
+    compile "io.reactivex:rxjava:$rootProject.ext.rxjavaVersion"
 
     compile 'com.sothree.slidinguppanel:library:3.3.1'
 

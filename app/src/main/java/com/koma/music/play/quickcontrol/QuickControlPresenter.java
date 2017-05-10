@@ -1,6 +1,5 @@
 package com.koma.music.play.quickcontrol;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
@@ -31,13 +30,9 @@ public class QuickControlPresenter implements QuickControlContract.Presenter {
 
     private CompositeSubscription mSubscriptions;
 
-    private Context mContext;
-
-    public QuickControlPresenter(Context context, @NonNull QuickControlContract.View view) {
+    public QuickControlPresenter(@NonNull QuickControlContract.View view) {
         mView = view;
         mView.setPresenter(this);
-
-        mContext = context;
 
         mSubscriptions = new CompositeSubscription();
     }
@@ -49,18 +44,18 @@ public class QuickControlPresenter implements QuickControlContract.Presenter {
 
     @Override
     public void doPrev() {
-        MusicUtils.previous(mContext, false);
+        MusicUtils.previous(mView.getContext(), false);
     }
 
     @Override
     public void doNext() {
-        MusicUtils.asyncNext(mContext);
+        MusicUtils.asyncNext(mView.getContext());
     }
 
     @Override
     public void doBlurArtWork() {
         LogUtils.i(TAG, "doArtWork");
-        Glide.with(mContext).load(Utils.getAlbumArtUri(MusicUtils.getCurrentAlbumId())).asBitmap()
+        Glide.with(mView.getContext()).load(Utils.getAlbumArtUri(MusicUtils.getCurrentAlbumId())).asBitmap()
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onLoadFailed(Exception e, Drawable errorDrawable) {
@@ -74,7 +69,7 @@ public class QuickControlPresenter implements QuickControlContract.Presenter {
                         Subscription subscription = Observable.create(new Observable.OnSubscribe<Drawable>() {
                             @Override
                             public void call(Subscriber<? super Drawable> subscriber) {
-                                subscriber.onNext(ImageLoader.createBlurredImageFromBitmap(bitmap, mContext, 6));
+                                subscriber.onNext(ImageLoader.createBlurredImageFromBitmap(bitmap, mView.getContext(), 6));
                                 subscriber.onCompleted();
                             }
                         }).subscribeOn(Schedulers.io())

@@ -12,7 +12,10 @@
  */
 package com.koma.music.artist;
 
+import android.app.ActivityOptions;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
@@ -27,8 +30,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.koma.music.R;
 import com.koma.music.base.BaseViewHolder;
 import com.koma.music.data.model.Artist;
+import com.koma.music.util.Constants;
 import com.koma.music.util.MusicUtils;
-import com.koma.music.util.NavigationUtils;
 import com.koma.music.util.Utils;
 
 import java.util.List;
@@ -63,7 +66,7 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
 
     @Override
     public ArtistsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_album, null);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_album, parent, false);
         return new ArtistsViewHolder(view);
     }
 
@@ -73,7 +76,7 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
 
         holder.mMore.setTag(position);
 
-        holder.mAlbum.setTransitionName(holder.mTransitionName + position);
+        holder.mAlbum.setTransitionName(holder.mTransitionName + String.valueOf(position));
 
         Glide.with(mContext).load(mData.get(position).mArtistId).centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
@@ -105,6 +108,8 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
         TextView mInfo;
         @BindView(R.id.iv_more)
         ImageView mMore;
+        @BindString(R.string.transition_album)
+        String mAlbumTransitionName;
 
         @OnClick(R.id.iv_more)
         void doMoreAction(View view) {
@@ -124,8 +129,19 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
 
             String artistName = mData.get(position).mArtistName;
 
-            NavigationUtils.navigateToArtist((AppCompatActivity) mContext, artistId, artistName,
-                    new Pair<View, String>(mAlbum, mAlbum.getTransitionName()));
+            Intent intent = new Intent();
+            intent.putExtra(Constants.ARTIST_ID, artistId);
+            intent.putExtra(Constants.ARTIST_NAME, artistName);
+            intent.putExtra(Constants.WHICH_DETAIL_PAGE, Constants.ARTIST_DETAIL);
+
+            ComponentName componentName = new ComponentName(Constants.MUSIC_PACKAGE_NAME,
+                    Constants.DETAIL_PACKAGE_NAME);
+
+            intent.setComponent(componentName);
+
+            mContext.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(
+                    ((AppCompatActivity) mContext), new Pair<View, String>(mAlbum,
+                            mAlbumTransitionName)).toBundle());
         }
     }
 }

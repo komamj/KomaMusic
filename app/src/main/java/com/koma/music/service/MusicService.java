@@ -30,7 +30,6 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.audiofx.AudioEffect;
@@ -1328,7 +1327,7 @@ public class MusicService extends Service {
                 ? artistName : artistName + " - " + albumName;
 
         int playButtonResId = isPlaying
-                ? R.drawable.ic_pause_notification : R.drawable.ic_play_notification;
+                ? R.drawable.ic_pause_black : R.drawable.ic_play_black;
         int playButtonTitleResId = isPlaying
                 ? R.string.notification_pause : R.string.notification_play;
 

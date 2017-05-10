@@ -44,8 +44,6 @@ import butterknife.OnClick;
  */
 
 public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsViewHolder> {
-    private static final String PACKAFE_ALBUM_DETAIL_ACTIVITY = "com.koma.music.album.detail.AlbumDetailActivity";
-
     private List<Album> mData;
 
     private Context mContext;
@@ -67,7 +65,7 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
 
     @Override
     public AlbumsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_album, null);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_album, parent, false);
         return new AlbumsViewHolder(view);
     }
 
@@ -75,7 +73,7 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
     public void onBindViewHolder(AlbumsViewHolder holder, int position) {
         holder.itemView.setTag(position);
         holder.mMore.setTag(position);
-        holder.mAlbum.setTransitionName(holder.mAlbumTransitionName + position);
+        holder.mAlbum.setTransitionName(holder.mAlbumTransitionName + String.valueOf(position));
         Glide.with(mContext).load(Utils.getAlbumArtUri(mData.get(position).mAlbumId))
                 .placeholder(R.drawable.ic_album)
                 .into(holder.mAlbum);
@@ -126,16 +124,16 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
 
             intent.putExtra(Constants.ALBUM_ID, albumId);
             intent.putExtra(Constants.ALBUM_NAME, albumName);
-            intent.putExtra(Constants.TRANSITION_NAME, mAlbumTransitionName + position);
+            intent.putExtra(Constants.WHICH_DETAIL_PAGE, Constants.ALBUM_DETAIL);
 
             ComponentName componentName = new ComponentName(Constants.MUSIC_PACKAGE_NAME,
-                    PACKAFE_ALBUM_DETAIL_ACTIVITY);
+                    Constants.DETAIL_PACKAGE_NAME);
 
             intent.setComponent(componentName);
 
             mContext.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(
                     ((AppCompatActivity) mContext), new Pair<View, String>(mAlbum,
-                            mAlbumTransitionName + position),
+                            mAlbumTransitionName),
                     new Pair<View, String>(mFabPlay, mFabTransitionName)).toBundle());
         }
     }

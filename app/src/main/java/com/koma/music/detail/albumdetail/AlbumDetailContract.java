@@ -10,7 +10,7 @@
  * KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.koma.music.artist.detail;
+package com.koma.music.detail.albumdetail;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -18,7 +18,7 @@ import android.graphics.drawable.Drawable;
 
 import com.koma.music.base.BasePresenter;
 import com.koma.music.base.BaseView;
-import com.koma.music.data.model.Album;
+import com.koma.music.data.model.Song;
 
 import java.util.List;
 
@@ -26,23 +26,24 @@ import java.util.List;
  * Created by koma on 5/5/17.
  */
 
-public interface ArtistDetailContract {
+public interface AlbumDetailContract {
     interface View extends BaseView<Presenter> {
         Context getContext();
 
-        long getArtistId();
+        long getAlbumId();
 
-        void showArtistAlbums(List<Album> albumList);
+        boolean isActive();
 
-        void showArtwork(Drawable albumArt);
+        void showAlbumSongs(List<Song> songList);
 
-        void showArtwork(Bitmap bitmap);
+        void showAlbum(Drawable albumArt);
+
+        void showAlbum(Bitmap bitmap);
     }
 
-
     interface Presenter extends BasePresenter {
-        void loadArtistAlbums(long artistId);
+        void loadAlbumSongs(long albumID);
 
-        void loadArtWork(long artistId);
+        void loadAlbum(long albumID);
     }
 }

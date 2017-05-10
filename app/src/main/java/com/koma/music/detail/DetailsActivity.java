@@ -10,45 +10,39 @@
  * KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.koma.music.album.detail;
+package com.koma.music.detail;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.koma.music.R;
 import com.koma.music.base.BaseActivity;
-import com.koma.music.data.local.MusicRepository;
-import com.koma.music.data.model.Song;
-import com.koma.music.song.SongsAdapter;
+import com.koma.music.detail.albumdetail.AlbumDetailsFragment;
+import com.koma.music.detail.artistdetail.ArtistDetailFragment;
+import com.koma.music.play.quickcontrol.QuickControlFragment;
+import com.koma.music.play.quickcontrol.QuickControlPresenter;
 import com.koma.music.util.Constants;
-import com.koma.music.util.LogUtils;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * Created by koma on 5/4/17.
+ * Created by koma on 5/9/17.
  */
 
-public class AlbumDetailActivity extends BaseActivity implements AlbumDetailContract.View {
-    private static final String TAG = AlbumDetailActivity.class.getSimpleName();
+public class DetailsActivity extends BaseActivity {
+    private static final String TAG = DetailsActivity.class.getSimpleName();
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -61,22 +55,20 @@ public class AlbumDetailActivity extends BaseActivity implements AlbumDetailCont
     @BindView(R.id.app_bar)
     AppBarLayout appBarLayout;
 
+    @BindView(R.id.sliding_layout)
+    SlidingUpPanelLayout mPanelLayout;
+
     @OnClick(R.id.fab_play)
     void doPlayAlbum() {
 
     }
 
-    @BindView(R.id.recycler_view)
-    RecyclerView mRecyclerView;
 
-    private long mAlbumId;
+    private int mWhichPage = Constants.ALBUM_DETAIL;
 
-    private String mAlbumName;
+    private long mTargetId;
 
-    @NonNull
-    private AlbumDetailContract.Presenter mPresenter;
-
-    private SongsAdapter mAdapter;
+    private String mTitle;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,6 +78,10 @@ public class AlbumDetailActivity extends BaseActivity implements AlbumDetailCont
     }
 
     private void init() {
+        if (getIntent() != null) {
+            mWhichPage = getIntent().getIntExtra(Constants.WHICH_DETAIL_PAGE, Constants.ALBUM_DETAIL);
+        }
+
         setSupportActionBar(mToolbar);
 
         ActionBar actionBar = getSupportActionBar();
@@ -93,83 +89,60 @@ public class AlbumDetailActivity extends BaseActivity implements AlbumDetailCont
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        if (getIntent() != null) {
-            mAlbumId = getIntent().getLongExtra(Constants.ALBUM_ID, -1);
-            mAlbumName = getIntent().getStringExtra(Constants.ALBUM_NAME);
+        QuickControlFragment quickControlFragment = (QuickControlFragment)
+                getSupportFragmentManager().findFragmentById(R.id.quickcontrols_container);
+        if (quickControlFragment == null) {
+            quickControlFragment = new QuickControlFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.quickcontrols_container, quickControlFragment).commit();
+        }
+        new QuickControlPresenter(quickControlFragment);
+
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+
+        if (fragment != null) {
+            return;
         }
 
-        if (!TextUtils.isEmpty(mAlbumName)) {
-            collapsingToolbarLayout.setTitle(mAlbumName);
+        Bundle bundle;
+
+        switch (mWhichPage) {
+
+            case Constants.RECENTLY_ADDED:
+                break;
+            case Constants.RECENTLY_PLAYED:
+                break;
+            case Constants.MY_FAVORITE:
+                break;
+            case Constants.ALBUM_DETAIL:
+                mTargetId = getIntent().getLongExtra(Constants.ALBUM_ID, -1);
+                mTitle = getIntent().getStringExtra(Constants.ALBUM_NAME);
+                collapsingToolbarLayout.setTitle(mTitle);
+                fragment = new AlbumDetailsFragment();
+                bundle = new Bundle();
+                bundle.putLong(Constants.ALBUM_ID, mTargetId);
+                fragment.setArguments(bundle);
+                break;
+            case Constants.ARTIST_DETAIL:
+                mTargetId = getIntent().getLongExtra(Constants.ARTIST_ID, -1);
+                mTitle = getIntent().getStringExtra(Constants.ARTIST_NAME);
+                collapsingToolbarLayout.setTitle(mTitle);
+                fragment = new ArtistDetailFragment();
+                bundle = new Bundle();
+                bundle.putLong(Constants.ARTIST_ID, mTargetId);
+                fragment.setArguments(bundle);
+                break;
+            default:
+                break;
         }
 
-        mAlbum.setTransitionName(getIntent().getStringExtra("transition_name"));
-
-        LogUtils.i(TAG, "transiiton name : " + mAlbum.getTransitionName());
-        new AlbumDetailPresenter(this, MusicRepository.getInstance());
-
-        mAdapter = new SongsAdapter(this, new ArrayList<Song>());
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(mAdapter);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        if (mPresenter != null) {
-            mPresenter.subscribe();
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        if (mPresenter != null) {
-            mPresenter.unSubscribe();
-        }
-    }
-
-
-    @Override
-    public int getLayoutId() {
-        return R.layout.activity_album_detail;
-    }
-
-    @Override
-    public void setPresenter(@NonNull AlbumDetailContract.Presenter presenter) {
-        mPresenter = presenter;
-    }
-
-    @Override
-    public Context getContext() {
-        return this;
-    }
-
-    @Override
-    public long getAlbumId() {
-        return this.mAlbumId;
-    }
-
-    @Override
-    public void showAlbumSongs(List<Song> songList) {
-        LogUtils.i(TAG, "showAlbumSongs size : " + songList.size());
-        if (mAdapter != null) {
-            mAdapter.replaceData(songList);
-        }
-    }
-
-    @Override
     public void showAlbum(Drawable albumArt) {
         mAlbum.setImageDrawable(albumArt);
     }
 
-    @Override
     public void showAlbum(Bitmap bitmap) {
         mAlbum.setImageBitmap(bitmap);
     }
@@ -196,5 +169,10 @@ public class AlbumDetailActivity extends BaseActivity implements AlbumDetailCont
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_details;
     }
 }

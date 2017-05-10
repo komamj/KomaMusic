@@ -13,7 +13,7 @@
 package com.koma.music.data.local;
 
 import com.koma.music.album.AlbumsPresenter;
-import com.koma.music.album.detail.AlbumDetailPresenter;
+import com.koma.music.detail.albumdetail.AlbumDetailPresenter;
 import com.koma.music.artist.ArtistsPresenter;
 import com.koma.music.data.model.Album;
 import com.koma.music.data.model.Artist;

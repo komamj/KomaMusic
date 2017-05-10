@@ -33,7 +33,7 @@
                 android:transitionName="@string/transition_fab_play"
                 android:layout_gravity="bottom|end"
                 android:layout_margin="@dimen/activity_horizontal_margin"
-                android:src="@drawable/ic_play_white"
+                android:src="@drawable/ic_play_black"
                 app:layout_anchorGravity="bottom|end" />
         </FrameLayout>
 

@@ -21,6 +21,7 @@ import android.provider.MediaStore;
 
 public class Constants {
     public static final String MUSIC_PACKAGE_NAME = "com.koma.music";
+    public static final String DETAIL_PACKAGE_NAME = "com.koma.music.detail.DetailsActivity";
 
     public static final Uri AUDIO_URI = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
     public static Uri PLAYLIST_URI = MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI;
@@ -37,11 +38,12 @@ public class Constants {
             + " AND " + MediaStore.Audio.AudioColumns.TITLE + " != ''";
 
     //Detail
-    public static final String RECENTLY_ADDED = "recently_added";
-    public static final String RECENTLY_PLAYED = "recently_played";
-    public static final String MY_FAVORITE = "my_favorite";
-    public static final String ALBUM_DETAIL = "album";
-    public static final String ARTIST_DETAIL = "artist";
+    public static final String WHICH_DETAIL_PAGE = "which_detail_page";
+    public static final int RECENTLY_ADDED = 0x00;
+    public static final int RECENTLY_PLAYED = RECENTLY_ADDED + 1;
+    public static final int MY_FAVORITE = RECENTLY_PLAYED + 1;
+    public static final int ALBUM_DETAIL = MY_FAVORITE + 1;
+    public static final int ARTIST_DETAIL = ALBUM_DETAIL + 1;
 
     //AlbumDetail
     public static final String TRANSITION_NAME = "transition_name";

@@ -10,79 +10,47 @@
  * KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.koma.music.artist.detail;
+package com.koma.music.detail.artistdetail;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.koma.music.R;
 import com.koma.music.album.AlbumsAdapter;
-import com.koma.music.base.BaseFragment;
+import com.koma.music.base.BaseLoadingFragment;
 import com.koma.music.data.local.MusicRepository;
 import com.koma.music.data.model.Album;
+import com.koma.music.detail.DetailsActivity;
 import com.koma.music.util.Constants;
 import com.koma.music.util.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-
 /**
  * Created by koma on 5/5/17.
  */
 
-public class ArtistDetailFragment extends BaseFragment implements ArtistDetailContract.View {
+public class ArtistDetailFragment extends BaseLoadingFragment implements ArtistDetailContract.View {
     private static final String TAG = ArtistDetailFragment.class.getSimpleName();
 
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
-    @BindView(R.id.iv_album)
-    ImageView mAlbum;
-    @BindView(R.id.fab_play)
-    FloatingActionButton mFabPlay;
-    @BindView(R.id.collapsing_toolbar)
-    CollapsingToolbarLayout collapsingToolbarLayout;
-    @BindView(R.id.app_bar)
-    AppBarLayout appBarLayout;
-
-    @OnClick(R.id.fab_play)
-    void doPlayAlbum() {
-    }
-
-    @BindView(R.id.recycler_view)
-    RecyclerView mRecyclerView;
-
     private long mArtistId;
-
-    private String mArtistName;
 
     @NonNull
     private ArtistDetailContract.Presenter mPresenter;
 
     private AlbumsAdapter mAdapter;
 
-    public static ArtistDetailFragment newInstance(long id, String name, String transitionName) {
-        ArtistDetailFragment fragment = new ArtistDetailFragment();
-        Bundle args = new Bundle();
-        args.putLong(Constants.ARTIST_ID, id);
-        args.putString(Constants.ARTIST_NAME, name);
-        args.putString(Constants.TRANSITION_NAME, transitionName);
-        fragment.setArguments(args);
-        return fragment;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        new ArtistDetailPresenter(this, MusicRepository.getInstance());
     }
 
     @Override
@@ -97,16 +65,7 @@ public class ArtistDetailFragment extends BaseFragment implements ArtistDetailCo
     private void init() {
         if (getArguments() != null) {
             mArtistId = getArguments().getLong(Constants.ARTIST_ID, -1);
-            mArtistName = getArguments().getString(Constants.ARTIST_NAME);
         }
-
-        if (!TextUtils.isEmpty(mArtistName)) {
-            collapsingToolbarLayout.setTitle(mArtistName);
-        }
-
-        mAlbum.setTransitionName(getArguments().getString(Constants.TRANSITION_NAME));
-
-        LogUtils.i(TAG, "transition name : " + mAlbum.getTransitionName());
 
         new ArtistDetailPresenter(this, MusicRepository.getInstance());
 
@@ -152,7 +111,7 @@ public class ArtistDetailFragment extends BaseFragment implements ArtistDetailCo
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_album_detail;
+        return R.layout.fragment_base;
     }
 
     @Override
@@ -166,14 +125,36 @@ public class ArtistDetailFragment extends BaseFragment implements ArtistDetailCo
             mAdapter.replaceData(albumList);
         }
     }
-
     @Override
     public void showArtwork(Drawable albumArt) {
-        mAlbum.setImageDrawable(albumArt);
+        ((DetailsActivity) getActivity()).showAlbum(albumArt);
     }
 
     @Override
     public void showArtwork(Bitmap bitmap) {
-        mAlbum.setImageBitmap(bitmap);
+        ((DetailsActivity) getActivity()).showAlbum(bitmap);
+    }
+
+    @Override
+    public void refreshData() {
+        if (mPresenter != null) {
+            mPresenter.loadArtistAlbums(mArtistId);
+            mPresenter.loadArtWork(mArtistId);
+        }
+    }
+
+    @Override
+    public void onPlaylistChanged() {
+
+    }
+
+    @Override
+    public void onMetaChanged() {
+
+    }
+
+    @Override
+    public void onPlayStateChanged() {
+
     }
 }

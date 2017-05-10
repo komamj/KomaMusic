@@ -1,5 +1,6 @@
 package com.koma.music.play.quickcontrol;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 
 import com.koma.music.base.BasePresenter;
@@ -14,6 +15,8 @@ public interface QuickControlContract {
         void updateBlurArtWork();
 
         void setBlurArtWork(Drawable blurArtWork);
+
+        Context getContext();
     }
 
     interface Presenter extends BasePresenter {

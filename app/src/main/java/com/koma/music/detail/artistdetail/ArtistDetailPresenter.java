@@ -10,7 +10,7 @@
  * KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.koma.music.artist.detail;
+package com.koma.music.detail.artistdetail;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;

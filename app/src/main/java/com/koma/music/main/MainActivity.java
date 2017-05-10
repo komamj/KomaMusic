@@ -98,7 +98,7 @@ public class MainActivity extends BaseMusicStateActivity
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.quickcontrols_container, quickControlFragment).commit();
         }
-        new QuickControlPresenter(this, quickControlFragment);
+        new QuickControlPresenter(quickControlFragment);
 
         addBackstackListener();
     }
@@ -108,7 +108,7 @@ public class MainActivity extends BaseMusicStateActivity
             @Override
             public void onBackStackChanged() {
                 LogUtils.i(TAG, "onBackStackChanged");
-               // getSupportFragmentManager().findFragmentById(R.id.fragment_container).onResume();
+                getSupportFragmentManager().findFragmentById(R.id.fragment_container).onResume();
             }
         });
     }

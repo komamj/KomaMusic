@@ -51,22 +51,40 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        android:id="@+id/sliding_layout"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:gravity="bottom"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:umanoDragView="@+id/quickcontrols_container"
+        app:umanoOverlay="false"
+        app:umanoPanelHeight="55dp"
+        app:umanoShadowHeight="5dp">
+
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        <FrameLayout
+            android:id="@+id/quickcontrols_container"
+            android:layout_width="match_parent"
+            android:layout_height="55dp" />
+
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_horizontal_margin"
-        android:src="@drawable/ic_play_white"
+        android:src="@drawable/ic_play_black"
         app:borderWidth="0dp"
         app:fabSize="mini"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </android.support.design.widget.CoordinatorLayout>
 

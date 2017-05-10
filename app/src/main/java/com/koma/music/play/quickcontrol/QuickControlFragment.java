@@ -84,7 +84,7 @@ public class QuickControlFragment extends BaseMusicStateFragment implements Quic
     }
 
     private void init() {
-        new QuickControlPresenter(mContext, this);
+        new QuickControlPresenter(this);
         mHeaderLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -107,6 +107,11 @@ public class QuickControlFragment extends BaseMusicStateFragment implements Quic
         super.onDestroyView();
 
         LogUtils.i(TAG, "onDestroyView");
+    }
+
+    @Override
+    public Context getContext() {
+        return mContext;
     }
 
     @Override
@@ -149,8 +154,8 @@ public class QuickControlFragment extends BaseMusicStateFragment implements Quic
     public void onPlayStateChanged() {
         LogUtils.i(TAG, "onPlayStateChanged");
 
-        mPauseOrPlay.setImageResource(MusicUtils.isPlaying() ? R.drawable.ic_pause_header :
-                R.drawable.ic_play_header);
+        mPauseOrPlay.setImageResource(MusicUtils.isPlaying() ? R.drawable.ic_pause_black :
+                R.drawable.ic_play_black);
     }
 
     @Override

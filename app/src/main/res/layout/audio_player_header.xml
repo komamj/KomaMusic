@@ -73,14 +73,14 @@
 
             <com.koma.music.widget.SquareImageView
                 android:id="@+id/iv_pause"
-                android:layout_width="55dp"
-                android:layout_height="wrap_content"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
+                android:layout_centerInParent="true"
                 android:layout_marginEnd="8dp"
                 android:background="?selectableItemBackgroundBorderless"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_play_header" />
+                android:src="@drawable/ic_play_black" />
         </RelativeLayout>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

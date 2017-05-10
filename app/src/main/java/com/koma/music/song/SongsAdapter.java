@@ -67,11 +67,11 @@ public class SongsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
         if (viewType == TYPE_HEADER) {
-            view = LayoutInflater.from(mContext).inflate(R.layout.item_song_header, null);
+            view = LayoutInflater.from(mContext).inflate(R.layout.item_song_header, parent, false);
 
             return new SongsHeaderViewHolder(view);
         } else {
-            view = LayoutInflater.from(mContext).inflate(R.layout.item_song_info_base, null);
+            view = LayoutInflater.from(mContext).inflate(R.layout.item_song_info_base, parent, false);
 
             return new SongsViewHolder(view);
         }

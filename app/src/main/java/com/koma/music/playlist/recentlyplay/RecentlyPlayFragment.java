@@ -12,12 +12,18 @@
  */
 package com.koma.music.playlist.recentlyplay;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import com.koma.music.base.BaseFragment;
+import com.koma.music.R;
 import com.koma.music.base.BaseLoadingFragment;
+import com.koma.music.data.model.Song;
+import com.koma.music.detail.DetailsActivity;
 import com.koma.music.util.LogUtils;
+
+import java.util.List;
 
 /**
  * Created by koma on 4/20/17.
@@ -60,7 +66,7 @@ public class RecentlyPlayFragment extends BaseLoadingFragment implements Recentl
 
     @Override
     protected int getLayoutId() {
-        return 0;
+        return R.layout.fragment_base;
     }
 
     @Override
@@ -70,7 +76,9 @@ public class RecentlyPlayFragment extends BaseLoadingFragment implements Recentl
 
     @Override
     public void refreshData() {
-
+        if (mPresenter != null) {
+            mPresenter.loadRecentlyPlayedSongs();
+        }
     }
 
     @Override
@@ -86,5 +94,34 @@ public class RecentlyPlayFragment extends BaseLoadingFragment implements Recentl
     @Override
     public void onPlayStateChanged() {
 
+    }
+
+    @Override
+    public boolean isActive() {
+        return isAdded();
+    }
+
+    @Override
+    public void showEmptyView() {
+        super.showEmptyView();
+    }
+
+    @Override
+    public void hideLoadingView() {
+        super.hideLoadingView();
+    }
+
+    @Override
+    public void showPlayedSongs(List<Song> songs) {
+    }
+
+    @Override
+    public void showArtwork(Drawable albumArt) {
+        ((DetailsActivity) getActivity()).showAlbum(albumArt);
+    }
+
+    @Override
+    public void showArtwork(Bitmap bitmap) {
+        ((DetailsActivity) getActivity()).showAlbum(bitmap);
     }
 }

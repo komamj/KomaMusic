@@ -12,13 +12,23 @@
  */
 package com.koma.music.playlist.recentlyadd;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 
-import com.koma.music.base.BaseFragment;
+import com.koma.music.R;
 import com.koma.music.base.BaseLoadingFragment;
-import com.koma.music.playlist.myfavorite.MyFavoriteContract;
+import com.koma.music.data.local.MusicRepository;
+import com.koma.music.data.model.Song;
+import com.koma.music.detail.DetailsActivity;
+import com.koma.music.song.SongsAdapter;
 import com.koma.music.util.LogUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by koma on 4/20/17.
@@ -28,13 +38,36 @@ public class RecentlyAddedFragment extends BaseLoadingFragment implements Recent
     private static final String TAG = RecentlyAddedFragment.class.getSimpleName();
 
     @NonNull
-    private MyFavoriteContract.Presenter mPresenter;
+    private RecentlyAddedContract.Presenter mPresenter;
+
+    private SongsAdapter mAdapter;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        new RecentlyAddedPresenter(this, MusicRepository.getInstance());
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         LogUtils.i(TAG, "onActivityCreated");
+
+        init();
+    }
+
+    private void init() {
+        mAdapter = new SongsAdapter(mContext, new ArrayList<Song>());
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setHasFixedSize(true);
+
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -61,17 +94,14 @@ public class RecentlyAddedFragment extends BaseLoadingFragment implements Recent
 
     @Override
     protected int getLayoutId() {
-        return 0;
-    }
-
-    @Override
-    public void setPresenter(@NonNull MyFavoriteContract.Presenter presenter) {
-        mPresenter = presenter;
+        return R.layout.fragment_base;
     }
 
     @Override
     public void refreshData() {
-
+        if (mPresenter != null) {
+            mPresenter.loadRecentlyAddedSongs();
+        }
     }
 
     @Override
@@ -87,5 +117,45 @@ public class RecentlyAddedFragment extends BaseLoadingFragment implements Recent
     @Override
     public void onPlayStateChanged() {
 
+    }
+
+    @Override
+    public Context getContext() {
+        return mContext;
+    }
+
+    @Override
+    public void setPresenter(RecentlyAddedContract.Presenter presenter) {
+        mPresenter = presenter;
+    }
+
+    @Override
+    public boolean isActive() {
+        return isAdded();
+    }
+
+    @Override
+    public void showEmptyView() {
+        super.showEmptyView();
+    }
+
+    @Override
+    public void hideLoadingView() {
+        super.hideLoadingView();
+    }
+
+    @Override
+    public void showSongs(List<Song> songs) {
+        mAdapter.replaceData(songs);
+    }
+
+    @Override
+    public void showArtwork(Drawable albumArt) {
+        ((DetailsActivity) getActivity()).showAlbum(albumArt);
+    }
+
+    @Override
+    public void showArtwork(Bitmap bitmap) {
+        ((DetailsActivity) getActivity()).showAlbum(bitmap);
     }
 }

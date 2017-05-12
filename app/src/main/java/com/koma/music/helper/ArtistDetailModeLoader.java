@@ -26,12 +26,12 @@ import java.io.InputStream;
  * Created by koma on 5/5/17.
  */
 
-public class ArtworkModeLoader implements StreamModelLoader<Long> {
-    private static final String TAG = ArtworkModeLoader.class.getSimpleName();
+public class ArtistDetailModeLoader implements StreamModelLoader<Long> {
+    private static final String TAG = ArtistDetailModeLoader.class.getSimpleName();
 
     private Context mContext;
 
-    public ArtworkModeLoader(Context context) {
+    public ArtistDetailModeLoader(Context context) {
         mContext = context;
     }
 
@@ -39,7 +39,7 @@ public class ArtworkModeLoader implements StreamModelLoader<Long> {
     public DataFetcher<InputStream> getResourceFetcher(Long artistId, int width, int height) {
         // this method is working in main thread.
 
-        return new ArtworkDataFetcher(mContext, artistId);
+        return new ArtistDetailDataFetcher(mContext, artistId);
     }
 
     // ModelLoader工厂，在向Glide注册自定义ModelLoader时使用到
@@ -48,7 +48,7 @@ public class ArtworkModeLoader implements StreamModelLoader<Long> {
         @Override
         public ModelLoader<Long, InputStream> build(Context context,
                                                     GenericLoaderFactory genericLoaderFactory) {
-            return new ArtworkModeLoader(context);
+            return new ArtistDetailModeLoader(context);
         }
 
         @Override

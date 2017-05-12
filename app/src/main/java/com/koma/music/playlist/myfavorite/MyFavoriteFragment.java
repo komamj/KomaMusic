@@ -1,11 +1,17 @@
 package com.koma.music.playlist.myfavorite;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import com.koma.music.base.BaseFragment;
 import com.koma.music.base.BaseLoadingFragment;
+import com.koma.music.data.local.MusicRepository;
+import com.koma.music.data.model.Song;
+import com.koma.music.detail.DetailsActivity;
 import com.koma.music.util.LogUtils;
+
+import java.util.List;
 
 /**
  * Created by koma on 4/20/17.
@@ -16,6 +22,13 @@ public class MyFavoriteFragment extends BaseLoadingFragment implements MyFavorit
 
     @NonNull
     private MyFavoriteContract.Presenter mPresenter;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        new MyFavoritePresenter(this, MusicRepository.getInstance());
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -74,5 +87,35 @@ public class MyFavoriteFragment extends BaseLoadingFragment implements MyFavorit
     @Override
     public void onPlayStateChanged() {
 
+    }
+
+    @Override
+    public boolean isActive() {
+        return isAdded();
+    }
+
+    @Override
+    public void showEmptyView() {
+
+    }
+
+    @Override
+    public void hideLoadingView() {
+
+    }
+
+    @Override
+    public void showFavoriteSongs(List<Song> songs) {
+
+    }
+
+    @Override
+    public void showArtwork(Drawable albumArt) {
+        ((DetailsActivity) getActivity()).showAlbum(albumArt);
+    }
+
+    @Override
+    public void showArtwork(Bitmap bitmap) {
+        ((DetailsActivity) getActivity()).showAlbum(bitmap);
     }
 }

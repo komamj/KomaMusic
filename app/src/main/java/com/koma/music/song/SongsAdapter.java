@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.koma.music.R;
 import com.koma.music.base.BaseSongInfoViewHolder;
 import com.koma.music.base.BaseViewHolder;
@@ -86,6 +87,8 @@ public class SongsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             ((SongsViewHolder) holder).mMoreMenu.setTag(position - 1);
 
             Glide.with(mContext).load(Utils.getAlbumArtUri(mData.get(position - 1).mAlbumId))
+                    .error(R.drawable.ic_album)
+                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .placeholder(R.drawable.ic_album)
                     .into(((SongsViewHolder) holder).mAlbum);
 

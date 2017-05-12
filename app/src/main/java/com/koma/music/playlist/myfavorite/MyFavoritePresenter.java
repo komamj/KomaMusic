@@ -3,7 +3,10 @@ package com.koma.music.playlist.myfavorite;
 import android.support.annotation.NonNull;
 
 import com.koma.music.data.local.MusicRepository;
+import com.koma.music.data.model.Song;
 import com.koma.music.util.LogUtils;
+
+import java.util.List;
 
 import rx.subscriptions.CompositeSubscription;
 
@@ -42,5 +45,15 @@ public class MyFavoritePresenter implements MyFavoriteContract.Presenter {
         if (mSubscriptions != null) {
             mSubscriptions.clear();
         }
+    }
+
+    @Override
+    public void loadMyFavoriteSongs() {
+
+    }
+
+    @Override
+    public void onLoadFinished(List<Song> songs) {
+
     }
 }

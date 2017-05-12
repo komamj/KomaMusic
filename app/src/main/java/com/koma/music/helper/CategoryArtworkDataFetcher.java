@@ -12,46 +12,47 @@
  */
 package com.koma.music.helper;
 
+import android.content.ContentResolver;
 import android.content.Context;
 
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.data.DataFetcher;
-import com.koma.music.album.AlbumsPresenter;
-import com.koma.music.data.model.Album;
+import com.koma.music.song.SongsPresenter;
+import com.koma.music.util.Constants;
 import com.koma.music.util.Utils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 /**
- * Created by koma on 5/6/17.
+ * Created by koma on 5/11/17.
  */
 
-public class ArtworkDataFetcher implements DataFetcher<InputStream> {
-    private static final String TAG = ArtworkDataFetcher.class.getSimpleName();
-
-    private long mArtistId;
+public class CategoryArtworkDataFetcher implements DataFetcher<InputStream> {
+    private String mCategory;
 
     private Context mContext;
 
     private InputStream mInputStream;
 
-    public ArtworkDataFetcher(Context context, long artistId) {
-        mArtistId = artistId;
-
+    public CategoryArtworkDataFetcher(Context context, String category) {
         mContext = context;
+
+        mCategory = category;
     }
 
     @Override
     public InputStream loadData(Priority priority) throws Exception {
-        // this method is in work thread
-
-        List<Album> albumList = AlbumsPresenter.getArtistAlbums(this.mArtistId);
-
-        mInputStream = mContext.getContentResolver().openInputStream(Utils.getAlbumArtUri(albumList.get(0).getAlbumId()));
-
-        return mInputStream;
+        ContentResolver contentResolver = mContext.getContentResolver();
+        switch (mCategory) {
+            case Constants.CATEGORY_RECENTLY_ADDED:
+                mInputStream = contentResolver.openInputStream(Utils.getAlbumArtUri(SongsPresenter.getSingleSong().mAlbumId));
+                break;
+            case Constants.CATEGORY_RECENTLY_PLAYED:
+                break;
+            case Constants.CATEGORY_MY_FAVORITE:
+        }
+        return null;
     }
 
     @Override
@@ -69,11 +70,19 @@ public class ArtworkDataFetcher implements DataFetcher<InputStream> {
 
     @Override
     public String getId() {
-        return String.valueOf(this.mArtistId);
+        return null;
     }
 
     @Override
     public void cancel() {
+        if (mInputStream != null) {
+            try {
+                mInputStream.close();
+            } catch (IOException e) {
 
+            } finally {
+                mInputStream = null;
+            }
+        }
     }
 }

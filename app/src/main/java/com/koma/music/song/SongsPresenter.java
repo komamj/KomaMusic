@@ -103,6 +103,10 @@ public class SongsPresenter implements SongsContract.Presenter {
 
     @Override
     public void onLoadSongsFinished(List<Song> songs) {
+        if (mView == null) {
+            return;
+        }
+
         if (mView.isActive()) {
             mView.hideLoadingView();
 
@@ -157,5 +161,45 @@ public class SongsPresenter implements SongsContract.Presenter {
             cursor = null;
         }
         return songs;
+    }
+
+    public static Song getSingleSong() {
+        Song song = null;
+        Cursor cursor = MusicApplication.getContext().getContentResolver().query(Constants.AUDIO_URI,
+                AUDIO_PROJECTION, Constants.MUSIC_ONLY_SELECTION, null,
+                MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+        // Gather the data
+        if (cursor != null && cursor.moveToFirst()) {
+            // Copy the song Id
+            final long id = cursor.getLong(0);
+
+            // Copy the song name
+            final String songName = cursor.getString(1);
+
+            // Copy the artist name
+            final String artist = cursor.getString(2);
+
+            // Copy the album id
+            final long albumId = cursor.getLong(3);
+
+            // Copy the album name
+            final String album = cursor.getString(4);
+
+            // Copy the duration
+            final long duration = cursor.getLong(5);
+
+            // Convert the duration into seconds
+            final int durationInSecs = (int) duration / 1000;
+
+            // Create a new song
+            song = new Song(id, songName, artist, album, albumId,
+                    durationInSecs);
+        }
+        // Close the cursor
+        if (cursor != null) {
+            cursor.close();
+            cursor = null;
+        }
+        return song;
     }
 }

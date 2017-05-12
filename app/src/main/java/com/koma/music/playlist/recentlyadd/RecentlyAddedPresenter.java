@@ -14,16 +14,33 @@ package com.koma.music.playlist.recentlyadd;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.koma.music.MusicApplication;
+import com.koma.music.R;
+import com.koma.music.data.local.MusicRepository;
 import com.koma.music.data.model.Song;
 import com.koma.music.util.LogUtils;
 import com.koma.music.util.PreferenceUtils;
+import com.koma.music.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by koma on 4/20/17.
@@ -32,15 +49,114 @@ import java.util.List;
 public class RecentlyAddedPresenter implements RecentlyAddedContract.Presenter {
     private static final String TAG = RecentlyAddedPresenter.class.getSimpleName();
 
+    private MusicRepository mRepository;
+
+    private CompositeSubscription mSubscriptions;
+
+    @NonNull
+    private RecentlyAddedContract.View mView;
+
+    public RecentlyAddedPresenter(RecentlyAddedContract.View view, MusicRepository repository) {
+        mView = view;
+        mView.setPresenter(this);
+
+        mRepository = repository;
+
+        mSubscriptions = new CompositeSubscription();
+    }
     @Override
     public void subscribe() {
         LogUtils.i(TAG, "subscribe");
 
+        loadRecentlyAddedSongs();
+    }
+
+    @Override
+    public void loadRecentlyAddedSongs() {
+        if (mSubscriptions != null) {
+            mSubscriptions.clear();
+        }
+
+        Subscription subscription = mRepository.getRecentlyAddedSongs().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<Song>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        LogUtils.e(TAG, "loadRecentlyAddedSongs onError : " + e.toString());
+                    }
+
+                    @Override
+                    public void onNext(List<Song> songs) {
+                        onLoadSongsFinished(songs);
+                    }
+                });
+
+        mSubscriptions.add(subscription);
+    }
+
+    @Override
+    public void onLoadSongsFinished(List<Song> songs) {
+        LogUtils.i(TAG, "onLoadSongsFinished");
+
+        if (mView != null) {
+            if (mView.isActive()) {
+                mView.hideLoadingView();
+
+                if (songs.size() == 0) {
+                    Glide.with(mView.getContext()).load(R.drawable.ic_album).asBitmap()
+                            .into(new SimpleTarget<Bitmap>() {
+                                @Override
+                                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                    if (mView != null) {
+                                        mView.showArtwork(resource);
+                                    }
+                                }
+                            });
+
+                    mView.showEmptyView();
+                } else {
+                    Glide.with(mView.getContext()).load(Utils.getAlbumArtUri(songs.get(0).mAlbumId))
+                            .asBitmap()
+                            .placeholder(R.drawable.ic_album)
+                            .error(R.drawable.ic_album)
+                            .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                            .priority(Priority.IMMEDIATE)
+                            .into(new SimpleTarget<Bitmap>() {
+                                @Override
+                                public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                                    super.onLoadFailed(e, errorDrawable);
+
+                                    if (mView != null) {
+                                        mView.showArtwork(errorDrawable);
+                                    }
+                                }
+
+                                @Override
+                                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                    if (mView != null) {
+                                        mView.showArtwork(resource);
+                                    }
+                                }
+                            });
+
+                    mView.showSongs(songs);
+                }
+            }
+        }
     }
 
     @Override
     public void unSubscribe() {
         LogUtils.i(TAG, "unSubscribe");
+
+        if (mSubscriptions != null) {
+            mSubscriptions.clear();
+        }
     }
 
     public static List<Song> getRecentlyAddedSongs() {
@@ -76,6 +192,8 @@ public class RecentlyAddedPresenter implements RecentlyAddedContract.Presenter {
 
                 // Add everything up
                 songList.add(song);
+
+                LogUtils.i(TAG, "sadasd");
             } while (mCursor.moveToNext());
         }
         // Close the cursor
@@ -91,6 +209,7 @@ public class RecentlyAddedPresenter implements RecentlyAddedContract.Presenter {
      * @return The {@link Cursor} used to run the song query.
      */
     private static final Cursor makeLastAddedCursor(final Context context) {
+        LogUtils.i(TAG, "sadasd");
         // timestamp of four weeks ago
         long fourWeeksAgo = (System.currentTimeMillis() / 1000) - (4 * 3600 * 24 * 7);
         // possible saved timestamp caused by user "clearing" the last added playlist
@@ -119,8 +238,6 @@ public class RecentlyAddedPresenter implements RecentlyAddedContract.Presenter {
                         MediaStore.Audio.AudioColumns.ALBUM,
                         /* 5 */
                         MediaStore.Audio.AudioColumns.DURATION,
-                        /* 6 */
-                        MediaStore.Audio.AudioColumns.YEAR,
                 }, selection, null, MediaStore.Audio.Media.DATE_ADDED + " DESC");
     }
 }

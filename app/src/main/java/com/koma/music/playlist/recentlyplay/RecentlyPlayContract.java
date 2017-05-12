@@ -12,8 +12,14 @@
  */
 package com.koma.music.playlist.recentlyplay;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+
 import com.koma.music.base.BasePresenter;
 import com.koma.music.base.BaseView;
+import com.koma.music.data.model.Song;
+
+import java.util.List;
 
 /**
  * Created by koma on 4/20/17.
@@ -21,8 +27,22 @@ import com.koma.music.base.BaseView;
 
 public interface RecentlyPlayContract {
     interface View extends BaseView<Presenter> {
+        boolean isActive();
+
+        void showEmptyView();
+
+        void hideLoadingView();
+
+        void showPlayedSongs(List<Song> songs);
+
+        void showArtwork(Drawable albumArt);
+
+        void showArtwork(Bitmap bitmap);
     }
 
     interface Presenter extends BasePresenter {
+        void loadRecentlyPlayedSongs();
+
+        void onLoadPlayedSongsFinished(List<Song> songs);
     }
 }

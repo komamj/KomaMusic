@@ -15,9 +15,7 @@ package com.koma.music.playlist;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
-import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.koma.music.R;
 import com.koma.music.base.BaseLoadingFragment;
 import com.koma.music.data.local.MusicRepository;
@@ -27,43 +25,12 @@ import com.koma.music.util.LogUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-
 /**
  * Created by koma on 3/21/17.
  */
 
 public class PlaylistsFragment extends BaseLoadingFragment implements PlaylistsConstract.View {
     private static final String TAG = PlaylistsFragment.class.getSimpleName();
-
-    @BindView(R.id.iv_recently_played)
-    ImageView mRecentlyPlayed;
-
-    @BindView(R.id.iv_recently_added)
-    ImageView mRecentlyAdded;
-    @BindView(R.id.iv_my_favorite)
-    ImageView mMyFavorite;
-
-    @OnClick(R.id.iv_my_favorite)
-    void launchFavorite() {
-
-    }
-
-    @OnClick(R.id.iv_recently_added)
-    void launchRecentlyAdded() {
-
-    }
-
-    @OnClick(R.id.iv_recently_played)
-    void launchRecentlyPlayed() {
-    }
-
-    @OnClick(R.id.tv_new_playlist)
-    void newPlaylist() {
-        NewPlaylistDialog newPlaylistDialog = new NewPlaylistDialog();
-        newPlaylistDialog.show(getChildFragmentManager(), NewPlaylistDialog.DIALOG_TAG);
-    }
 
     @NonNull
     private PlaylistsConstract.Presenter mPresenter;
@@ -87,15 +54,6 @@ public class PlaylistsFragment extends BaseLoadingFragment implements PlaylistsC
     }
 
     private void init() {
-        Glide.with(this).load("")
-                .placeholder(R.drawable.ic_album)
-                .into(mRecentlyAdded);
-        Glide.with(this).load("")
-                .placeholder(R.drawable.ic_album)
-                .into(mRecentlyPlayed);
-        Glide.with(this).load("")
-                .placeholder(R.drawable.ic_album)
-                .into(mMyFavorite);
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
@@ -143,7 +101,7 @@ public class PlaylistsFragment extends BaseLoadingFragment implements PlaylistsC
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_playlist;
+        return R.layout.fragment_base;
     }
 
     @Override
@@ -167,12 +125,16 @@ public class PlaylistsFragment extends BaseLoadingFragment implements PlaylistsC
 
     @Override
     public void refreshData() {
-
+        if (mPresenter != null) {
+            mPresenter.loadPlaylists();
+        }
     }
 
     @Override
     public void onPlaylistChanged() {
-
+        if (mPresenter != null) {
+            mPresenter.loadPlaylists();
+        }
     }
 
     @Override

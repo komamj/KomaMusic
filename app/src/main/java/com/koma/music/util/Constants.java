@@ -53,4 +53,9 @@ public class Constants {
     //ArtistDetail
     public static final String ARTIST_ID = "artist_id";
     public static final String ARTIST_NAME = "artist_name";
+
+    //Category artwork
+    public static final String CATEGORY_RECENTLY_ADDED = "category_recently_added";
+    public static final String CATEGORY_RECENTLY_PLAYED = "category_recently_played";
+    public static final String CATEGORY_MY_FAVORITE = "category_my_favorite";
 }

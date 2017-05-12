@@ -12,27 +12,39 @@
  */
 package com.koma.music.playlist;
 
+import android.app.ActivityOptions;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.koma.music.R;
 import com.koma.music.base.BaseSongInfoViewHolder;
+import com.koma.music.base.BaseViewHolder;
 import com.koma.music.data.model.Playlist;
+import com.koma.music.util.Constants;
 import com.koma.music.util.Utils;
 
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
  * Created by koma on 4/14/17.
  */
 
-public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder> {
+public class PlaylistAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final String TAG = PlaylistAdapter.class.getSimpleName();
+
+    private static final int TYPE_HEADER = 0x00;
+    private static final int TYPE_NORMAL = TYPE_HEADER + 1;
 
     private List<Playlist> mData;
 
@@ -54,22 +66,90 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
     }
 
     @Override
-    public PlaylistViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_song_info_base, parent, false);
-        return new PlaylistViewHolder(view);
+    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view;
+        if (viewType == TYPE_HEADER) {
+            view = LayoutInflater.from(mContext).inflate(R.layout.item_playlist_header, parent, false);
+            return new PlaylistHeaderVH(view);
+        } else {
+            view = LayoutInflater.from(mContext).inflate(R.layout.item_song_info_base, parent, false);
+            return new PlaylistViewHolder(view);
+        }
     }
 
     @Override
-    public void onBindViewHolder(PlaylistViewHolder holder, int position) {
-        holder.itemView.setTag(position);
-        holder.mMoreMenu.setTag(position);
-        holder.mTitle.setText(mData.get(position).mPlaylistName);
-        holder.mInfo.setText(Utils.makeLabel(mContext, R.plurals.num_songs, mData.get(position).mSongCount));
+    public void onBindViewHolder(BaseViewHolder holder, int position) {
+        if (getItemViewType(position) == TYPE_HEADER) {
+            ((PlaylistHeaderVH) holder).mFavorite.setImageResource(R.drawable.ic_album);
+            ((PlaylistHeaderVH) holder).mRecentlyAdded.setImageResource(R.drawable.ic_album);
+            ((PlaylistHeaderVH) holder).mRecentlyPlayed.setImageResource(R.drawable.ic_album);
+        } else {
+            holder.itemView.setTag(position - 1);
+            PlaylistViewHolder viewHolder = (PlaylistViewHolder) holder;
+            viewHolder.mMoreMenu.setTag(position - 1);
+            viewHolder.mTitle.setText(mData.get(position - 1).mPlaylistName);
+            viewHolder.mInfo.setText(Utils.makeLabel(mContext, R.plurals.num_songs,
+                    mData.get(position - 1).mSongCount));
+        }
     }
 
     @Override
     public int getItemCount() {
-        return mData == null ? 0 : mData.size();
+        return mData == null ? 1 : mData.size() + 1;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == 0) {
+            return TYPE_HEADER;
+        } else {
+            return TYPE_NORMAL;
+        }
+    }
+
+    public class PlaylistHeaderVH extends BaseViewHolder {
+        @BindView(R.id.iv_recently_played)
+        ImageView mRecentlyPlayed;
+        @BindView(R.id.iv_recently_added)
+        ImageView mRecentlyAdded;
+        @BindView(R.id.iv_my_favorite)
+        ImageView mFavorite;
+
+        @OnClick(R.id.tv_new_playlist)
+        void newPlaylist() {
+            NewPlaylistDialog newPlaylistDialog = new NewPlaylistDialog();
+            newPlaylistDialog.show(((AppCompatActivity) mContext).getSupportFragmentManager(),
+                    NewPlaylistDialog.DIALOG_TAG);
+        }
+
+        @OnClick(R.id.iv_recently_added)
+        void launchRecentlyAddedDetail() {
+            Intent intent = new Intent();
+            intent.putExtra(Constants.WHICH_DETAIL_PAGE, Constants.RECENTLY_ADDED);
+
+            ComponentName componentName = new ComponentName(Constants.MUSIC_PACKAGE_NAME,
+                    Constants.DETAIL_PACKAGE_NAME);
+
+            intent.setComponent(componentName);
+
+            mContext.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(
+                    ((AppCompatActivity) mContext), new Pair<View, String>(mRecentlyAdded,
+                            "transition_album")).toBundle());
+        }
+
+        @OnClick(R.id.iv_recently_played)
+        void launchRecentlyPlayedDetail() {
+
+        }
+
+        @OnClick(R.id.iv_my_favorite)
+        void launchMyFavoriteDetail() {
+
+        }
+
+        public PlaylistHeaderVH(View view) {
+            super(view);
+        }
     }
 
     public class PlaylistViewHolder extends BaseSongInfoViewHolder {

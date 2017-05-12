@@ -15,7 +15,10 @@ package com.koma.music.playlist.recentlyplay;
 import android.support.annotation.NonNull;
 
 import com.koma.music.data.local.MusicRepository;
+import com.koma.music.data.model.Song;
 import com.koma.music.util.LogUtils;
+
+import java.util.List;
 
 import rx.subscriptions.CompositeSubscription;
 
@@ -50,5 +53,19 @@ public class RecentlyPlayPresenter implements RecentlyPlayContract.Presenter {
     @Override
     public void unSubscribe() {
         LogUtils.i(TAG, "unSubscribe");
+
+        if (mSubscriptions != null) {
+            mSubscriptions.clear();
+        }
+    }
+
+    @Override
+    public void loadRecentlyPlayedSongs() {
+
+    }
+
+    @Override
+    public void onLoadPlayedSongsFinished(List<Song> songs) {
+
     }
 }

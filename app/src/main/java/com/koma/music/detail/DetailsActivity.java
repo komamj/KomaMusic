@@ -31,6 +31,7 @@ import com.koma.music.detail.albumdetail.AlbumDetailsFragment;
 import com.koma.music.detail.artistdetail.ArtistDetailFragment;
 import com.koma.music.play.quickcontrol.QuickControlFragment;
 import com.koma.music.play.quickcontrol.QuickControlPresenter;
+import com.koma.music.playlist.recentlyadd.RecentlyAddedFragment;
 import com.koma.music.util.Constants;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -109,6 +110,9 @@ public class DetailsActivity extends BaseActivity {
         switch (mWhichPage) {
 
             case Constants.RECENTLY_ADDED:
+                mTitle = getResources().getString(R.string.recently_add);
+                collapsingToolbarLayout.setTitle(mTitle);
+                fragment = new RecentlyAddedFragment();
                 break;
             case Constants.RECENTLY_PLAYED:
                 break;

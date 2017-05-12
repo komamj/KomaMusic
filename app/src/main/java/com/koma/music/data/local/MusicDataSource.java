@@ -39,4 +39,10 @@ public interface MusicDataSource {
     Observable<List<Song>> getQueueSongs();
 
     Observable<List<Song>> getAlbumSongs(long albumId);
+
+    Observable<List<Song>> getRecentlyAddedSongs();
+
+    Observable<List<Song>> getRecentlyPlayedSongs();
+
+    Observable<List<Song>> getMyFavoriteSongs();
 }

@@ -13,14 +13,15 @@
 package com.koma.music.data.local;
 
 import com.koma.music.album.AlbumsPresenter;
-import com.koma.music.detail.albumdetail.AlbumDetailPresenter;
 import com.koma.music.artist.ArtistsPresenter;
 import com.koma.music.data.model.Album;
 import com.koma.music.data.model.Artist;
 import com.koma.music.data.model.Playlist;
 import com.koma.music.data.model.Song;
+import com.koma.music.detail.albumdetail.AlbumDetailPresenter;
 import com.koma.music.play.playqueue.PlayQueuePresenter;
 import com.koma.music.playlist.PlaylistsPresenter;
+import com.koma.music.playlist.recentlyadd.RecentlyAddedPresenter;
 import com.koma.music.song.SongsPresenter;
 
 import java.util.List;
@@ -108,6 +109,27 @@ public class LocalDataSource implements MusicDataSource {
                 subscriber.onCompleted();
             }
         });
+    }
+
+    @Override
+    public Observable<List<Song>> getRecentlyAddedSongs() {
+        return Observable.create(new Observable.OnSubscribe<List<Song>>() {
+            @Override
+            public void call(Subscriber<? super List<Song>> subscriber) {
+                subscriber.onNext(RecentlyAddedPresenter.getRecentlyAddedSongs());
+                subscriber.onCompleted();
+            }
+        });
+    }
+
+    @Override
+    public Observable<List<Song>> getRecentlyPlayedSongs() {
+        return null;
+    }
+
+    @Override
+    public Observable<List<Song>> getMyFavoriteSongs() {
+        return null;
     }
 
 }

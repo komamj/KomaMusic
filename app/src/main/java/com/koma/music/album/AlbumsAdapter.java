@@ -16,7 +16,6 @@ import android.app.ActivityOptions;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
@@ -27,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.koma.music.R;
 import com.koma.music.base.BaseViewHolder;
 import com.koma.music.data.model.Album;
@@ -75,6 +75,8 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
         holder.mMore.setTag(position);
         holder.mAlbum.setTransitionName(holder.mAlbumTransitionName + String.valueOf(position));
         Glide.with(mContext).load(Utils.getAlbumArtUri(mData.get(position).mAlbumId))
+                .error(R.drawable.ic_album)
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .placeholder(R.drawable.ic_album)
                 .into(holder.mAlbum);
         holder.mTitle.setText(mData.get(position).mAlbumName);
@@ -97,10 +99,10 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
         TextView mInfo;
         @BindView(R.id.iv_more)
         ImageView mMore;
-        @BindView(R.id.fab_play)
+       /* @BindView(R.id.fab_play)
         FloatingActionButton mFabPlay;
         @BindString(R.string.transition_fab_play)
-        String mFabTransitionName;
+        String mFabTransitionName;*/
 
         @OnClick(R.id.iv_more)
         void doMoreAction(View view) {
@@ -133,8 +135,7 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
 
             mContext.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(
                     ((AppCompatActivity) mContext), new Pair<View, String>(mAlbum,
-                            mAlbumTransitionName),
-                    new Pair<View, String>(mFabPlay, mFabTransitionName)).toBundle());
+                            mAlbumTransitionName)).toBundle());
         }
     }
 }

@@ -79,4 +79,19 @@ public class MusicRepository implements MusicDataSource {
     public Observable<List<Song>> getAlbumSongs(long albumId) {
         return mLocalDataSource.getAlbumSongs(albumId);
     }
+
+    @Override
+    public Observable<List<Song>> getRecentlyAddedSongs() {
+        return mLocalDataSource.getRecentlyAddedSongs();
+    }
+
+    @Override
+    public Observable<List<Song>> getRecentlyPlayedSongs() {
+        return mLocalDataSource.getRecentlyPlayedSongs();
+    }
+
+    @Override
+    public Observable<List<Song>> getMyFavoriteSongs() {
+        return mLocalDataSource.getMyFavoriteSongs();
+    }
 }

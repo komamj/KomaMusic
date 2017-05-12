@@ -117,6 +117,7 @@ public class ArtistDetailPresenter implements ArtistDetailContract.Presenter {
 
         if (mView != null) {
             Glide.with(mView.getContext()).load(artistId).asBitmap()
+                    .placeholder(R.drawable.ic_album)
                     .error(R.drawable.ic_album)
                     .priority(Priority.IMMEDIATE)
                     .dontAnimate()

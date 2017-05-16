@@ -23,6 +23,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.koma.music.R;
@@ -89,6 +92,30 @@ public class DetailsActivity extends BaseActivity {
         if (actionBar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        mToolbar.post(new Runnable() {
+            @Override
+            public void run() {
+                Animation animation = AnimationUtils.loadAnimation(DetailsActivity.this, R.anim.toolbar_slide_in);
+                animation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        mToolbar.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                mToolbar.startAnimation(animation);
+            }
+        });
 
         QuickControlFragment quickControlFragment = (QuickControlFragment)
                 getSupportFragmentManager().findFragmentById(R.id.quickcontrols_container);
@@ -173,6 +200,13 @@ public class DetailsActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        mFabPlay.setVisibility(View.INVISIBLE);
+
+        super.onBackPressed();
     }
 
     @Override

@@ -12,6 +12,8 @@
  */
 package com.koma.music.play;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 import com.koma.music.base.BasePresenter;
@@ -23,15 +25,13 @@ import com.koma.music.base.BaseView;
 
 public interface MusicPlayerContract {
     interface View extends BaseView<Presenter> {
+        Context getContext();
+
         void updateFavoriteView();
 
         void updateRepeatView();
 
-        void updateBlurArtWork();
-
-        void setBlurArtWork(Drawable blurArtWork);
-
-        void updateAlbumImage();
+        void updateArtwork(Bitmap artwork);
 
         void updateTitle();
 
@@ -53,6 +53,6 @@ public interface MusicPlayerContract {
 
         void onFavoriteFinished();
 
-        void doBlurArtWork();
+        void updateArtWork();
     }
 }

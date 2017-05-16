@@ -130,7 +130,6 @@ public class RecentlyAddedPresenter implements RecentlyAddedContract.Presenter {
                                 @Override
                                 public void onLoadFailed(Exception e, Drawable errorDrawable) {
                                     super.onLoadFailed(e, errorDrawable);
-
                                     if (mView != null) {
                                         mView.showArtwork(errorDrawable);
                                     }
@@ -192,8 +191,6 @@ public class RecentlyAddedPresenter implements RecentlyAddedContract.Presenter {
 
                 // Add everything up
                 songList.add(song);
-
-                LogUtils.i(TAG, "sadasd");
             } while (mCursor.moveToNext());
         }
         // Close the cursor
@@ -209,7 +206,6 @@ public class RecentlyAddedPresenter implements RecentlyAddedContract.Presenter {
      * @return The {@link Cursor} used to run the song query.
      */
     private static final Cursor makeLastAddedCursor(final Context context) {
-        LogUtils.i(TAG, "sadasd");
         // timestamp of four weeks ago
         long fourWeeksAgo = (System.currentTimeMillis() / 1000) - (4 * 3600 * 24 * 7);
         // possible saved timestamp caused by user "clearing" the last added playlist

@@ -12,12 +12,15 @@
  */
 package com.koma.music.play.quickcontrol;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -90,7 +93,9 @@ public class QuickControlFragment extends BaseMusicStateFragment implements Quic
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, MusicPlayerActivity.class);
 
-                startActivity(intent);
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(
+                        ((AppCompatActivity) mContext), new Pair<View, String>(mAlbum,
+                                "share_album")).toBundle());
             }
         });
     }

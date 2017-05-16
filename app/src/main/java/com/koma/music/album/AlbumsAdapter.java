@@ -16,6 +16,7 @@ import android.app.ActivityOptions;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
@@ -99,10 +100,10 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
         TextView mInfo;
         @BindView(R.id.iv_more)
         ImageView mMore;
-       /* @BindView(R.id.fab_play)
+        @BindView(R.id.fab_play)
         FloatingActionButton mFabPlay;
         @BindString(R.string.transition_fab_play)
-        String mFabTransitionName;*/
+        String mFabTransitionName;
 
         @OnClick(R.id.iv_more)
         void doMoreAction(View view) {
@@ -112,6 +113,7 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
         public AlbumsViewHolder(View view) {
             super(view);
             itemView.setOnClickListener(this);
+            mFabPlay.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -135,7 +137,8 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
 
             mContext.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(
                     ((AppCompatActivity) mContext), new Pair<View, String>(mAlbum,
-                            mAlbumTransitionName)).toBundle());
+                            mAlbumTransitionName),
+                    new Pair<View, String>(mFabPlay, mFabTransitionName)).toBundle());
         }
     }
 }

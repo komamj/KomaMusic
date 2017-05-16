@@ -13,12 +13,10 @@
 package com.koma.music.play;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.TransitionDrawable;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v4.view.ViewPager;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -27,7 +25,6 @@ import com.koma.music.R;
 import com.koma.music.base.BaseMusicStateFragment;
 import com.koma.music.util.LogUtils;
 import com.koma.music.util.MusicUtils;
-import com.koma.music.widget.viewpagerindicator.LinePageIndicator;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -39,12 +36,6 @@ import butterknife.OnClick;
 public class MusicPlayerFragment extends BaseMusicStateFragment implements MusicPlayerContract.View,
         SeekBar.OnSeekBarChangeListener {
     private static final String TAG = MusicPlayerFragment.class.getSimpleName();
-
-    @BindView(R.id.view_pager)
-    ViewPager mViewPager;
-
-    @BindView(R.id.indicator)
-    LinePageIndicator mIndicator;
 
     @BindView(R.id.tv_track_name)
     TextView mTrackName;
@@ -58,8 +49,6 @@ public class MusicPlayerFragment extends BaseMusicStateFragment implements Music
         MusicUtils.playOrPause();
     }
 
-    @BindView(R.id.iv_blur)
-    ImageView mBlurImageView;
     @BindView(R.id.song_progress)
     SeekBar mSongProgress;
     @BindView(R.id.song_elapsed_time)
@@ -68,6 +57,9 @@ public class MusicPlayerFragment extends BaseMusicStateFragment implements Music
     TextView mDuration;
     @BindView(R.id.iv_my_favorite)
     ImageView mFavorite;
+
+    @BindView(R.id.iv_album)
+    ImageView mAlbum;
 
     @OnClick(R.id.iv_my_favorite)
     void doMyFavorite() {
@@ -92,8 +84,6 @@ public class MusicPlayerFragment extends BaseMusicStateFragment implements Music
     }
 
     private Context mContext;
-
-    private MusicPlayerPagerAdapter mAdapter;
 
     @NonNull
     private MusicPlayerContract.Presenter mPresenter;
@@ -142,13 +132,6 @@ public class MusicPlayerFragment extends BaseMusicStateFragment implements Music
 
     private void init() {
         mSongProgress.setOnSeekBarChangeListener(this);
-
-        mAdapter = new MusicPlayerPagerAdapter(getChildFragmentManager());
-
-        mViewPager.setAdapter(mAdapter);
-
-        mIndicator.setViewPager(mViewPager);
-        mIndicator.setCurrentItem(1);
     }
 
     @Override
@@ -189,32 +172,8 @@ public class MusicPlayerFragment extends BaseMusicStateFragment implements Music
     }
 
     @Override
-    public void updateBlurArtWork() {
-        LogUtils.i(TAG, "updateBlurArtWork");
-        if (mPresenter != null) {
-            mPresenter.doBlurArtWork();
-        }
-    }
-
-    @Override
-    public void setBlurArtWork(Drawable blurArtWork) {
-        if (blurArtWork != null) {
-            if (mBlurImageView.getDrawable() != null) {
-                final TransitionDrawable td = new TransitionDrawable(new Drawable[]{
-                        mBlurImageView.getDrawable(), blurArtWork});
-                mBlurImageView.setImageDrawable(td);
-                td.startTransition(200);
-            } else {
-                mBlurImageView.setImageDrawable(blurArtWork);
-            }
-        } else {
-            mBlurImageView.setImageDrawable(null);
-        }
-    }
-
-    @Override
-    public void updateAlbumImage() {
-        LogUtils.i(TAG, "updateAlbumImage");
+    public void updateArtwork(Bitmap artwork) {
+        mAlbum.setImageBitmap(artwork);
     }
 
     @Override
@@ -283,7 +242,9 @@ public class MusicPlayerFragment extends BaseMusicStateFragment implements Music
 
     @Override
     public void updateNowPlayingInfo() {
-        updateAlbumImage();
+        if (mPresenter != null) {
+            mPresenter.updateArtWork();
+        }
 
         updateTitle();
 
@@ -292,10 +253,6 @@ public class MusicPlayerFragment extends BaseMusicStateFragment implements Music
         updateDuration();
 
         onPlayStateChanged();
-
-        updateBlurArtWork();
-
-        updateAlbumImage();
 
         updateFavoriteView();
     }

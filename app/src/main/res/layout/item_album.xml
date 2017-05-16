@@ -24,13 +24,18 @@
                 android:foreground="?selectableItemBackground"
                 android:transitionName="@string/transition_album" />
 
-            <ImageView
+            <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab_play"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
+                android:layout_height="wrap_content"
                 android:layout_margin="@dimen/activity_horizontal_margin"
                 android:src="@drawable/ic_play_black"
+                android:transitionName="@string/transition_fab_play"
+                android:visibility="gone"
+                app:borderWidth="0dp"
+                app:fabSize="mini"
+                app:layout_anchor="@id/app_bar"
                 app:layout_anchorGravity="bottom|end" />
         </FrameLayout>
 

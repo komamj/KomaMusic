@@ -42,6 +42,7 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
+                android:visibility="invisible"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
@@ -81,6 +82,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:src="@drawable/ic_play_black"
+        android:transitionName="@string/transition_fab_play"
         app:borderWidth="0dp"
         app:fabSize="mini"
         app:layout_anchor="@id/app_bar"

@@ -33,7 +33,7 @@ public class MusicDBHelper extends SQLiteOpenHelper {
     private static final int VERSION = 1;
 
     /* Name of database file */
-    public static final String DATABASENAME = "musicdb.db";
+    public static final String DATABASE_NAME = "komamusic.db";
 
     private static MusicDBHelper sInstance = null;
 
@@ -51,7 +51,7 @@ public class MusicDBHelper extends SQLiteOpenHelper {
     }
 
     public MusicDBHelper(final Context context) {
-        super(context, DATABASENAME, null, VERSION);
+        super(context, DATABASE_NAME, null, VERSION);
 
         mContext = context;
     }

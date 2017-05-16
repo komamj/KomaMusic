@@ -14,23 +14,17 @@ package com.koma.music.play;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.koma.music.R;
 import com.koma.music.data.local.MusicRepository;
-import com.koma.music.util.ImageLoader;
 import com.koma.music.util.LogUtils;
 import com.koma.music.util.MusicUtils;
 import com.koma.music.util.Utils;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -98,7 +92,7 @@ public class MusicPlayerPresenter implements MusicPlayerContract.Presenter {
 
     }
 
-    @Override
+    /*@Override
     public void doBlurArtWork() {
         LogUtils.i(TAG, "doArtWork");
         Glide.with(mContext).load(Utils.getAlbumArtUri(MusicUtils.getCurrentAlbumId())).asBitmap()
@@ -140,6 +134,19 @@ public class MusicPlayerPresenter implements MusicPlayerContract.Presenter {
                                 });
 
                         mSubscriptions.add(subscription);
+                    }
+                });
+    }
+*/
+    @Override
+    public void updateArtWork() {
+        Glide.with(mView.getContext()).load(Utils.getAlbumArtUri(MusicUtils.getCurrentAlbumId()))
+                .asBitmap()
+                .placeholder(R.drawable.ic_album)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        mView.updateArtwork(resource);
                     }
                 });
     }

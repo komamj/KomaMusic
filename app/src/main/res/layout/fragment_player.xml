@@ -1,187 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/iv_blur"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop" />
+        android:layout_height="match_parent">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#44000000" />
-
-    <android.support.percent.PercentRelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <FrameLayout
-            android:id="@+id/headerView"
+        <com.koma.music.widget.ArtworkSeekBar
+            android:id="@+id/top_album"
             android:layout_width="match_parent"
-            app:layout_heightPercent="80%">
-
-            <LinearLayout
+            android:layout_height="wrap_content">
+            <!--<FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="?actionBarSize"
-                android:orientation="vertical">
+                android:id="@+id/top_album"
+                android:layout_height="wrap_content">
 
-                <com.koma.music.widget.MarqueeTextView
-                    android:id="@+id/tv_track_name"
+                <ImageView
+                    android:id="@+id/iv_album"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="marquee"
-                    android:gravity="center"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:maxLines="1"
-                    android:text="@string/unknown"
-                    android:textColor="@android:color/white"
-                    android:textSize="22sp" />
-
-                <com.koma.music.widget.MarqueeTextView
-                    android:id="@+id/tv_artist_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:gravity="center"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:maxLines="1"
-                    android:paddingTop="3dp"
-                    android:text="@string/unknown"
-                    android:textColor="@android:color/white"
-                    android:textSize="11sp" />
-
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/view_pager"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-
-                <com.koma.music.widget.viewpagerindicator.LinePageIndicator
-                    android:id="@+id/indicator"
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp" />
-            </LinearLayout>
-
-        </FrameLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/headerView"
-            android:layout_gravity="bottom"
-            android:orientation="horizontal"
-            android:paddingTop="5dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="start"
-                android:gravity="start"
-                android:orientation="vertical">
+                    android:layout_height="300dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_album"
+                    android:transitionName="share_album" />
 
                 <SeekBar
                     android:id="@+id/song_progress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="30dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="290dp"
+                    android:background="@android:color/transparent"
                     android:maxHeight="2dp"
-                    android:progress="30"
-                    android:tag="tint_accent_color" />
+                    android:paddingEnd="0dp"
+                    android:paddingStart="0dp" />
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="40dp"
-                    android:layout_marginRight="40dp">
+            </FrameLayout>-->
+        </com.koma.music.widget.ArtworkSeekBar>
 
-                    <TextView
-                        android:id="@+id/song_elapsed_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:textColor="@android:color/white" />
+        <FrameLayout
+            android:id="@+id/time_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/top_album"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin">
 
-                    <TextView
-                        android:id="@+id/song_duration"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:textColor="@android:color/white" />
+            <TextView
+                android:id="@+id/song_elapsed_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start" />
 
-                </RelativeLayout>
+            <TextView
+                android:id="@+id/song_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+        </FrameLayout>
 
-                    <com.koma.music.widget.SquareImageView
-                        android:id="@+id/iv_my_favorite"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="?android:selectableItemBackground"
-                        android:padding="@dimen/activity_vertical_margin"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_favorite" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/time_layout"
+            android:orientation="vertical">
 
-                    <com.koma.music.widget.SquareImageView
-                        android:id="@+id/iv_previous"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="?android:selectableItemBackground"
-                        android:padding="8dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_prev" />
+            <com.koma.music.widget.MarqueeTextView
+                android:id="@+id/tv_track_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:maxLines="1"
+                android:text="@string/unknown"
+                android:textSize="22sp" />
 
-                    <com.koma.music.widget.SquareImageView
-                        android:id="@+id/iv_pause"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="?android:selectableItemBackground"
-                        android:padding="8dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_play" />
-
-
-                    <com.koma.music.widget.SquareImageView
-                        android:id="@+id/iv_next"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="?android:selectableItemBackground"
-                        android:padding="8dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_next" />
-
-                    <com.koma.music.widget.SquareImageView
-                        android:id="@+id/iv_play_mode"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="?android:selectableItemBackground"
-                        android:padding="@dimen/activity_vertical_margin"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_repeat_all" />
-                </LinearLayout>
-
-            </LinearLayout>
-
+            <com.koma.music.widget.MarqueeTextView
+                android:id="@+id/tv_artist_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:maxLines="1"
+                android:paddingTop="3dp"
+                android:text="@string/unknown"
+                android:textSize="11sp" />
         </LinearLayout>
 
-    </android.support.percent.PercentRelativeLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal">
+
+            <com.koma.music.widget.SquareImageView
+                android:id="@+id/iv_my_favorite"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="@dimen/activity_vertical_margin"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_favorite" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.koma.music.widget.SquareImageView
+                    android:id="@+id/iv_previous"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="?android:selectableItemBackgroundBorderless"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_prev" />
+
+                <com.koma.music.widget.SquareImageView
+                    android:id="@+id/iv_pause"
+                    android:layout_width="72dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:background="?android:selectableItemBackgroundBorderless"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_play" />
+
+
+                <com.koma.music.widget.SquareImageView
+                    android:id="@+id/iv_next"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:background="?android:selectableItemBackgroundBorderless"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_next" />
+            </LinearLayout>
+
+            <com.koma.music.widget.SquareImageView
+                android:id="@+id/iv_play_mode"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="@dimen/activity_vertical_margin"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_repeat_all" />
+        </FrameLayout>
+
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

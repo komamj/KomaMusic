@@ -20,6 +20,9 @@ import android.provider.MediaStore;
  */
 
 public class Constants {
+    /* Name of database file */
+    public static final String DATABASENAME = "komamusic.db";
+
     public static final String MUSIC_PACKAGE_NAME = "com.koma.music";
     public static final String DETAIL_PACKAGE_NAME = "com.koma.music.detail.DetailsActivity";
 
@@ -58,4 +61,5 @@ public class Constants {
     public static final String CATEGORY_RECENTLY_ADDED = "category_recently_added";
     public static final String CATEGORY_RECENTLY_PLAYED = "category_recently_played";
     public static final String CATEGORY_MY_FAVORITE = "category_my_favorite";
+    public static final String CATEGORY_ARTIST = "category_artist";
 }

@@ -34,5 +34,6 @@ public class FavoriteButton extends MusicButton {
      * Sets the correct drawable for the favorite state.
      */
     public void updateFavoriteState() {
+        setAlpha(INACTIVE_ALPHA);
     }
 }

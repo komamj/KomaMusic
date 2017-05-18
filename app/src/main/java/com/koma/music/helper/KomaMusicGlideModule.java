@@ -34,6 +34,6 @@ public class KomaMusicGlideModule implements GlideModule {
     @Override
     public void registerComponents(Context context, Glide glide) {
         // 注册我们的ImageFidLoader
-        glide.register(Long.class, InputStream.class, new ArtistDetailModeLoader.Factory());
+        glide.register(String.class, InputStream.class, new CategoryArtworkModeLoader.Factory());
     }
 }

@@ -12,10 +12,16 @@
  */
 package com.koma.music.playlist.recentlyplay;
 
+import android.database.Cursor;
 import android.support.annotation.NonNull;
 
+import com.koma.music.MusicApplication;
 import com.koma.music.data.local.MusicRepository;
+import com.koma.music.data.local.db.RecentlyPlay;
+import com.koma.music.data.local.db.SongPlayCount;
+import com.koma.music.data.local.db.SortedCursor;
 import com.koma.music.data.model.Song;
+import com.koma.music.song.SongsPresenter;
 import com.koma.music.util.LogUtils;
 
 import java.util.List;
@@ -67,5 +73,28 @@ public class RecentlyPlayPresenter implements RecentlyPlayContract.Presenter {
     @Override
     public void onLoadPlayedSongsFinished(List<Song> songs) {
 
+    }
+
+    public static List<Song> getRecentlyPlaySongs() {
+        return SongsPresenter.getSongsForCursor(makeRecentPlayCursor(), false);
+    }
+
+    /**
+     * 获取最近播放歌曲的cursor
+     *
+     * @return
+     */
+    public static SortedCursor makeRecentPlayCursor() {
+
+        Cursor songs = RecentlyPlay.getInstance(MusicApplication.getContext()).queryRecentIds(null);
+
+        try {
+            return SongsPresenter.makeSortedCursor(MusicApplication.getContext(), songs,
+                    songs.getColumnIndex(SongPlayCount.SongPlayCountColumns.ID));
+        } finally {
+            if (songs != null) {
+                songs.close();
+            }
+        }
     }
 }

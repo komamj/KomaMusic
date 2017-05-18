@@ -1063,7 +1063,7 @@ public final class MusicUtils {
      * remove all backing data for top tracks playlist
      */
     public static void clearRecent(Context context) {
-        //RecentPlay.getInstance(context).deleteAll();
+        //RecentlyPlay.getInstance(context).deleteAll();
     }
 
     /**
@@ -1576,7 +1576,7 @@ public final class MusicUtils {
                 // Remove the track from the play count
                 //SongPlayCount.getInstance(context).removeItem(id);
                 // Remove any items in the recents database
-                // RecentPlay.getInstance(context).removeItem(id);
+                // RecentlyPlay.getInstance(context).removeItem(id);
                 c.moveToNext();
             }
 

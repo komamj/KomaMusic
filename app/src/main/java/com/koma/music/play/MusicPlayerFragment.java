@@ -55,14 +55,15 @@ public class MusicPlayerFragment extends BaseMusicStateFragment implements Music
     TextView mSongElapsedTime;
     @BindView(R.id.song_duration)
     TextView mDuration;
-    @BindView(R.id.iv_my_favorite)
+    @BindView(R.id.iv_favorite)
     ImageView mFavorite;
 
     @BindView(R.id.iv_album)
     ImageView mAlbum;
 
-    @OnClick(R.id.iv_my_favorite)
+    @OnClick(R.id.iv_favorite)
     void doMyFavorite() {
+        mFavorite.setImageResource(R.drawable.ic_favorite);
     }
 
     @BindView(R.id.iv_play_mode)

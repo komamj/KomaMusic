@@ -10,7 +10,6 @@
  * KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-
 package com.koma.music.data.local.db;
 
 import android.content.ContentValues;
@@ -18,20 +17,20 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-public class RecentPlay {
+public class RecentlyPlay {
     /* Maximum # of items in the db */
     private static final int MAX_ITEMS_IN_DB = 100;
 
-    private static RecentPlay sInstance = null;
+    private static RecentlyPlay sInstance = null;
 
     private MusicDBHelper mMusicDatabase = null;
 
     /**
-     * Constructor of <code>RecentPlay</code>
+     * Constructor of <code>RecentlyPlay</code>
      *
      * @param context The {@link Context} to use
      */
-    public RecentPlay(final Context context) {
+    public RecentlyPlay(final Context context) {
         mMusicDatabase = MusicDBHelper.getInstance(context);
     }
 
@@ -55,9 +54,9 @@ public class RecentPlay {
      * @param context The {@link Context} to use
      * @return A new instance of this class.
      */
-    public static final synchronized RecentPlay getInstance(final Context context) {
+    public static final synchronized RecentlyPlay getInstance(final Context context) {
         if (sInstance == null) {
-            sInstance = new RecentPlay(context.getApplicationContext());
+            sInstance = new RecentlyPlay(context.getApplicationContext());
         }
         return sInstance;
     }

@@ -78,7 +78,7 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
 
         holder.mAlbum.setTransitionName(holder.mTransitionName + String.valueOf(position));
 
-        Glide.with(mContext).load(mData.get(position).mArtistId).centerCrop()
+        Glide.with(mContext).load(String.valueOf(mData.get(position).mArtistId)).centerCrop()
                 .error(R.drawable.ic_album)
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .placeholder(R.drawable.ic_album)

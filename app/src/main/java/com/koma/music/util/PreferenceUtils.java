@@ -21,6 +21,7 @@ import android.preference.PreferenceManager;
  */
 
 public class PreferenceUtils {
+
     /* Default start page (Artist page) */
     public static final int DEFFAULT_PAGE = 2;
 
@@ -115,17 +116,6 @@ public class PreferenceUtils {
     }
 
     /**
-     * Returns the current theme color.
-     *
-     * @param context The {@link Context} to use.
-     * @return The default theme color.
-     */
-    public final int getDefaultThemeColor(final Context context) {
-        return mPreferences.getInt(DEFAULT_THEME_COLOR,
-                context.getResources().getColor(android.R.color.holo_blue_bright));
-    }
-
-    /**
      * @return True if the user has checked to only download images on Wi-Fi,
      * false otherwise
      */
@@ -147,6 +137,111 @@ public class PreferenceUtils {
      */
     public final boolean downloadMissingArtistImages() {
         return mPreferences.getBoolean(DOWNLOAD_MISSING_ARTIST_IMAGES, true);
+    }
+
+    /**
+     * Saves the sort order for a list.
+     *
+     * @param key   Which sort order to change
+     * @param value The new sort order
+     */
+    private void setSortOrder(final String key, final String value) {
+        final SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
+    /**
+     * Sets the sort order for the artist list.
+     *
+     * @param value The new sort order
+     */
+    public void setArtistSortOrder(final String value) {
+        setSortOrder(ARTIST_SORT_ORDER, value);
+    }
+
+    /**
+     * @return The sort order used for the artist list
+     */
+    public final String getArtistSortOrder() {
+        return mPreferences.getString(ARTIST_SORT_ORDER, SortOrder.ArtistSortOrder.ARTIST_A_Z);
+    }
+
+    /**
+     * Sets the sort order for the artist song list.
+     *
+     * @param value The new sort order
+     */
+    public void setArtistSongSortOrder(final String value) {
+        setSortOrder(ARTIST_SONG_SORT_ORDER, value);
+    }
+
+    /**
+     * @return The sort order used for the artist song list in
+     */
+    public final String getArtistSongSortOrder() {
+        return mPreferences.getString(ARTIST_SONG_SORT_ORDER,
+                SortOrder.ArtistSongSortOrder.SONG_A_Z);
+    }
+
+    /**
+     * Sets the sort order for the artist album list.
+     *
+     * @param value The new sort order
+     */
+    public void setArtistAlbumSortOrder(final String value) {
+        setSortOrder(ARTIST_ALBUM_SORT_ORDER, value);
+    }
+
+    /**
+     * @return The sort order used for the artist album list in
+     */
+    public final String getArtistAlbumSortOrder() {
+        return mPreferences.getString(ARTIST_ALBUM_SORT_ORDER,
+                SortOrder.ArtistAlbumSortOrder.ALBUM_A_Z);
+    }
+
+    /**
+     * Sets the sort order for the album list.
+     *
+     * @param value The new sort order
+     */
+    public void setAlbumSortOrder(final String value) {
+        setSortOrder(ALBUM_SORT_ORDER, value);
+    }
+
+    public final String getAlbumSortOrder() {
+        return mPreferences.getString(ALBUM_SORT_ORDER, SortOrder.AlbumSortOrder.ALBUM_A_Z);
+    }
+
+    /**
+     * Sets the sort order for the album song list.
+     *
+     * @param value The new sort order
+     */
+    public void setAlbumSongSortOrder(final String value) {
+        setSortOrder(ALBUM_SONG_SORT_ORDER, value);
+    }
+
+    /**
+     * @return The sort order used for the album song in
+     */
+    public final String getAlbumSongSortOrder() {
+        return mPreferences.getString(ALBUM_SONG_SORT_ORDER,
+                SortOrder.AlbumSongSortOrder.SONG_TRACK_LIST);
+    }
+
+    /**
+     * Sets the sort order for the song list.
+     *
+     * @param value The new sort order
+     */
+    public void setSongSortOrder(final String value) {
+        setSortOrder(SONG_SORT_ORDER, value);
+    }
+
+    public final String getSongSortOrder() {
+        return mPreferences.getString(SONG_SORT_ORDER, SortOrder.SongSortOrder.SONG_A_Z);
     }
 
     /**

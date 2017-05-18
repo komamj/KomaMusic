@@ -12,7 +12,6 @@
  */
 package com.koma.music.album;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -115,19 +114,14 @@ public class AlbumsPresenter implements AlbumsConstract.Presenter {
     }
 
     public static List<Album> getAllAlbums() {
-        // Create the Cursor
-        Cursor cursor = makeAlbucursor(MusicApplication.getContext(), null);
-
-        return getAlbums(cursor);
+        return getAlbums(makeAlbucursor(null), false);
     }
 
     public static List<Album> getArtistAlbums(long artistId) {
-        Cursor cursor = makeAlbucursor(MusicApplication.getContext(), artistId);
-
-        return getAlbums(cursor);
+        return getAlbums(makeAlbucursor(artistId), false);
     }
 
-    private static List<Album> getAlbums(Cursor cursor) {
+    private static List<Album> getAlbums(Cursor cursor, boolean isSingle) {
         List<Album> albumList = new ArrayList<>();
 
         // Gather the data
@@ -157,7 +151,7 @@ public class AlbumsPresenter implements AlbumsConstract.Presenter {
                 final Album album = new Album(id, albumName, artist, songCount, year);
                 // Add everything up
                 albumList.add(album);
-            } while (cursor.moveToNext());
+            } while (cursor.moveToNext() && !isSingle);
         }
         // Close the cursor
         if (cursor != null) {
@@ -171,11 +165,10 @@ public class AlbumsPresenter implements AlbumsConstract.Presenter {
     /**
      * Creates the {@link Cursor} used to run the query.
      *
-     * @param context  The {@link Context} to use.
      * @param artistId The artistId we want to find albums for or null if we want all albums
      * @return The {@link Cursor} used to run the album query.
      */
-    private static final Cursor makeAlbucursor(final Context context, final Long artistId) {
+    private static final Cursor makeAlbucursor(final Long artistId) {
         // requested album ordering
         Uri uri = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI;
 
@@ -183,7 +176,7 @@ public class AlbumsPresenter implements AlbumsConstract.Presenter {
             uri = MediaStore.Audio.Artists.Albums.getContentUri("external", artistId);
         }
 
-        Cursor cursor = context.getContentResolver().query(uri,
+        Cursor cursor = MusicApplication.getContext().getContentResolver().query(uri,
                 new String[]{
                         /* 0 */
                         BaseColumns._ID,

@@ -12,12 +12,10 @@
  */
 package com.koma.music.main;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -31,7 +29,6 @@ import com.koma.music.R;
 import com.koma.music.base.BaseMusicStateActivity;
 import com.koma.music.play.quickcontrol.QuickControlFragment;
 import com.koma.music.play.quickcontrol.QuickControlPresenter;
-import com.koma.music.util.LogUtils;
 import com.koma.music.util.MusicUtils;
 import com.koma.music.util.Utils;
 
@@ -49,10 +46,12 @@ public class MainActivity extends BaseMusicStateActivity
     DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
+   /* @BindView(R.id.sliding_layout)
+    SlidingUpPanelLayout mPanelLayout;*/
 
-    private Handler mHandler;
+    //private Handler mHandler;
 
-    private Runnable mNavigateMusicLibrary = new Runnable() {
+ /*   private Runnable mNavigateMusicLibrary = new Runnable() {
         public void run() {
             mNavigationView.getMenu().findItem(R.id.nav_library).setChecked(true);
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
@@ -62,7 +61,7 @@ public class MainActivity extends BaseMusicStateActivity
                 transaction.replace(R.id.fragment_container, fragment).commit();
             }
         }
-    };
+    };*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +75,7 @@ public class MainActivity extends BaseMusicStateActivity
     }
 
     private void init() {
-        mHandler = new Handler(Looper.getMainLooper());
+        //  mHandler = new Handler(Looper.getMainLooper());
 
         mNavigationView.setNavigationItemSelectedListener(this);
 
@@ -100,10 +99,10 @@ public class MainActivity extends BaseMusicStateActivity
         }
         new QuickControlPresenter(quickControlFragment);
 
-        addBackstackListener();
+        // addBackstackListener();
     }
 
-    private void addBackstackListener() {
+   /* private void addBackstackListener() {
         getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
@@ -111,7 +110,7 @@ public class MainActivity extends BaseMusicStateActivity
                 getSupportFragmentManager().findFragmentById(R.id.fragment_container).onResume();
             }
         });
-    }
+    }*/
 
     @Override
     public void onResume() {
@@ -129,8 +128,16 @@ public class MainActivity extends BaseMusicStateActivity
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            //super.onBackPressed();
+            backToHome();
         }
+    }
+
+    private void backToHome() {
+        Intent launcher = new Intent(Intent.ACTION_MAIN);
+        launcher.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        launcher.addCategory(Intent.CATEGORY_HOME);
+        startActivity(launcher);
     }
 
     @Override
@@ -183,7 +190,6 @@ public class MainActivity extends BaseMusicStateActivity
 
     @Override
     public void onPlaylistChanged() {
-
     }
 
     @Override
@@ -195,6 +201,5 @@ public class MainActivity extends BaseMusicStateActivity
 
     @Override
     public void onPlayStateChanged() {
-
     }
 }

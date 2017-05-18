@@ -54,6 +54,7 @@ import android.view.KeyEvent;
 
 import com.koma.music.R;
 import com.koma.music.data.local.db.MusicPlaybackState;
+import com.koma.music.data.local.db.RecentlyPlay;
 import com.koma.music.data.model.MusicPlaybackTrack;
 import com.koma.music.util.LogUtils;
 import com.koma.music.util.PreferenceUtils;
@@ -221,6 +222,11 @@ public class MusicService extends Service {
     private MusicPlaybackState mPlaybackStateStore;
 
     /**
+     * Recently played database
+     */
+    private RecentlyPlay mRecentlyPlay;
+
+    /**
      * Shake detector class used for shake to switch song feature
      */
     private ShakeDetector mShakeDetector;
@@ -311,7 +317,7 @@ public class MusicService extends Service {
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         // Initialize the favorites and recents databases
-        // mRecentsCache = RecentPlay.getInstance(this);
+        mRecentlyPlay = RecentlyPlay.getInstance(this);
 
         // gets the song play count cache
         // mSongPlayCountCache = SongPlayCount.getInstance(this);
@@ -1221,9 +1227,9 @@ public class MusicService extends Service {
 
         if (what.equals(META_CHANGED)) {
             // Add the track to the recently played list.
-           /* mRecentsCache.addSongId(getAudioId());
+            mRecentlyPlay.addSongId(getAudioId());
 
-            mSongPlayCountCache.bumpSongCount(getAudioId());*/
+            // mSongPlayCountCache.bumpSongCount(getAudioId());
         } else if (what.equals(MusicServiceConstants.QUEUE_CHANGED)) {
             saveQueue(true);
             if (isPlaying()) {
@@ -1370,7 +1376,7 @@ public class MusicService extends Service {
                         retrievePlaybackAction(MusicServiceConstants.NEXT_ACTION));
 
         if (artwork != null) {
-           // builder.setColor(Palette.from(artwork).generate().getVibrantColor(Color.parseColor("#403f4d")));
+            // builder.setColor(Palette.from(artwork).generate().getVibrantColor(Color.parseColor("#403f4d")));
 
             builder.setColor(Palette.from(artwork).generate().getMutedColor(
                     getResources().getColor(R.color.colorPrimary)));

@@ -1,9 +1,14 @@
 package com.koma.music.playlist.myfavorite;
 
+import android.database.Cursor;
 import android.support.annotation.NonNull;
 
+import com.koma.music.MusicApplication;
 import com.koma.music.data.local.MusicRepository;
+import com.koma.music.data.local.db.FavoriteSong;
+import com.koma.music.data.local.db.SortedCursor;
 import com.koma.music.data.model.Song;
+import com.koma.music.song.SongsPresenter;
 import com.koma.music.util.LogUtils;
 
 import java.util.List;
@@ -55,5 +60,16 @@ public class MyFavoritePresenter implements MyFavoriteContract.Presenter {
     @Override
     public void onLoadFinished(List<Song> songs) {
 
+    }
+
+    public static final List<Song> getFavoriteSongs() {
+        return SongsPresenter.getSongsForCursor(getFavoriteSongCursor(), false);
+    }
+
+    public static Cursor getFavoriteSongCursor() {
+        Cursor cursor = FavoriteSong.getInstance(MusicApplication.getContext()).getFavoriteSong();
+        SortedCursor sortedCursor = SongsPresenter.makeSortedCursor(MusicApplication.getContext(),
+                cursor, 0);
+        return sortedCursor;
     }
 }

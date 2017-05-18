@@ -72,6 +72,11 @@ android {
         //忽略lint error
         abortOnError false
     }
+
+    greendao {
+        schemaVersion 1
+        targetGenDir 'src/main/java'
+    }
 }
 
 repositories {

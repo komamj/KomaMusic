@@ -17,6 +17,9 @@ import android.content.Context;
 
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.data.DataFetcher;
+import com.koma.music.album.AlbumsPresenter;
+import com.koma.music.playlist.myfavorite.MyFavoritePresenter;
+import com.koma.music.playlist.recentlyplay.RecentlyPlayPresenter;
 import com.koma.music.song.SongsPresenter;
 import com.koma.music.util.Constants;
 import com.koma.music.util.Utils;
@@ -34,6 +37,7 @@ public class CategoryArtworkDataFetcher implements DataFetcher<InputStream> {
     private Context mContext;
 
     private InputStream mInputStream;
+    private long mAlbumId;
 
     public CategoryArtworkDataFetcher(Context context, String category) {
         mContext = context;
@@ -44,15 +48,32 @@ public class CategoryArtworkDataFetcher implements DataFetcher<InputStream> {
     @Override
     public InputStream loadData(Priority priority) throws Exception {
         ContentResolver contentResolver = mContext.getContentResolver();
+
         switch (mCategory) {
             case Constants.CATEGORY_RECENTLY_ADDED:
-                mInputStream = contentResolver.openInputStream(Utils.getAlbumArtUri(SongsPresenter.getSingleSong().mAlbumId));
+                mAlbumId = SongsPresenter.getSongsForCursor(SongsPresenter.makeSongCursor(), true)
+                        .get(0).mAlbumId;
+                mInputStream = contentResolver.openInputStream(Utils.getAlbumArtUri(mAlbumId));
                 break;
             case Constants.CATEGORY_RECENTLY_PLAYED:
+                mAlbumId = SongsPresenter.getSongsForCursor(RecentlyPlayPresenter
+                        .makeRecentPlayCursor(), true).get(0).mAlbumId;
+
+                mInputStream = contentResolver.openInputStream(Utils.getAlbumArtUri(mAlbumId));
                 break;
             case Constants.CATEGORY_MY_FAVORITE:
+                mAlbumId = SongsPresenter.getSongsForCursor(MyFavoritePresenter
+                        .getFavoriteSongCursor(), true).get(0).mAlbumId;
+                mInputStream = contentResolver.openInputStream(Utils.getAlbumArtUri(
+                        mAlbumId));
+                break;
+            default:
+                mAlbumId = AlbumsPresenter.getArtistAlbums(Integer.parseInt(mCategory)).get(0)
+                        .getAlbumId();
+                mInputStream = contentResolver.openInputStream(Utils.getAlbumArtUri(mAlbumId));
+                break;
         }
-        return null;
+        return mInputStream;
     }
 
     @Override
@@ -70,7 +91,7 @@ public class CategoryArtworkDataFetcher implements DataFetcher<InputStream> {
 
     @Override
     public String getId() {
-        return null;
+        return String.valueOf(mAlbumId) + mCategory;
     }
 
     @Override

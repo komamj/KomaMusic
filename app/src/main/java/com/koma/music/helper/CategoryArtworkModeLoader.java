@@ -12,7 +12,12 @@
  */
 package com.koma.music.helper;
 
+import android.content.Context;
+
 import com.bumptech.glide.load.data.DataFetcher;
+import com.bumptech.glide.load.model.GenericLoaderFactory;
+import com.bumptech.glide.load.model.ModelLoader;
+import com.bumptech.glide.load.model.ModelLoaderFactory;
 import com.bumptech.glide.load.model.stream.StreamModelLoader;
 
 import java.io.InputStream;
@@ -22,8 +27,29 @@ import java.io.InputStream;
  */
 
 public class CategoryArtworkModeLoader implements StreamModelLoader<String> {
+    private Context mContext;
+
+    public CategoryArtworkModeLoader(Context context) {
+        mContext = context;
+    }
+
     @Override
-    public DataFetcher<InputStream> getResourceFetcher(String model, int width, int height) {
-        return null;
+    public DataFetcher<InputStream> getResourceFetcher(String categoryType, int width, int height) {
+        return new CategoryArtworkDataFetcher(mContext, categoryType);
+    }
+
+    // ModelLoader工厂，在向Glide注册自定义ModelLoader时使用到
+    public static class Factory implements ModelLoaderFactory<String, InputStream> {
+
+        @Override
+        public ModelLoader<String, InputStream> build(Context context,
+                                                      GenericLoaderFactory genericLoaderFactory) {
+            return new CategoryArtworkModeLoader(context);
+        }
+
+        @Override
+        public void teardown() {
+
+        }
     }
 }

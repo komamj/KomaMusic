@@ -54,10 +54,11 @@ public class MusicDBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         /*PropertiesStore.getInstance(mContext).onCreate(db);
         PlaylistArtworkStore.getInstance(mContext).onCreate(db);
-        SongPlayCount.getInstance(mContext).onCreate(db);
         SearchHistory.getInstance(mContext).onCreate(db);*/
         RecentlyPlay.getInstance(mContext).onCreate(db);
+        SongPlayCount.getInstance(mContext).onCreate(db);
         MusicPlaybackState.getInstance(mContext).onCreate(db);
+        FavoriteSong.getInstance(mContext).onCreate(db);
         // LocalizedStore.getInstance(mContext).onCreate(db);
     }
 
@@ -65,11 +66,11 @@ public class MusicDBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
        /* PropertiesStore.getInstance(mContext).onUpgrade(db, oldVersion, newVersion);
         PlaylistArtworkStore.getInstance(mContext).onUpgrade(db, oldVersion, newVersion);
-
-        SongPlayCount.getInstance(mContext).onUpgrade(db, oldVersion, newVersion);
         SearchHistory.getInstance(mContext).onUpgrade(db, oldVersion, newVersion);*/
         RecentlyPlay.getInstance(mContext).onUpgrade(db, oldVersion, newVersion);
         MusicPlaybackState.getInstance(mContext).onUpgrade(db, oldVersion, newVersion);
+        SongPlayCount.getInstance(mContext).onUpgrade(db, oldVersion, newVersion);
+        FavoriteSong.getInstance(mContext).onUpgrade(db, oldVersion, newVersion);
         // LocalizedStore.getInstance(mContext).onUpgrade(db, oldVersion, newVersion);
     }
 
@@ -79,10 +80,11 @@ public class MusicDBHelper extends SQLiteOpenHelper {
                 "Downgrading from: " + oldVersion + " to " + newVersion + ". Dropping tables");
        /* PropertiesStore.getInstance(mContext).onDowngrade(db, oldVersion, newVersion);
         PlaylistArtworkStore.getInstance(mContext).onDowngrade(db, oldVersion, newVersion);
-        SongPlayCount.getInstance(mContext).onDowngrade(db, oldVersion, newVersion);
         SearchHistory.getInstance(mContext).onDowngrade(db, oldVersion, newVersion);*/
         MusicPlaybackState.getInstance(mContext).onDowngrade(db, oldVersion, newVersion);
         RecentlyPlay.getInstance(mContext).onDowngrade(db, oldVersion, newVersion);
+        SongPlayCount.getInstance(mContext).onDowngrade(db, oldVersion, newVersion);
+        FavoriteSong.getInstance(mContext).onDowngrade(db, oldVersion, newVersion);
         //LocalizedStore.getInstance(mContext).onDowngrade(db, oldVersion, newVersion);
     }
 }

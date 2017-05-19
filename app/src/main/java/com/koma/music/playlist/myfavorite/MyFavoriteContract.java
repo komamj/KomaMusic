@@ -12,6 +12,7 @@
  */
 package com.koma.music.playlist.myfavorite;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
@@ -27,6 +28,8 @@ import java.util.List;
 
 public interface MyFavoriteContract {
     interface View extends BaseView<Presenter> {
+        Context getContext();
+
         boolean isActive();
 
         void showEmptyView();

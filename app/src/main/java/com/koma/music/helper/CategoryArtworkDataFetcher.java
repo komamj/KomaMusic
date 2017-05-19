@@ -19,6 +19,7 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.data.DataFetcher;
 import com.koma.music.album.AlbumsPresenter;
 import com.koma.music.playlist.myfavorite.MyFavoritePresenter;
+import com.koma.music.playlist.recentlyadd.RecentlyAddedPresenter;
 import com.koma.music.playlist.recentlyplay.RecentlyPlayPresenter;
 import com.koma.music.song.SongsPresenter;
 import com.koma.music.util.Constants;
@@ -51,8 +52,9 @@ public class CategoryArtworkDataFetcher implements DataFetcher<InputStream> {
 
         switch (mCategory) {
             case Constants.CATEGORY_RECENTLY_ADDED:
-                mAlbumId = SongsPresenter.getSongsForCursor(SongsPresenter.makeSongCursor(), true)
-                        .get(0).mAlbumId;
+                mAlbumId = SongsPresenter.getSongsForCursor(
+                        RecentlyAddedPresenter.makeLastAddedCursor(), true).get(0).mAlbumId;
+
                 mInputStream = contentResolver.openInputStream(Utils.getAlbumArtUri(mAlbumId));
                 break;
             case Constants.CATEGORY_RECENTLY_PLAYED:

@@ -12,17 +12,22 @@
  */
 package com.koma.music.playlist.recentlyplay;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 
 import com.koma.music.R;
 import com.koma.music.base.BaseLoadingFragment;
+import com.koma.music.data.local.MusicRepository;
 import com.koma.music.data.model.Song;
 import com.koma.music.detail.DetailsActivity;
+import com.koma.music.song.SongsAdapter;
 import com.koma.music.util.LogUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,14 +37,34 @@ import java.util.List;
 public class RecentlyPlayFragment extends BaseLoadingFragment implements RecentlyPlayContract.View {
     private static final String TAG = RecentlyPlayFragment.class.getSimpleName();
 
+    private SongsAdapter mAdapter;
+
     @NonNull
     private RecentlyPlayContract.Presenter mPresenter;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        new RecentlyPlayPresenter(this, MusicRepository.getInstance());
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         LogUtils.i(TAG, "onActivityCreated");
+
+        init();
+    }
+
+    private void init() {
+        mAdapter = new SongsAdapter(mContext, new ArrayList<Song>());
+        mRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -70,6 +95,11 @@ public class RecentlyPlayFragment extends BaseLoadingFragment implements Recentl
     }
 
     @Override
+    public Context getContext() {
+        return mContext;
+    }
+
+    @Override
     public void setPresenter(@NonNull RecentlyPlayContract.Presenter presenter) {
         mPresenter = presenter;
     }
@@ -88,7 +118,9 @@ public class RecentlyPlayFragment extends BaseLoadingFragment implements Recentl
 
     @Override
     public void onMetaChanged() {
-
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -113,6 +145,9 @@ public class RecentlyPlayFragment extends BaseLoadingFragment implements Recentl
 
     @Override
     public void showPlayedSongs(List<Song> songs) {
+        if (mAdapter != null) {
+            mAdapter.replaceData(songs);
+        }
     }
 
     @Override

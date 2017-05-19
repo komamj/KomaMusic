@@ -55,6 +55,7 @@ import android.view.KeyEvent;
 import com.koma.music.R;
 import com.koma.music.data.local.db.MusicPlaybackState;
 import com.koma.music.data.local.db.RecentlyPlay;
+import com.koma.music.data.local.db.SongPlayCount;
 import com.koma.music.data.model.MusicPlaybackTrack;
 import com.koma.music.util.LogUtils;
 import com.koma.music.util.PreferenceUtils;
@@ -224,8 +225,11 @@ public class MusicService extends Service {
     /**
      * Recently played database
      */
-    private RecentlyPlay mRecentlyPlay;
-
+    private RecentlyPlay mRecentlyPlayCache;
+    /**
+     * The song play count database
+     */
+    private SongPlayCount mSongPlayCountCache;
     /**
      * Shake detector class used for shake to switch song feature
      */
@@ -317,10 +321,10 @@ public class MusicService extends Service {
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         // Initialize the favorites and recents databases
-        mRecentlyPlay = RecentlyPlay.getInstance(this);
+        mRecentlyPlayCache = RecentlyPlay.getInstance(this);
 
         // gets the song play count cache
-        // mSongPlayCountCache = SongPlayCount.getInstance(this);
+         mSongPlayCountCache = SongPlayCount.getInstance(this);
 
         // gets a pointer to the playback state store
         mPlaybackStateStore = MusicPlaybackState.getInstance(this);
@@ -1227,9 +1231,9 @@ public class MusicService extends Service {
 
         if (what.equals(META_CHANGED)) {
             // Add the track to the recently played list.
-            mRecentlyPlay.addSongId(getAudioId());
+            mRecentlyPlayCache.addSongId(getAudioId());
 
-            // mSongPlayCountCache.bumpSongCount(getAudioId());
+            mSongPlayCountCache.bumpSongCount(getAudioId());
         } else if (what.equals(MusicServiceConstants.QUEUE_CHANGED)) {
             saveQueue(true);
             if (isPlaying()) {

@@ -26,7 +26,6 @@ public class Constants {
     public static final String MUSIC_PACKAGE_NAME = "com.koma.music";
     public static final String DETAIL_PACKAGE_NAME = "com.koma.music.detail.DetailsActivity";
 
-    public static final Uri AUDIO_URI = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
     public static Uri PLAYLIST_URI = MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI;
     public static Uri SONG_URI = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
     public static Uri ARTIST_URI = MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI;

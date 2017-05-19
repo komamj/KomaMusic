@@ -34,7 +34,9 @@ import com.koma.music.detail.albumdetail.AlbumDetailsFragment;
 import com.koma.music.detail.artistdetail.ArtistDetailFragment;
 import com.koma.music.play.quickcontrol.QuickControlFragment;
 import com.koma.music.play.quickcontrol.QuickControlPresenter;
+import com.koma.music.playlist.myfavorite.MyFavoriteFragment;
 import com.koma.music.playlist.recentlyadd.RecentlyAddedFragment;
+import com.koma.music.playlist.recentlyplay.RecentlyPlayFragment;
 import com.koma.music.util.Constants;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -139,11 +141,20 @@ public class DetailsActivity extends BaseActivity {
             case Constants.RECENTLY_ADDED:
                 mTitle = getResources().getString(R.string.recently_add);
                 collapsingToolbarLayout.setTitle(mTitle);
+
                 fragment = new RecentlyAddedFragment();
                 break;
             case Constants.RECENTLY_PLAYED:
+                mTitle = getResources().getString(R.string.recently_play);
+                collapsingToolbarLayout.setTitle(mTitle);
+
+                fragment = new RecentlyPlayFragment();
                 break;
             case Constants.MY_FAVORITE:
+                mTitle = getResources().getString(R.string.my_favorite);
+                collapsingToolbarLayout.setTitle(mTitle);
+
+                fragment = new MyFavoriteFragment();
                 break;
             case Constants.ALBUM_DETAIL:
                 mTargetId = getIntent().getLongExtra(Constants.ALBUM_ID, -1);

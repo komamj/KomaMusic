@@ -25,7 +25,6 @@ import com.koma.music.data.local.db.SortedCursor;
 import com.koma.music.data.model.Song;
 import com.koma.music.util.Constants;
 import com.koma.music.util.LogUtils;
-import com.koma.music.util.PreferenceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -171,26 +170,24 @@ public class SongsPresenter implements SongsContract.Presenter {
     }
 
     public static final Cursor makeSongCursor() {
-        Cursor cursor = MusicApplication.getContext().getContentResolver().query(Constants.AUDIO_URI,
+        Cursor cursor = MusicApplication.getContext().getContentResolver().query(Constants.SONG_URI,
                 AUDIO_PROJECTION, Constants.MUSIC_ONLY_SELECTION, null,
                 MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
         return cursor;
     }
 
     public static Cursor makeSongCursor(Context context, String selection, String[] paramArrayOfString) {
-        final String songSortOrder = PreferenceUtils.getInstance(context).getSongSortOrder();
-        return makeSongCursor(context, selection, paramArrayOfString, songSortOrder);
+        //final String songSortOrder = PreferenceUtils.getInstance(context).getSongSortOrder();
+        return makeSongCursor(context, selection, paramArrayOfString,
+                MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
     }
 
     private static Cursor makeSongCursor(Context context, String selection, String[] paramArrayOfString, String sortOrder) {
-        String selectionStatement = "is_music=1 AND title != ''";
-
         if (!TextUtils.isEmpty(selection)) {
-            selectionStatement = selectionStatement + " AND " + selection;
+            selection = Constants.MUSIC_ONLY_SELECTION + " AND " + selection;
         }
-        return context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                new String[]{"_id", "title", "artist", "album", "duration", "track", "artist_id", "album_id", MediaStore.Audio.Media.DATA},
-                selectionStatement, paramArrayOfString, sortOrder);
+        return context.getContentResolver().query(Constants.SONG_URI,
+                AUDIO_PROJECTION, selection, paramArrayOfString, sortOrder);
 
     }
 

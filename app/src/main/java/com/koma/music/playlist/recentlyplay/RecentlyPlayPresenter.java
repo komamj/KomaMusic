@@ -13,9 +13,17 @@
 package com.koma.music.playlist.recentlyplay;
 
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.koma.music.MusicApplication;
+import com.koma.music.R;
 import com.koma.music.data.local.MusicRepository;
 import com.koma.music.data.local.db.RecentlyPlay;
 import com.koma.music.data.local.db.SongPlayCount;
@@ -23,9 +31,14 @@ import com.koma.music.data.local.db.SortedCursor;
 import com.koma.music.data.model.Song;
 import com.koma.music.song.SongsPresenter;
 import com.koma.music.util.LogUtils;
+import com.koma.music.util.Utils;
 
 import java.util.List;
 
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -54,6 +67,8 @@ public class RecentlyPlayPresenter implements RecentlyPlayContract.Presenter {
     @Override
     public void subscribe() {
         LogUtils.i(TAG, "subscribe");
+
+        loadRecentlyPlayedSongs();
     }
 
     @Override
@@ -67,12 +82,81 @@ public class RecentlyPlayPresenter implements RecentlyPlayContract.Presenter {
 
     @Override
     public void loadRecentlyPlayedSongs() {
+        if (mSubscriptions != null) {
+            mSubscriptions.clear();
+        }
 
+        Subscription subscription = mRepository.getRecentlyPlayedSongs().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<Song>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        LogUtils.e(TAG, "loadRecentlyPlayedSongs error : " + e.toString());
+                    }
+
+                    @Override
+                    public void onNext(List<Song> songs) {
+                        onLoadPlayedSongsFinished(songs);
+                    }
+                });
+
+        mSubscriptions.add(subscription);
     }
 
     @Override
     public void onLoadPlayedSongsFinished(List<Song> songs) {
+        LogUtils.i(TAG, "onLoadSongsFinished count : " + songs.size());
 
+        if (mView != null) {
+            if (mView.isActive()) {
+                mView.hideLoadingView();
+
+                if (songs.size() == 0) {
+                    Glide.with(mView.getContext()).load(R.drawable.ic_album).asBitmap()
+                            .into(new SimpleTarget<Bitmap>() {
+                                @Override
+                                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                    if (mView != null) {
+                                        mView.showArtwork(resource);
+                                    }
+                                }
+                            });
+
+                    mView.showEmptyView();
+                } else {
+                    Glide.with(mView.getContext()).load(Utils.getAlbumArtUri(songs.get(0).mAlbumId))
+                            .asBitmap()
+                            .placeholder(R.drawable.ic_album)
+                            .error(R.drawable.ic_album)
+                            .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                            .priority(Priority.IMMEDIATE)
+                            .into(new SimpleTarget<Bitmap>() {
+                                @Override
+                                public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                                    super.onLoadFailed(e, errorDrawable);
+                                    LogUtils.e(TAG, "onLoadfailed : " + e.toString());
+                                    if (mView != null) {
+                                        mView.showArtwork(errorDrawable);
+                                    }
+                                }
+
+                                @Override
+                                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                    if (mView != null) {
+                                        mView.showArtwork(resource);
+                                    }
+                                }
+                            });
+
+                    mView.showPlayedSongs(songs);
+                }
+            }
+        }
     }
 
     public static List<Song> getRecentlyPlaySongs() {
@@ -87,6 +171,8 @@ public class RecentlyPlayPresenter implements RecentlyPlayContract.Presenter {
     public static SortedCursor makeRecentPlayCursor() {
 
         Cursor songs = RecentlyPlay.getInstance(MusicApplication.getContext()).queryRecentIds(null);
+
+        LogUtils.i(TAG, "count : " + songs.getCount());
 
         try {
             return SongsPresenter.makeSortedCursor(MusicApplication.getContext(), songs,

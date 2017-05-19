@@ -24,6 +24,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.koma.music.R;
 import com.koma.music.base.BaseSongInfoViewHolder;
 import com.koma.music.base.BaseViewHolder;
@@ -80,9 +82,28 @@ public class PlaylistAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     @Override
     public void onBindViewHolder(BaseViewHolder holder, int position) {
         if (getItemViewType(position) == TYPE_HEADER) {
-            ((PlaylistHeaderVH) holder).mFavorite.setImageResource(R.drawable.ic_album);
-            ((PlaylistHeaderVH) holder).mRecentlyAdded.setImageResource(R.drawable.ic_album);
-            ((PlaylistHeaderVH) holder).mRecentlyPlayed.setImageResource(R.drawable.ic_album);
+            PlaylistHeaderVH viewHolder = (PlaylistHeaderVH) holder;
+
+            Glide.with(mContext).load(Constants.CATEGORY_RECENTLY_ADDED)
+                    .crossFade()
+                    .priority(Priority.HIGH)
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_album)
+                    .into(viewHolder.mRecentlyAdded);
+
+            Glide.with(mContext).load(Constants.CATEGORY_RECENTLY_PLAYED)
+                    .crossFade()
+                    .priority(Priority.HIGH)
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_album)
+                    .into(viewHolder.mRecentlyPlayed);
+
+            Glide.with(mContext).load(Constants.CATEGORY_MY_FAVORITE)
+                    .crossFade()
+                    .priority(Priority.HIGH)
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_album)
+                    .into(viewHolder.mFavorite);
         } else {
             holder.itemView.setTag(position - 1);
             PlaylistViewHolder viewHolder = (PlaylistViewHolder) holder;
@@ -139,12 +160,32 @@ public class PlaylistAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         @OnClick(R.id.iv_recently_played)
         void launchRecentlyPlayedDetail() {
+            Intent intent = new Intent();
+            intent.putExtra(Constants.WHICH_DETAIL_PAGE, Constants.RECENTLY_PLAYED);
 
+            ComponentName componentName = new ComponentName(Constants.MUSIC_PACKAGE_NAME,
+                    Constants.DETAIL_PACKAGE_NAME);
+
+            intent.setComponent(componentName);
+
+            mContext.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(
+                    ((AppCompatActivity) mContext), new Pair<View, String>(mRecentlyPlayed,
+                            "transition_album")).toBundle());
         }
 
         @OnClick(R.id.iv_my_favorite)
         void launchMyFavoriteDetail() {
+            Intent intent = new Intent();
+            intent.putExtra(Constants.WHICH_DETAIL_PAGE, Constants.MY_FAVORITE);
 
+            ComponentName componentName = new ComponentName(Constants.MUSIC_PACKAGE_NAME,
+                    Constants.DETAIL_PACKAGE_NAME);
+
+            intent.setComponent(componentName);
+
+            mContext.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(
+                    ((AppCompatActivity) mContext), new Pair<View, String>(mFavorite,
+                            "transition_album")).toBundle());
         }
 
         public PlaylistHeaderVH(View view) {

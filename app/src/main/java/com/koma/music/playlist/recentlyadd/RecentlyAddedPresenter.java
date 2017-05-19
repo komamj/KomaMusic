@@ -12,7 +12,6 @@
  */
 package com.koma.music.playlist.recentlyadd;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -29,11 +28,12 @@ import com.koma.music.MusicApplication;
 import com.koma.music.R;
 import com.koma.music.data.local.MusicRepository;
 import com.koma.music.data.model.Song;
+import com.koma.music.song.SongsPresenter;
+import com.koma.music.util.Constants;
 import com.koma.music.util.LogUtils;
 import com.koma.music.util.PreferenceUtils;
 import com.koma.music.util.Utils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import rx.Subscriber;
@@ -64,6 +64,7 @@ public class RecentlyAddedPresenter implements RecentlyAddedContract.Presenter {
 
         mSubscriptions = new CompositeSubscription();
     }
+
     @Override
     public void subscribe() {
         LogUtils.i(TAG, "subscribe");
@@ -159,57 +160,18 @@ public class RecentlyAddedPresenter implements RecentlyAddedContract.Presenter {
     }
 
     public static List<Song> getRecentlyAddedSongs() {
-        List<Song> songList = new ArrayList<>();
-        // Create the xCursor
-        Cursor mCursor = makeLastAddedCursor(MusicApplication.getContext());
-        // Gather the data
-        if (mCursor != null && mCursor.moveToFirst()) {
-            do {
-                // Copy the song Id
-                final long id = mCursor.getLong(0);
-
-                // Copy the song name
-                final String songName = mCursor.getString(1);
-
-                // Copy the artist name
-                final String artist = mCursor.getString(2);
-
-                // Copy the album id
-                final long albumId = mCursor.getLong(3);
-
-                // Copy the album name
-                final String album = mCursor.getString(4);
-
-                // Copy the duration
-                final long duration = mCursor.getLong(5);
-
-                // Convert the duration into seconds
-                final int durationInSecs = (int) duration / 1000;
-
-                // Create a new song
-                final Song song = new Song(id, songName, artist, album, albumId, durationInSecs);
-
-                // Add everything up
-                songList.add(song);
-            } while (mCursor.moveToNext());
-        }
-        // Close the cursor
-        if (mCursor != null) {
-            mCursor.close();
-            mCursor = null;
-        }
-        return songList;
+        return SongsPresenter.getSongsForCursor(makeLastAddedCursor(), false);
     }
 
     /**
-     * @param context The {@link Context} to use.
      * @return The {@link Cursor} used to run the song query.
      */
-    private static final Cursor makeLastAddedCursor(final Context context) {
+    public static final Cursor makeLastAddedCursor() {
         // timestamp of four weeks ago
         long fourWeeksAgo = (System.currentTimeMillis() / 1000) - (4 * 3600 * 24 * 7);
         // possible saved timestamp caused by user "clearing" the last added playlist
-        long cutoff = PreferenceUtils.getInstance(context).getLastAddedCutoff() / 1000;
+        long cutoff = PreferenceUtils.getInstance(MusicApplication.getContext())
+                .getLastAddedCutoff() / 1000;
         // use the most recent of the two timestamps
         if (cutoff < fourWeeksAgo) {
             cutoff = fourWeeksAgo;
@@ -220,7 +182,7 @@ public class RecentlyAddedPresenter implements RecentlyAddedContract.Presenter {
                 " AND " + MediaStore.Audio.Media.DATE_ADDED + ">" +
                 cutoff;
 
-        return context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+        return MusicApplication.getContext().getContentResolver().query(Constants.SONG_URI,
                 new String[]{
                         /* 0 */
                         BaseColumns._ID,

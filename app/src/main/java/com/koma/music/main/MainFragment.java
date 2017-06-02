@@ -20,15 +20,10 @@ import android.support.v7.widget.Toolbar;
 
 import com.koma.music.R;
 import com.koma.music.album.AlbumsFragment;
-import com.koma.music.album.AlbumsPresenter;
 import com.koma.music.artist.ArtistsFragment;
-import com.koma.music.artist.ArtistsPresenter;
 import com.koma.music.base.BaseFragment;
-import com.koma.music.data.local.MusicRepository;
 import com.koma.music.playlist.PlaylistsFragment;
-import com.koma.music.playlist.PlaylistsPresenter;
 import com.koma.music.song.SongsFragment;
-import com.koma.music.song.SongsPresenter;
 import com.koma.music.util.Utils;
 
 import butterknife.BindArray;

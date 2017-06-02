@@ -10,9 +10,7 @@ buildscript {
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
 
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-
-        //classpath 'com.jakewharton:butterknife-gradle-plugin:8.5.1'
+        classpath 'com.jakewharton:butterknife-gradle-plugin:8.6.0'
 
         classpath 'org.greenrobot:greendao-gradle-plugin:3.2.2' // add plugin
     }
@@ -30,10 +28,10 @@ task clean(type: Delete) {
 
 ext {
     // App dependencies
-    supportLibraryVersion = '25.0.1'
+    supportLibraryVersion = '25.3.1'
     glideVersion = '3.7.0'
     rxjavaVersion = '1.1.6'
     rxandroidVersion = '1.2.1'
-    butterknife = '8.4.0'
+    butterknife = '8.6.0'
     leakcanaryVersion = '1.5'
 }

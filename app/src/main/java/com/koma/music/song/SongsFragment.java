@@ -157,9 +157,4 @@ public class SongsFragment extends BaseLoadingFragment implements SongsContract.
             mAdapter.notifyDataSetChanged();
         }
     }
-
-    @Override
-    public void onPlayStateChanged() {
-
-    }
 }

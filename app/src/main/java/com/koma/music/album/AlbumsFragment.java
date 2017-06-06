@@ -144,9 +144,4 @@ public class AlbumsFragment extends BaseLoadingFragment implements AlbumsConstra
     public void onMetaChanged() {
 
     }
-
-    @Override
-    public void onPlayStateChanged() {
-
-    }
 }

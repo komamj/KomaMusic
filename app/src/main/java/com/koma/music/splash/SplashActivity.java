@@ -16,7 +16,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.koma.music.R;
-import com.koma.music.base.BaseActivity;
+import com.koma.music.base.PermissionActivity;
 import com.koma.music.main.MainActivity;
 
 import java.util.concurrent.TimeUnit;
@@ -29,7 +29,7 @@ import rx.subscriptions.CompositeSubscription;
  * Created by koma on 4/21/17.
  */
 
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends PermissionActivity {
     private static final int TIME_TO_MAINACTIVITY = 2000;
 
     private CompositeSubscription mSubsriptions;
@@ -44,6 +44,11 @@ public class SplashActivity extends BaseActivity {
     @Override
     public int getLayoutId() {
         return R.layout.activity_splash;
+    }
+
+    @Override
+    public void init() {
+
     }
 
     private void launchMainActivity() {

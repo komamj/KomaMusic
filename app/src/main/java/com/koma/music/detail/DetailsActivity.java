@@ -29,7 +29,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.koma.music.R;
-import com.koma.music.base.BaseActivity;
+import com.koma.music.base.BaseControlActivity;
 import com.koma.music.detail.albumdetail.AlbumDetailsFragment;
 import com.koma.music.detail.artistdetail.ArtistDetailFragment;
 import com.koma.music.play.quickcontrol.QuickControlFragment;
@@ -38,7 +38,6 @@ import com.koma.music.playlist.myfavorite.MyFavoriteFragment;
 import com.koma.music.playlist.recentlyadd.RecentlyAddedFragment;
 import com.koma.music.playlist.recentlyplay.RecentlyPlayFragment;
 import com.koma.music.util.Constants;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -47,7 +46,7 @@ import butterknife.OnClick;
  * Created by koma on 5/9/17.
  */
 
-public class DetailsActivity extends BaseActivity {
+public class DetailsActivity extends BaseControlActivity {
     private static final String TAG = DetailsActivity.class.getSimpleName();
 
     @BindView(R.id.toolbar)
@@ -61,8 +60,6 @@ public class DetailsActivity extends BaseActivity {
     @BindView(R.id.app_bar)
     AppBarLayout appBarLayout;
 
-    @BindView(R.id.sliding_layout)
-    SlidingUpPanelLayout mPanelLayout;
 
     @OnClick(R.id.fab_play)
     void doPlayAlbum() {
@@ -78,12 +75,13 @@ public class DetailsActivity extends BaseActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
 
-        init();
+        super.onCreate(savedInstanceState);
     }
 
-    private void init() {
+    public void init() {
         if (getIntent() != null) {
             mWhichPage = getIntent().getIntExtra(Constants.WHICH_DETAIL_PAGE, Constants.ALBUM_DETAIL);
         }
@@ -120,15 +118,11 @@ public class DetailsActivity extends BaseActivity {
         });
 
         QuickControlFragment quickControlFragment = (QuickControlFragment)
-                getSupportFragmentManager().findFragmentById(R.id.quickcontrols_container);
-        if (quickControlFragment == null) {
-            quickControlFragment = new QuickControlFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.quickcontrols_container, quickControlFragment).commit();
-        }
+                getSupportFragmentManager().findFragmentById(R.id.fragment_playback_controls);
+
         new QuickControlPresenter(quickControlFragment);
 
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
 
         if (fragment != null) {
             return;
@@ -178,7 +172,7 @@ public class DetailsActivity extends BaseActivity {
                 break;
         }
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
     }
 
     public void showAlbum(Drawable albumArt) {

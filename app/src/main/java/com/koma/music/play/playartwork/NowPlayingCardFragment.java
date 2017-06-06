@@ -16,7 +16,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.koma.music.R;
-import com.koma.music.base.BaseMusicStateFragment;
+import com.koma.music.base.BaseFragment;
 import com.koma.music.util.MusicUtils;
 import com.koma.music.util.Utils;
 
@@ -26,7 +26,7 @@ import butterknife.BindView;
  * Created by koma on 4/27/17.
  */
 
-public class NowPlayingCardFragment extends BaseMusicStateFragment {
+public class NowPlayingCardFragment extends BaseFragment {
     private static final String TAG = NowPlayingCardFragment.class.getSimpleName();
 
     @BindView(R.id.iv_artwork)
@@ -65,10 +65,5 @@ public class NowPlayingCardFragment extends BaseMusicStateFragment {
     @Override
     public void onMetaChanged() {
         updateAlbumImage();
-    }
-
-    @Override
-    public void onPlayStateChanged() {
-
     }
 }

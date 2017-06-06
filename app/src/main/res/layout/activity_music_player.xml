@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<fragment xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_player_ui"
+    android:name="com.koma.music.play.MusicPlayerFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.koma.music.play.MusicPlayerActivity">
-
-    <FrameLayout
-        android:id="@+id/main_player_ui"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</android.support.design.widget.CoordinatorLayout>
+    tools:layout="@layout/fragment_player" />

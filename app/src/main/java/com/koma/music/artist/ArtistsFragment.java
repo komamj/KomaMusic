@@ -151,9 +151,4 @@ public class ArtistsFragment extends BaseLoadingFragment implements ArtistsConst
     public void onMetaChanged() {
 
     }
-
-    @Override
-    public void onPlayStateChanged() {
-
-    }
 }

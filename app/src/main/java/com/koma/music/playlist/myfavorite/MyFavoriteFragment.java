@@ -121,10 +121,6 @@ public class MyFavoriteFragment extends BaseLoadingFragment implements MyFavorit
         }
     }
 
-    @Override
-    public void onPlayStateChanged() {
-
-    }
 
     @Override
     public boolean isActive() {

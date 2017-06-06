@@ -152,9 +152,4 @@ public class ArtistDetailFragment extends BaseLoadingFragment implements ArtistD
     public void onMetaChanged() {
 
     }
-
-    @Override
-    public void onPlayStateChanged() {
-
-    }
 }

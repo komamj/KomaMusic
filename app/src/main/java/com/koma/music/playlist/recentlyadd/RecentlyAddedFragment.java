@@ -114,10 +114,6 @@ public class RecentlyAddedFragment extends BaseLoadingFragment implements Recent
 
     }
 
-    @Override
-    public void onPlayStateChanged() {
-
-    }
 
     @Override
     public Context getContext() {

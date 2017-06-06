@@ -142,9 +142,4 @@ public class PlayQueueFragment extends BaseLoadingFragment implements PlayQueueC
             mAdapter.notifyDataSetChanged();
         }
     }
-
-    @Override
-    public void onPlayStateChanged() {
-
-    }
 }

@@ -15,10 +15,12 @@ package com.koma.music.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,19 +28,33 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.koma.music.R;
-import com.koma.music.base.BaseMusicStateActivity;
+import com.koma.music.album.AlbumsFragment;
+import com.koma.music.artist.ArtistsFragment;
+import com.koma.music.base.BaseControlActivity;
 import com.koma.music.play.quickcontrol.QuickControlFragment;
-import com.koma.music.play.quickcontrol.QuickControlPresenter;
+import com.koma.music.playlist.PlaylistsFragment;
+import com.koma.music.song.SongsFragment;
 import com.koma.music.util.MusicUtils;
 import com.koma.music.util.Utils;
 
+import butterknife.BindArray;
 import butterknife.BindString;
 import butterknife.BindView;
 
-public class MainActivity extends BaseMusicStateActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseControlActivity implements
+        NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    private static final int PAGE_LIMIT = 1;
+
+    @BindArray(R.array.tab_title)
+    String[] mTitles;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.tab_layout)
+    TabLayout mTabLayout;
+    @BindView(R.id.viewPager)
+    ViewPager mViewPager;
     @BindString(R.string.unknown)
     String mDefaultName;
     ImageView mNavAlbum;
@@ -46,77 +62,63 @@ public class MainActivity extends BaseMusicStateActivity
     DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
-   /* @BindView(R.id.sliding_layout)
-    SlidingUpPanelLayout mPanelLayout;*/
 
-    //private Handler mHandler;
-
- /*   private Runnable mNavigateMusicLibrary = new Runnable() {
-        public void run() {
-            mNavigationView.getMenu().findItem(R.id.nav_library).setChecked(true);
-            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-            if (fragment == null) {
-                fragment = new MainFragment();
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, fragment).commit();
-            }
-        }
-    };*/
-
+    private MainPagerAdapter mPagerAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        init();
+        initViews();
     }
 
-    public DrawerLayout getDrawerLayout() {
-        return mDrawerLayout;
-    }
 
-    private void init() {
-        //  mHandler = new Handler(Looper.getMainLooper());
-
+    private void initViews() {
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
         mNavigationView.setNavigationItemSelectedListener(this);
 
+        setSupportActionBar(mToolbar);
         View navHeadView = mNavigationView.inflateHeaderView(R.layout.nav_header_main);
         mNavAlbum = (ImageView) navHeadView.findViewById(R.id.iv_nav_album);
 
         mNavigationView.getMenu().findItem(R.id.nav_library).setChecked(true);
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if (fragment == null) {
-            fragment = new MainFragment();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, fragment).commit();
-        }
 
-        QuickControlFragment quickControlFragment = (QuickControlFragment)
-                getSupportFragmentManager().findFragmentById(R.id.quickcontrols_container);
-        if (quickControlFragment == null) {
-            quickControlFragment = new QuickControlFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.quickcontrols_container, quickControlFragment).commit();
-        }
-        new QuickControlPresenter(quickControlFragment);
+        mPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(), mTitles);
 
-        // addBackstackListener();
+        PlaylistsFragment playlistsFragment = new PlaylistsFragment();
+
+        mPagerAdapter.addFragment(playlistsFragment);
+
+        SongsFragment songsFragment = new SongsFragment();
+
+        mPagerAdapter.addFragment(songsFragment);
+
+        ArtistsFragment artistsFragment = new ArtistsFragment();
+
+        mPagerAdapter.addFragment(artistsFragment);
+
+        AlbumsFragment albumsFragment = new AlbumsFragment();
+
+        mPagerAdapter.addFragment(albumsFragment);
+
+        mViewPager.setAdapter(mPagerAdapter);
+
+        mViewPager.setOffscreenPageLimit(PAGE_LIMIT);
+
+        mTabLayout.setupWithViewPager(mViewPager);
+        if (Utils.isRTL()) {
+            mViewPager.setCurrentItem(MainPagerAdapter.SONG_TAB_INDEX_RTL);
+        } else {
+            mViewPager.setCurrentItem(MainPagerAdapter.SONG_TAB_INDEX);
+        }
     }
-
-   /* private void addBackstackListener() {
-        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                LogUtils.i(TAG, "onBackStackChanged");
-                getSupportFragmentManager().findFragmentById(R.id.fragment_container).onResume();
-            }
-        });
-    }*/
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
     }
-
 
     @Override
     public int getLayoutId() {
@@ -184,22 +186,12 @@ public class MainActivity extends BaseMusicStateActivity
     }
 
     @Override
-    public void refreshData() {
-
-    }
-
-    @Override
-    public void onPlaylistChanged() {
-    }
-
-    @Override
     public void onMetaChanged() {
+        super.onMetaChanged();
+
         Glide.with(this).load(Utils.getAlbumArtUri(MusicUtils.getCurrentAlbumId()))
                 .error(R.drawable.ic_notification)
                 .into(mNavAlbum);
     }
 
-    @Override
-    public void onPlayStateChanged() {
-    }
 }

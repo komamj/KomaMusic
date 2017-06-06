@@ -16,7 +16,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.koma.music.R;
-import com.koma.music.base.BaseMusicStateActivity;
+import com.koma.music.base.PermissionActivity;
 import com.koma.music.data.local.MusicRepository;
 import com.koma.music.util.LogUtils;
 
@@ -24,7 +24,7 @@ import com.koma.music.util.LogUtils;
  * Created by koma on 3/20/17.
  */
 
-public class MusicPlayerActivity extends BaseMusicStateActivity {
+public class MusicPlayerActivity extends PermissionActivity {
     private static final String TAG = MusicPlayerActivity.class.getSimpleName();
 
     @Override
@@ -36,20 +36,14 @@ public class MusicPlayerActivity extends BaseMusicStateActivity {
 
         LogUtils.i(TAG, "onCreate");
 
-        init();
+        initViews();
     }
 
-    private void init() {
+    private void initViews() {
         MusicPlayerFragment musicPlayerFragment =
                 (MusicPlayerFragment) getSupportFragmentManager().findFragmentById(R.id.main_player_ui);
-        if (musicPlayerFragment == null) {
-            musicPlayerFragment = new MusicPlayerFragment();
 
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.main_player_ui, musicPlayerFragment).commit();
-        }
-
-        new MusicPlayerPresenter(this, musicPlayerFragment, MusicRepository.getInstance());
+        new MusicPlayerPresenter(musicPlayerFragment, MusicRepository.getInstance());
     }
 
     @Override
@@ -72,22 +66,7 @@ public class MusicPlayerActivity extends BaseMusicStateActivity {
     }
 
     @Override
-    public void refreshData() {
-
-    }
-
-    @Override
-    public void onPlaylistChanged() {
-
-    }
-
-    @Override
-    public void onMetaChanged() {
-
-    }
-
-    @Override
-    public void onPlayStateChanged() {
+    public void init() {
 
     }
 }

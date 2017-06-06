@@ -31,6 +31,13 @@
     <string name="shuffle">Shuffle all</string>
 
     <string name="music_desc_format"><xliff:g id="artist">%s</xliff:g>—<xliff:g id="album">%s</xliff:g></string>
+    <!--QuickControl-->
+    <string name="currently_playing_song">Song currently playing</string>
+    <string name="currently_playing_artist">Artist of currently playing song</string>
+    <string name="currently_playing_extra_info">Extra info for currently playing song</string>
+    <string name="play_pause">play or pause</string>
+    <string name="skip_next">skip to next</string>
+    <string name="skip_prev">skip to previous</string>
 
     <!--playlist-->
     <string name="recently_add">Recently added</string>

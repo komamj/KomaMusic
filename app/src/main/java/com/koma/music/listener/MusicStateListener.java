@@ -33,9 +33,4 @@ public interface MusicStateListener {
      * Called when {@link MusicServiceConstants#META_CHANGED} is invoked
      */
     public void onMetaChanged();
-
-    /**
-     * Called when {@link MusicServiceConstants#PLAYSTATE_CHANGED} is invoked
-     */
-    public void onPlayStateChanged();
 }

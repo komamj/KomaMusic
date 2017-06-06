@@ -23,7 +23,7 @@ import butterknife.BindView;
  * Created by koma on 4/27/17.
  */
 
-public abstract class BaseLoadingFragment extends BaseMusicStateFragment {
+public abstract class BaseLoadingFragment extends BaseFragment {
     @BindView(R.id.recycler_view)
     protected RecyclerView mRecyclerView;
     @BindView(R.id.loding_view)

@@ -3,6 +3,7 @@
     <color name="colorPrimary">#FF5722</color>
     <color name="colorPrimaryDark">#D1471C</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="bt_accent">#00B8D4</color>
     <!--Tablayout-->
     <color name="tab_indicator_color">#FFFFFFFF</color>
     <color name="tab_selected_text_color">#FFFFFFFF</color>

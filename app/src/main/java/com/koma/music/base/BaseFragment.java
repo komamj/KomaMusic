@@ -15,22 +15,19 @@ package com.koma.music.base;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.koma.music.R;
-import com.koma.music.widget.LoadingView;
+import com.koma.music.listener.MusicStateListener;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * Created by koma on 3/20/17.
  */
 
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment implements MusicStateListener {
     protected Context mContext;
 
     @Override
@@ -51,6 +48,24 @@ public abstract class BaseFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         return view;
+    }
+
+    protected BaseControlActivity getContainingActivity() {
+        return (BaseControlActivity) getActivity();
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        getContainingActivity().setMusicStateListenerListener(this);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        getContainingActivity().removeMusicStateListenerListener(this);
     }
 
     protected abstract int getLayoutId();

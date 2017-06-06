@@ -141,9 +141,4 @@ public class PlaylistsFragment extends BaseLoadingFragment implements PlaylistsC
     public void onMetaChanged() {
 
     }
-
-    @Override
-    public void onPlayStateChanged() {
-
-    }
 }

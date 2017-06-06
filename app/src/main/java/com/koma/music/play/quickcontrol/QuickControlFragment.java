@@ -22,13 +22,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.koma.music.R;
-import com.koma.music.base.BaseMusicStateFragment;
+import com.koma.music.base.BaseFragment;
 import com.koma.music.play.MusicPlayerActivity;
 import com.koma.music.util.LogUtils;
 import com.koma.music.util.MusicUtils;
@@ -42,24 +42,21 @@ import butterknife.OnClick;
  * Created by koma on 4/20/17.
  */
 
-public class QuickControlFragment extends BaseMusicStateFragment implements QuickControlContract.View {
+public class QuickControlFragment extends BaseFragment implements QuickControlContract.View {
     private static final String TAG = QuickControlFragment.class.getSimpleName();
 
     @BindString(R.string.unknown)
     String mDefaultName;
-
-    @BindView(R.id.tv_track_name)
+    @BindView(R.id.title)
     TextView mTrackName;
-    @BindView(R.id.tv_artist_name)
+    @BindView(R.id.artist)
     TextView mArtistName;
-    @BindView(R.id.iv_album)
-    ImageView mAlbum;
-    @BindView(R.id.audio_header)
-    LinearLayout mHeaderLayout;
-    @BindView(R.id.iv_pause)
-    ImageView mPauseOrPlay;
+    @BindView(R.id.album_art)
+    ImageView mAlbumArt;
+    @BindView(R.id.play_pause)
+    ImageButton mPlayPause;
 
-    @OnClick(R.id.iv_pause)
+    @OnClick(R.id.play_pause)
     void doPauseOrPlay() {
         MusicUtils.playOrPause();
     }
@@ -74,7 +71,25 @@ public class QuickControlFragment extends BaseMusicStateFragment implements Quic
 
     @Override
     protected int getLayoutId() {
-        return R.layout.audio_player_header;
+        return R.layout.fragment_playback_controls;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        LogUtils.i(TAG, "onViewCreated");
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, MusicPlayerActivity.class);
+
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(
+                        ((AppCompatActivity) mContext), new Pair<View, String>(mAlbumArt,
+                                "share_album")).toBundle());
+            }
+        });
     }
 
     @Override
@@ -88,16 +103,6 @@ public class QuickControlFragment extends BaseMusicStateFragment implements Quic
 
     private void init() {
         new QuickControlPresenter(this);
-        mHeaderLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mContext, MusicPlayerActivity.class);
-
-                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(
-                        ((AppCompatActivity) mContext), new Pair<View, String>(mAlbum,
-                                "share_album")).toBundle());
-            }
-        });
     }
 
     @Override
@@ -136,7 +141,7 @@ public class QuickControlFragment extends BaseMusicStateFragment implements Quic
         Glide.with(this).load(Utils.getAlbumArtUri(
                 MusicUtils.getCurrentAlbumId()))
                 .placeholder(R.drawable.ic_album)
-                .into(mAlbum);
+                .into(mAlbumArt);
 
         updateBlurArtWork();
         String trackName = MusicUtils.getTrackName();
@@ -151,16 +156,6 @@ public class QuickControlFragment extends BaseMusicStateFragment implements Quic
         } else {
             mArtistName.setText(artistName);
         }
-
-        onPlayStateChanged();
-    }
-
-    @Override
-    public void onPlayStateChanged() {
-        LogUtils.i(TAG, "onPlayStateChanged");
-
-        mPauseOrPlay.setImageResource(MusicUtils.isPlaying() ? R.drawable.ic_pause_black :
-                R.drawable.ic_play_black);
     }
 
     @Override
@@ -172,6 +167,14 @@ public class QuickControlFragment extends BaseMusicStateFragment implements Quic
 
     @Override
     public void setBlurArtWork(Drawable blurArtWork) {
+    }
+
+    public void updateState() {
+        if (MusicUtils.isPlaying()) {
+            mPlayPause.setImageResource(R.drawable.ic_pause_black_24dp);
+        } else {
+            mPlayPause.setImageResource(R.drawable.ic_play_arrow_black_36dp);
+        }
     }
 
     @Override

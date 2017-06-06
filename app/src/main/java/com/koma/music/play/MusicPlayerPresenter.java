@@ -12,7 +12,6 @@
  */
 package com.koma.music.play;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 
@@ -33,7 +32,6 @@ import rx.subscriptions.CompositeSubscription;
 
 public class MusicPlayerPresenter implements MusicPlayerContract.Presenter {
     private static final String TAG = MusicPlayerPresenter.class.getSimpleName();
-    private Context mContext;
     @NonNull
     private MusicPlayerContract.View mView;
 
@@ -41,9 +39,8 @@ public class MusicPlayerPresenter implements MusicPlayerContract.Presenter {
 
     private MusicRepository mRepository;
 
-    public MusicPlayerPresenter(Context context, @NonNull MusicPlayerContract.View view,
+    public MusicPlayerPresenter(@NonNull MusicPlayerContract.View view,
                                 MusicRepository repository) {
-        mContext = context;
 
         mSubscriptions = new CompositeSubscription();
 

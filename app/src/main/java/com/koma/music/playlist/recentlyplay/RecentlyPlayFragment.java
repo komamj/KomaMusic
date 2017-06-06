@@ -124,11 +124,6 @@ public class RecentlyPlayFragment extends BaseLoadingFragment implements Recentl
     }
 
     @Override
-    public void onPlayStateChanged() {
-
-    }
-
-    @Override
     public boolean isActive() {
         return isAdded();
     }

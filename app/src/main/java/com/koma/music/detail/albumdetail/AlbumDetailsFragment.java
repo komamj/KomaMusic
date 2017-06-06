@@ -158,10 +158,6 @@ public class AlbumDetailsFragment extends BaseLoadingFragment implements AlbumDe
 
     }
 
-    @Override
-    public void onPlayStateChanged() {
-
-    }
 
     @Override
     public void setPresenter(AlbumDetailContract.Presenter presenter) {

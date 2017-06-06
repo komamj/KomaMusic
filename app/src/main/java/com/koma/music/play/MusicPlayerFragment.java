@@ -12,28 +12,37 @@
  */
 package com.koma.music.play;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.koma.music.R;
-import com.koma.music.base.BaseMusicStateFragment;
+import com.koma.music.service.MusicServiceConstants;
 import com.koma.music.util.LogUtils;
 import com.koma.music.util.MusicUtils;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
  * Created by koma on 4/5/17.
  */
 
-public class MusicPlayerFragment extends BaseMusicStateFragment implements MusicPlayerContract.View,
+public class MusicPlayerFragment extends Fragment implements MusicPlayerContract.View,
         SeekBar.OnSeekBarChangeListener {
     private static final String TAG = MusicPlayerFragment.class.getSimpleName();
 
@@ -110,10 +119,13 @@ public class MusicPlayerFragment extends BaseMusicStateFragment implements Music
     }
 
     @Override
-    protected int getLayoutId() {
-        return R.layout.fragment_player;
-    }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_player, container, false);
 
+        ButterKnife.bind(this, view);
+
+        return view;
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -141,16 +153,55 @@ public class MusicPlayerFragment extends BaseMusicStateFragment implements Music
 
         LogUtils.i(TAG, "onStart");
 
+        registerPlaybackStatusReceiver();
+
         if (mPresenter != null) {
             mPresenter.subscribe();
         }
     }
+
+    private void registerPlaybackStatusReceiver() {
+        IntentFilter filter = new IntentFilter();
+        // if a queue has changed,notify us
+        // filter.addAction(MusicServiceConstants.QUEUE_CHANGED);
+        // Play and pause changes
+        filter.addAction(MusicServiceConstants.PLAYSTATE_CHANGED);
+        // Track changes
+        filter.addAction(MusicServiceConstants.META_CHANGED);
+        // Update a list, probably the playlist fragment's
+        // filter.addAction(MusicServiceConstants.REFRESH);
+        // If a playlist has changed, notify us
+        //filter.addAction(MusicServiceConstants.PLAYLIST_CHANGED);
+        // If there is an error playing a track
+        filter.addAction(MusicServiceConstants.TRACK_ERROR);
+
+        mContext.registerReceiver(mPlaybackStatus, filter);
+    }
+
+    private final BroadcastReceiver mPlaybackStatus = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            LogUtils.i(TAG, "onReceive action : " + action);
+            if (action.equals(MusicServiceConstants.META_CHANGED)) {
+                onMetaChanged();
+            } else if (action.equals(MusicServiceConstants.PLAYSTATE_CHANGED)) {
+                onPlayStateChanged();
+            } else if (action.equals(MusicServiceConstants.TRACK_ERROR)) {
+                final String errorMsg = context.getString(R.string.error_playing_track,
+                        intent.getStringExtra(MusicServiceConstants.TRACK_NAME));
+                Toast.makeText(mContext, errorMsg, Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 
     @Override
     public void onStop() {
         super.onStop();
 
         LogUtils.i(TAG, "onStop");
+
+        mContext.unregisterReceiver(mPlaybackStatus);
 
         if (mPresenter != null) {
             mPresenter.unSubscribe();
@@ -258,18 +309,7 @@ public class MusicPlayerFragment extends BaseMusicStateFragment implements Music
         updateFavoriteView();
     }
 
-    @Override
-    public void refreshData() {
-        LogUtils.i(TAG, "refreshData");
-    }
-
-    @Override
-    public void onPlaylistChanged() {
-        LogUtils.i(TAG, "onPlaylistChanged");
-    }
-
-    @Override
-    public void onMetaChanged() {
+    private void onMetaChanged() {
         LogUtils.i(TAG, "onMetaChanged");
 
         mSongProgress.setMax((int) MusicUtils.duration());
@@ -277,8 +317,7 @@ public class MusicPlayerFragment extends BaseMusicStateFragment implements Music
         updateNowPlayingInfo();
     }
 
-    @Override
-    public void onPlayStateChanged() {
+    private void onPlayStateChanged() {
         LogUtils.i(TAG, "onPlayStateChanged");
 
         boolean isPlaying = MusicUtils.isPlaying();

@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 
-apply plugin: 'org.greenrobot.greendao' // apply plugin
+//apply plugin: 'org.greenrobot.greendao' // apply plugin
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -26,7 +26,7 @@ android {
     buildTypes {
         debug {
             // 显示Log
-            buildConfigField "boolean", "LOG_DEBUG", "true"
+            buildConfigField "boolean", "LOG_DEBUG", "false"
             //不去除无用代码
             minifyEnabled false
             //不进行对齐
@@ -37,7 +37,7 @@ android {
 
         release {
             // 不显示Log
-            buildConfigField "boolean", "LOG_DEBUG", "true"
+            buildConfigField "boolean", "LOG_DEBUG", "false"
             // 去除无用代码
             minifyEnabled false
             // 进行对齐
@@ -72,10 +72,10 @@ android {
         abortOnError false
     }
 
-    greendao {
+    /*greendao {
         schemaVersion 1
         targetGenDir 'src/main/java'
-    }
+    }*/
 }
 
 repositories {
@@ -110,12 +110,12 @@ dependencies {
     // explicitly depend on RxJava's latest version for bug fixes and new features.
     compile "io.reactivex:rxjava:$rootProject.ext.rxjavaVersion"
 
-    compile 'com.sothree.slidinguppanel:library:3.3.1'
+    //compile 'com.sothree.slidinguppanel:library:3.3.1'
 
     //imageloader
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
 
-    compile 'org.greenrobot:greendao:3.2.2' // add library
+    //compile 'org.greenrobot:greendao:3.2.2' // add library
 
     //leakcanary
     debugCompile "com.squareup.leakcanary:leakcanary-android:$rootProject.ext.leakcanaryVersion"

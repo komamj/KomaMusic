@@ -273,7 +273,7 @@ public abstract class BaseControlActivity extends PermissionActivity implements 
                 .setCustomAnimations(R.anim.slide_in_from_bottom, R.anim.slide_out_to_bottom,
                         R.anim.slide_in_from_bottom, R.anim.slide_out_to_bottom)
                 .show(mControlFragment)
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     protected void hidePlaybackControls() {

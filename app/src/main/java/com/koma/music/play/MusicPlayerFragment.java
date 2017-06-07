@@ -24,12 +24,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.koma.music.R;
+import com.koma.music.data.local.db.FavoriteSong;
 import com.koma.music.service.MusicServiceConstants;
 import com.koma.music.util.LogUtils;
 import com.koma.music.util.MusicUtils;
@@ -51,7 +53,7 @@ public class MusicPlayerFragment extends Fragment implements MusicPlayerContract
     @BindView(R.id.tv_artist_name)
     TextView mArtistName;
     @BindView(R.id.iv_pause)
-    ImageView mPauseOrPlay;
+    ImageButton mPauseOrPlay;
 
     @OnClick(R.id.iv_pause)
     void doPauseOrPlay() {
@@ -65,22 +67,41 @@ public class MusicPlayerFragment extends Fragment implements MusicPlayerContract
     @BindView(R.id.song_duration)
     TextView mDuration;
     @BindView(R.id.iv_favorite)
-    ImageView mFavorite;
+    ImageButton mFavorite;
 
     @BindView(R.id.iv_album)
     ImageView mAlbum;
 
+    private boolean mIsFavorite;
     @OnClick(R.id.iv_favorite)
     void doMyFavorite() {
-        mFavorite.setImageResource(R.drawable.ic_favorite);
+        if (mIsFavorite) {
+            mFavorite.setImageResource(R.drawable.ic_favorite_none);
+            mPresenter.doFavorite(true);
+            mIsFavorite = false;
+        } else {
+            mFavorite.setImageResource(R.drawable.ic_favorite);
+            mPresenter.doFavorite(false);
+            mIsFavorite = true;
+        }
     }
 
-    @BindView(R.id.iv_play_mode)
-    ImageView mPlayMode;
+    @BindView(R.id.iv_repeat_mode)
+    ImageButton mRepeatModeView;
 
-    @OnClick(R.id.iv_play_mode)
-    void switchPlayMode() {
+    @OnClick(R.id.iv_repeat_mode)
+    void cycleRepeatMode() {
+        LogUtils.i(TAG, "onClick");
+        MusicUtils.cycleRepeat();
+    }
 
+    @BindView(R.id.iv_shuffle_mode)
+    ImageButton mShuffleModeView;
+
+    @OnClick(R.id.iv_shuffle_mode)
+    void cycleShuffleMode() {
+        LogUtils.i(TAG, "onClicksadsad");
+        MusicUtils.cycleShuffle();
     }
 
     @OnClick(R.id.iv_previous)
@@ -93,6 +114,11 @@ public class MusicPlayerFragment extends Fragment implements MusicPlayerContract
         MusicUtils.asyncNext(mContext);
     }
 
+    @OnClick(R.id.iv_queue)
+    void displayPlayQueue() {
+
+    }
+
     private Context mContext;
 
     @NonNull
@@ -100,9 +126,6 @@ public class MusicPlayerFragment extends Fragment implements MusicPlayerContract
 
     private Runnable mUpdateProgress;
     private Handler mHandler;
-
-    public MusicPlayerFragment() {
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -136,13 +159,6 @@ public class MusicPlayerFragment extends Fragment implements MusicPlayerContract
         init();
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        removeUpdate();
-    }
-
     private void init() {
         mSongProgress.setOnSeekBarChangeListener(this);
     }
@@ -160,6 +176,15 @@ public class MusicPlayerFragment extends Fragment implements MusicPlayerContract
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        updateFavoriteView();
+
+        updatePlayModeView();
+    }
+
     private void registerPlaybackStatusReceiver() {
         IntentFilter filter = new IntentFilter();
         // if a queue has changed,notify us
@@ -171,9 +196,12 @@ public class MusicPlayerFragment extends Fragment implements MusicPlayerContract
         // Update a list, probably the playlist fragment's
         // filter.addAction(MusicServiceConstants.REFRESH);
         // If a playlist has changed, notify us
-        //filter.addAction(MusicServiceConstants.PLAYLIST_CHANGED);
+        filter.addAction(MusicServiceConstants.PLAYLIST_CHANGED);
         // If there is an error playing a track
         filter.addAction(MusicServiceConstants.TRACK_ERROR);
+
+        filter.addAction(MusicServiceConstants.SHUFFLEMODE_CHANGED);
+        filter.addAction(MusicServiceConstants.REPEATMODE_CHANGED);
 
         mContext.registerReceiver(mPlaybackStatus, filter);
     }
@@ -187,6 +215,9 @@ public class MusicPlayerFragment extends Fragment implements MusicPlayerContract
                 onMetaChanged();
             } else if (action.equals(MusicServiceConstants.PLAYSTATE_CHANGED)) {
                 onPlayStateChanged();
+            } else if (action.equals(MusicServiceConstants.SHUFFLEMODE_CHANGED) ||
+                    action.equals(MusicServiceConstants.REPEATMODE_CHANGED)) {
+                updatePlayModeView();
             } else if (action.equals(MusicServiceConstants.TRACK_ERROR)) {
                 final String errorMsg = context.getString(R.string.error_playing_track,
                         intent.getStringExtra(MusicServiceConstants.TRACK_NAME));
@@ -209,18 +240,51 @@ public class MusicPlayerFragment extends Fragment implements MusicPlayerContract
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        removeUpdate();
+    }
+
+    @Override
     public void setPresenter(@NonNull MusicPlayerContract.Presenter presenter) {
         mPresenter = presenter;
     }
 
     @Override
     public void updateFavoriteView() {
-
+        mIsFavorite = FavoriteSong.getInstance(mContext).isFavorite(MusicUtils.getCurrentAudioId());
+        mFavorite.setImageResource(mIsFavorite ? R.drawable.ic_favorite : R.drawable.ic_favorite_none);
     }
 
     @Override
-    public void updateRepeatView() {
-
+    public void updatePlayModeView() {
+        switch (MusicUtils.getRepeatMode()) {
+            case MusicServiceConstants.REPEAT_ALL:
+                mRepeatModeView.setImageResource(R.mipmap.ic_repeat_dark_selected);
+                break;
+            case MusicServiceConstants.REPEAT_CURRENT:
+                mRepeatModeView.setImageResource(R.mipmap.ic_repeat_one_song_dark);
+                break;
+            case MusicServiceConstants.REPEAT_NONE:
+                mRepeatModeView.setImageResource(R.mipmap.ic_repeat_white);
+                break;
+            default:
+                break;
+        }
+        switch (MusicUtils.getShuffleMode()) {
+            case MusicServiceConstants.SHUFFLE_NORMAL:
+                mShuffleModeView.setImageResource(R.mipmap.ic_play_shuffle_orange);
+                break;
+            case MusicServiceConstants.SHUFFLE_AUTO:
+                mShuffleModeView.setImageResource(R.mipmap.ic_play_shuffle_orange);
+                break;
+            case MusicServiceConstants.SHUFFLE_NONE:
+                mShuffleModeView.setImageResource(R.mipmap.ic_shuffle_white);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -312,6 +376,8 @@ public class MusicPlayerFragment extends Fragment implements MusicPlayerContract
     private void onMetaChanged() {
         LogUtils.i(TAG, "onMetaChanged");
 
+        mIsFavorite = FavoriteSong.getInstance(mContext).isFavorite(MusicUtils.getCurrentAudioId());
+
         mSongProgress.setMax((int) MusicUtils.duration());
 
         updateNowPlayingInfo();
@@ -322,7 +388,7 @@ public class MusicPlayerFragment extends Fragment implements MusicPlayerContract
 
         boolean isPlaying = MusicUtils.isPlaying();
 
-        mPauseOrPlay.setImageResource(isPlaying ? R.drawable.ic_pause : R.drawable.ic_play);
+        mPauseOrPlay.setImageResource(isPlaying ? R.drawable.ic_pause_72dp : R.drawable.ic_play_72dp);
 
         if (isPlaying) {
             postUpdate();

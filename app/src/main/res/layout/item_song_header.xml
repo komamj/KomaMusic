@@ -11,6 +11,7 @@
         android:drawablePadding="@dimen/activity_horizontal_margin"
         android:drawableStart="@drawable/ic_shuffle"
         android:fontFamily="sans-serif-medium"
+        android:drawableTint="@android:color/black"
         android:gravity="center_vertical"
         android:paddingBottom="20dp"
         android:paddingEnd="30dp"

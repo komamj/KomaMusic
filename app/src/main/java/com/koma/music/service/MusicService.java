@@ -1337,7 +1337,7 @@ public class MusicService extends Service {
                 ? artistName : artistName + " - " + albumName;
 
         int playButtonResId = isPlaying
-                ? R.drawable.ic_pause_black_24dp : R.drawable.ic_play_arrow_black_36dp;
+                ? R.drawable.ic_pause_black_36dp : R.drawable.ic_play_arrow_black_36dp;
         int playButtonTitleResId = isPlaying
                 ? R.string.notification_pause : R.string.notification_play;
 

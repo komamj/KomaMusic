@@ -61,4 +61,7 @@ public class Constants {
     public static final String CATEGORY_RECENTLY_PLAYED = "category_recently_played";
     public static final String CATEGORY_MY_FAVORITE = "category_my_favorite";
     public static final String CATEGORY_ARTIST = "category_artist";
+
+    //MyFavorite
+    public static final String SONG_ID = "song_id";
 }

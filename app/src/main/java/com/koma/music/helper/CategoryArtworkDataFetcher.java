@@ -93,7 +93,7 @@ public class CategoryArtworkDataFetcher implements DataFetcher<InputStream> {
 
     @Override
     public String getId() {
-        return String.valueOf(mAlbumId) + mCategory;
+        return null;
     }
 
     @Override

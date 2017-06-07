@@ -26,6 +26,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.koma.music.R;
 import com.koma.music.base.BaseSongInfoViewHolder;
 import com.koma.music.base.BaseViewHolder;
@@ -88,11 +89,13 @@ public class PlaylistAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                     .crossFade()
                     .priority(Priority.HIGH)
                     .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .placeholder(R.drawable.ic_album)
                     .into(viewHolder.mRecentlyAdded);
 
             Glide.with(mContext).load(Constants.CATEGORY_RECENTLY_PLAYED)
                     .crossFade()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .priority(Priority.HIGH)
                     .centerCrop()
                     .placeholder(R.drawable.ic_album)
@@ -100,6 +103,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
             Glide.with(mContext).load(Constants.CATEGORY_MY_FAVORITE)
                     .crossFade()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .priority(Priority.HIGH)
                     .centerCrop()
                     .placeholder(R.drawable.ic_album)

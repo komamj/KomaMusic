@@ -172,8 +172,6 @@ public class RecentlyPlayPresenter implements RecentlyPlayContract.Presenter {
 
         Cursor songs = RecentlyPlay.getInstance(MusicApplication.getContext()).queryRecentIds(null);
 
-        LogUtils.i(TAG, "count : " + songs.getCount());
-
         try {
             return SongsPresenter.makeSortedCursor(MusicApplication.getContext(), songs,
                     songs.getColumnIndex(SongPlayCount.SongPlayCountColumns.ID));

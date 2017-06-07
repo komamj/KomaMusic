@@ -29,7 +29,7 @@ public interface MusicPlayerContract {
 
         void updateFavoriteView();
 
-        void updateRepeatView();
+        void updatePlayModeView();
 
         void updateArtwork(Bitmap artwork);
 
@@ -49,7 +49,7 @@ public interface MusicPlayerContract {
 
         void doNext();
 
-        void doFavorite();
+        void doFavorite(boolean forceRemove);
 
         void onFavoriteFinished();
 

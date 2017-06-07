@@ -65,11 +65,6 @@ public class QuickControlFragment extends BaseFragment implements QuickControlCo
     private QuickControlContract.Presenter mPresenter;
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
     protected int getLayoutId() {
         return R.layout.fragment_playback_controls;
     }
@@ -171,7 +166,7 @@ public class QuickControlFragment extends BaseFragment implements QuickControlCo
 
     public void updateState() {
         if (MusicUtils.isPlaying()) {
-            mPlayPause.setImageResource(R.drawable.ic_pause_black_24dp);
+            mPlayPause.setImageResource(R.drawable.ic_pause_black_36dp);
         } else {
             mPlayPause.setImageResource(R.drawable.ic_play_arrow_black_36dp);
         }

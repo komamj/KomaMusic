@@ -66,7 +66,6 @@ public class DetailsActivity extends BaseControlActivity {
 
     }
 
-
     private int mWhichPage = Constants.ALBUM_DETAIL;
 
     private long mTargetId;

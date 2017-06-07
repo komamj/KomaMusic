@@ -12,6 +12,7 @@
  */
 package com.koma.music.play;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 
@@ -20,6 +21,8 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.koma.music.R;
 import com.koma.music.data.local.MusicRepository;
+import com.koma.music.service.FavoriteIntentService;
+import com.koma.music.util.Constants;
 import com.koma.music.util.LogUtils;
 import com.koma.music.util.MusicUtils;
 import com.koma.music.util.Utils;
@@ -80,8 +83,33 @@ public class MusicPlayerPresenter implements MusicPlayerContract.Presenter {
     }
 
     @Override
-    public void doFavorite() {
-        LogUtils.i(TAG, "doFavorite");
+    public void doFavorite(boolean forceRemove) {
+        LogUtils.i(TAG, "doFavorite forceRemove :" + forceRemove);
+
+        /*if (forceRemove) {
+            Observable.create(new Observable.OnSubscribe<Integer>() {
+                @Override
+                public void call(Subscriber<? super Integer> subscriber) {
+                    subscriber.onNext(FavoriteSong.getInstance(mView.getContext())
+                            .removeFavoriteSong(new long[]{MusicUtils.getCurrentAudioId()}));
+                    subscriber.onCompleted();
+                }
+            }).subscribeOn(Schedulers.io())
+                    .subscribe();
+        } else {
+            Observable.create(new Observable.OnSubscribe<Integer>() {
+                @Override
+                public void call(Subscriber<? super Integer> subscriber) {
+                    subscriber.onNext(FavoriteSong.getInstance(mView.getContext())
+                            .addFavoriteSong(new long[]{MusicUtils.getCurrentAudioId()}));
+                    subscriber.onCompleted();
+                }
+            }).subscribeOn(Schedulers.io())
+                    .subscribe();
+        }*/
+        Intent intent = new Intent(mView.getContext(), FavoriteIntentService.class);
+        intent.putExtra(Constants.SONG_ID, MusicUtils.getCurrentAudioId());
+        mView.getContext().startService(intent);
     }
 
     @Override

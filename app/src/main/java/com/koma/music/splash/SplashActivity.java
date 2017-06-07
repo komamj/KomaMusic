@@ -37,8 +37,6 @@ public class SplashActivity extends PermissionActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mSubsriptions = new CompositeSubscription();
     }
 
     @Override
@@ -48,7 +46,14 @@ public class SplashActivity extends PermissionActivity {
 
     @Override
     public void init() {
-
+        mSubsriptions = new CompositeSubscription();
+        mSubsriptions.add(Observable.timer(TIME_TO_MAINACTIVITY, TimeUnit.MILLISECONDS)
+                .subscribe(new Action1<Long>() {
+                    @Override
+                    public void call(Long aLong) {
+                        launchMainActivity();
+                    }
+                }));
     }
 
     private void launchMainActivity() {
@@ -62,13 +67,17 @@ public class SplashActivity extends PermissionActivity {
     public void onStart() {
         super.onStart();
 
-        mSubsriptions.add(Observable.timer(TIME_TO_MAINACTIVITY, TimeUnit.MILLISECONDS)
-                .subscribe(new Action1<Long>() {
-                    @Override
-                    public void call(Long aLong) {
-                        launchMainActivity();
-                    }
-                }));
+        if (mSubsriptions != null) {
+            mSubsriptions.clear();
+
+            mSubsriptions.add(Observable.timer(TIME_TO_MAINACTIVITY, TimeUnit.MILLISECONDS)
+                    .subscribe(new Action1<Long>() {
+                        @Override
+                        public void call(Long aLong) {
+                            launchMainActivity();
+                        }
+                    }));
+        }
     }
 
 
@@ -76,7 +85,9 @@ public class SplashActivity extends PermissionActivity {
     public void onStop() {
         super.onStop();
 
-        mSubsriptions.clear();
+        if (mSubsriptions != null) {
+            mSubsriptions.clear();
+        }
     }
 
     @Override

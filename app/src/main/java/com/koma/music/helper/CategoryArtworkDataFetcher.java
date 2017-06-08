@@ -93,7 +93,7 @@ public class CategoryArtworkDataFetcher implements DataFetcher<InputStream> {
 
     @Override
     public String getId() {
-        return null;
+        return String.valueOf(this.hashCode());
     }
 
     @Override

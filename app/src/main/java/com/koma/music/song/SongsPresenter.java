@@ -29,11 +29,11 @@ import com.koma.music.util.LogUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subscribers.DisposableSubscriber;
 
 /**
  * Created by koma on 3/20/17.
@@ -58,12 +58,12 @@ public class SongsPresenter implements SongsContract.Presenter {
     @NonNull
     private SongsContract.View mView;
 
-    private CompositeSubscription mSubscriptions;
+    private CompositeDisposable mDisposables;
 
     private MusicRepository mRepository;
 
     public SongsPresenter(@NonNull SongsContract.View view, MusicRepository repository) {
-        mSubscriptions = new CompositeSubscription();
+        mDisposables = new CompositeDisposable();
         mRepository = repository;
         mView = view;
         mView.setPresenter(this);
@@ -78,23 +78,24 @@ public class SongsPresenter implements SongsContract.Presenter {
     @Override
     public void unSubscribe() {
         LogUtils.i(TAG, "unSubscribe");
-        mSubscriptions.clear();
+        mDisposables.clear();
     }
 
     @Override
     public void loadSongs() {
-        mSubscriptions.clear();
-        Subscription subscription = mRepository.getAllSongs().subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<Song>>() {
-                    @Override
-                    public void onCompleted() {
-                        LogUtils.i(TAG, "onCompleted");
-                    }
+        mDisposables.clear();
 
+        Disposable disposable = mRepository.getAllSongs().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSubscriber<List<Song>>() {
                     @Override
                     public void onError(Throwable throwable) {
                         LogUtils.e(TAG, "onError :" + throwable.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        LogUtils.i(TAG, "onCompleted");
                     }
 
                     @Override
@@ -102,7 +103,8 @@ public class SongsPresenter implements SongsContract.Presenter {
                         onLoadSongsFinished(songs);
                     }
                 });
-        mSubscriptions.add(subscription);
+
+        mDisposables.add(disposable);
     }
 
     @Override

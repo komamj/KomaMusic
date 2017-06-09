@@ -27,7 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.koma.music.R;
 import com.koma.music.base.BaseViewHolder;
 import com.koma.music.data.model.Album;
@@ -49,8 +49,13 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
 
     private Context mContext;
 
+    private RequestOptions mRequestOptions;
+
     public AlbumsAdapter(Context context, List<Album> albumList) {
         mContext = context;
+
+        mRequestOptions = new RequestOptions().error(R.drawable.ic_album)
+                .placeholder(R.drawable.ic_album);
 
         setList(albumList);
     }
@@ -75,10 +80,9 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
         holder.itemView.setTag(position);
         holder.mMore.setTag(position);
         holder.mAlbum.setTransitionName(holder.mAlbumTransitionName + String.valueOf(position));
-        Glide.with(mContext).load(Utils.getAlbumArtUri(mData.get(position).mAlbumId))
-                .error(R.drawable.ic_album)
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .placeholder(R.drawable.ic_album)
+        Glide.with(mContext)
+                .load(Utils.getAlbumArtUri(mData.get(position).mAlbumId))
+                .apply(mRequestOptions)
                 .into(holder.mAlbum);
         holder.mTitle.setText(mData.get(position).mAlbumName);
         holder.mInfo.setText(mData.get(position).mArtistName);

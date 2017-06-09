@@ -12,13 +12,13 @@
  */
 package com.koma.music.helper;
 
-import android.content.Context;
+import android.support.annotation.Nullable;
 
-import com.bumptech.glide.load.data.DataFetcher;
-import com.bumptech.glide.load.model.GenericLoaderFactory;
+import com.bumptech.glide.load.Options;
 import com.bumptech.glide.load.model.ModelLoader;
 import com.bumptech.glide.load.model.ModelLoaderFactory;
-import com.bumptech.glide.load.model.stream.StreamModelLoader;
+import com.bumptech.glide.load.model.MultiModelLoaderFactory;
+import com.bumptech.glide.signature.ObjectKey;
 
 import java.io.InputStream;
 
@@ -26,30 +26,27 @@ import java.io.InputStream;
  * Created by koma on 5/11/17.
  */
 
-public class CategoryArtworkModeLoader implements StreamModelLoader<String> {
-    private Context mContext;
-
-    public CategoryArtworkModeLoader(Context context) {
-        mContext = context;
+public class ArtworkModeLoader implements ModelLoader<String, InputStream> {
+    @Nullable
+    @Override
+    public LoadData<InputStream> buildLoadData(String category, int width, int height, Options options) {
+        return new LoadData<>(new ObjectKey(category), new ArtworkDataFetcher(category));
     }
 
     @Override
-    public DataFetcher<InputStream> getResourceFetcher(String categoryType, int width, int height) {
-        return new CategoryArtworkDataFetcher(mContext, categoryType);
+    public boolean handles(String category) {
+        return true;
     }
 
-    // ModelLoader工厂，在向Glide注册自定义ModelLoader时使用到
     public static class Factory implements ModelLoaderFactory<String, InputStream> {
 
         @Override
-        public ModelLoader<String, InputStream> build(Context context,
-                                                      GenericLoaderFactory genericLoaderFactory) {
-            return new CategoryArtworkModeLoader(context);
+        public ModelLoader<String, InputStream> build(MultiModelLoaderFactory multiFactory) {
+            return new ArtworkModeLoader();
         }
 
         @Override
         public void teardown() {
-
         }
     }
 }

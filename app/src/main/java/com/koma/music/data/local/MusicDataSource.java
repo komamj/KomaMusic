@@ -19,30 +19,30 @@ import com.koma.music.data.model.Song;
 
 import java.util.List;
 
-import rx.Observable;
+import io.reactivex.Flowable;
 
 /**
  * Created by koma on 3/20/17.
  */
 
 public interface MusicDataSource {
-    Observable<List<Song>> getAllSongs();
+    Flowable<List<Song>> getAllSongs();
 
-    Observable<List<Playlist>> getAllPlaylists();
+    Flowable<List<Playlist>> getAllPlaylists();
 
-    Observable<List<Album>> getAllAlbums();
+    Flowable<List<Album>> getAllAlbums();
 
-    Observable<List<Album>> getArtistAlbums(long artistId);
+    Flowable<List<Album>> getArtistAlbums(long artistId);
 
-    Observable<List<Artist>> getAllArtists();
+    Flowable<List<Artist>> getAllArtists();
 
-    Observable<List<Song>> getQueueSongs();
+    Flowable<List<Song>> getQueueSongs();
 
-    Observable<List<Song>> getAlbumSongs(long albumId);
+    Flowable<List<Song>> getAlbumSongs(long albumId);
 
-    Observable<List<Song>> getRecentlyAddedSongs();
+    Flowable<List<Song>> getRecentlyAddedSongs();
 
-    Observable<List<Song>> getRecentlyPlayedSongs();
+    Flowable<List<Song>> getRecentlyPlayedSongs();
 
-    Observable<List<Song>> getMyFavoriteSongs();
+    Flowable<List<Song>> getMyFavoriteSongs();
 }

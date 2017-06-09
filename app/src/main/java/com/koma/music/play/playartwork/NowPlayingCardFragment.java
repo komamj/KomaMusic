@@ -42,7 +42,6 @@ public class NowPlayingCardFragment extends BaseFragment {
 
     private void updateAlbumImage() {
         Glide.with(this).load(Utils.getAlbumArtUri(MusicUtils.getCurrentAlbumId()))
-                .placeholder(R.drawable.ic_album)
                 .into(mAlbum);
 
     }

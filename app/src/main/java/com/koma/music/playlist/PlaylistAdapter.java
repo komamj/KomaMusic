@@ -25,8 +25,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.koma.music.R;
 import com.koma.music.base.BaseSongInfoViewHolder;
 import com.koma.music.base.BaseViewHolder;
@@ -53,8 +52,13 @@ public class PlaylistAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     private Context mContext;
 
+    private RequestOptions mRequestOptions;
+
     public PlaylistAdapter(Context context, List<Playlist> playlists) {
         mContext = context;
+
+        mRequestOptions = new RequestOptions().error(R.drawable.ic_album)
+                .placeholder(R.drawable.ic_album);
 
         setList(playlists);
     }
@@ -85,28 +89,17 @@ public class PlaylistAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         if (getItemViewType(position) == TYPE_HEADER) {
             PlaylistHeaderVH viewHolder = (PlaylistHeaderVH) holder;
 
-            Glide.with(mContext).load(Constants.CATEGORY_RECENTLY_ADDED)
-                    .crossFade()
-                    .priority(Priority.HIGH)
-                    .centerCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .placeholder(R.drawable.ic_album)
+            Glide.with(mContext)
+                    .load(Constants.CATEGORY_RECENTLY_ADDED)
+                    .apply(mRequestOptions)
                     .into(viewHolder.mRecentlyAdded);
 
             Glide.with(mContext).load(Constants.CATEGORY_RECENTLY_PLAYED)
-                    .crossFade()
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .priority(Priority.HIGH)
-                    .centerCrop()
-                    .placeholder(R.drawable.ic_album)
+                    .apply(mRequestOptions)
                     .into(viewHolder.mRecentlyPlayed);
 
             Glide.with(mContext).load(Constants.CATEGORY_MY_FAVORITE)
-                    .crossFade()
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .priority(Priority.HIGH)
-                    .centerCrop()
-                    .placeholder(R.drawable.ic_album)
+                    .apply(mRequestOptions)
                     .into(viewHolder.mFavorite);
         } else {
             holder.itemView.setTag(position - 1);

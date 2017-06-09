@@ -17,9 +17,8 @@ import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.koma.music.R;
+import com.bumptech.glide.request.transition.Transition;
 import com.koma.music.data.local.MusicRepository;
 import com.koma.music.service.FavoriteIntentService;
 import com.koma.music.util.Constants;
@@ -27,7 +26,8 @@ import com.koma.music.util.LogUtils;
 import com.koma.music.util.MusicUtils;
 import com.koma.music.util.Utils;
 
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.disposables.CompositeDisposable;
+
 
 /**
  * Created by koma on 4/8/17.
@@ -38,14 +38,14 @@ public class MusicPlayerPresenter implements MusicPlayerContract.Presenter {
     @NonNull
     private MusicPlayerContract.View mView;
 
-    private CompositeSubscription mSubscriptions;
+    private CompositeDisposable mSubscriptions;
 
     private MusicRepository mRepository;
 
     public MusicPlayerPresenter(@NonNull MusicPlayerContract.View view,
                                 MusicRepository repository) {
 
-        mSubscriptions = new CompositeSubscription();
+        mSubscriptions = new CompositeDisposable();
 
         mRepository = repository;
 
@@ -165,12 +165,11 @@ public class MusicPlayerPresenter implements MusicPlayerContract.Presenter {
 */
     @Override
     public void updateArtWork() {
-        Glide.with(mView.getContext()).load(Utils.getAlbumArtUri(MusicUtils.getCurrentAlbumId()))
-                .asBitmap()
-                .placeholder(R.drawable.ic_album)
+        Glide.with(mView.getContext()).asBitmap()
+                .load(Utils.getAlbumArtUri(MusicUtils.getCurrentAlbumId()))
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                         mView.updateArtwork(resource);
                     }
                 });

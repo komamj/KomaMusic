@@ -25,11 +25,12 @@ import com.koma.music.util.LogUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subscribers.DisposableSubscriber;
+
 
 /**
  * Created by koma on 4/28/17.
@@ -60,7 +61,7 @@ public class PlayQueuePresenter implements PlayQueueContract.Presenter {
 
     private MusicRepository mRepository;
 
-    private CompositeSubscription mSubscriptions;
+    private CompositeDisposable mDisposables;
 
     public PlayQueuePresenter(@NonNull PlayQueueContract.View view, MusicRepository repository) {
         mView = view;
@@ -68,7 +69,7 @@ public class PlayQueuePresenter implements PlayQueueContract.Presenter {
 
         mRepository = repository;
 
-        mSubscriptions = new CompositeSubscription();
+        mDisposables = new CompositeDisposable();
     }
 
     @Override
@@ -82,8 +83,8 @@ public class PlayQueuePresenter implements PlayQueueContract.Presenter {
     public void unSubscribe() {
         LogUtils.i(TAG, "unSubscribe");
 
-        if (mSubscriptions != null) {
-            mSubscriptions.clear();
+        if (mDisposables != null) {
+            mDisposables.clear();
         }
     }
 
@@ -91,30 +92,30 @@ public class PlayQueuePresenter implements PlayQueueContract.Presenter {
     public void loadPlayQueue() {
         LogUtils.i(TAG, "loadPlayQueue");
 
-        if (mSubscriptions != null) {
-            mSubscriptions.clear();
+        if (mDisposables != null) {
+            mDisposables.clear();
         }
 
-        Subscription subscription = mRepository.getQueueSongs().subscribeOn(Schedulers.io())
+        Disposable disposable = mRepository.getQueueSongs().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<Song>>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable throwable) {
-
-                    }
-
+                .subscribeWith(new DisposableSubscriber<List<Song>>() {
                     @Override
                     public void onNext(List<Song> songs) {
                         onLoadPlayQueueFinished(songs);
                     }
+
+                    @Override
+                    public void onError(Throwable t) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
                 });
 
-        mSubscriptions.add(subscription);
+        mDisposables.add(disposable);
     }
 
     @Override

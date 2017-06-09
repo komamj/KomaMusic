@@ -21,9 +21,10 @@ import com.koma.music.main.MainActivity;
 
 import java.util.concurrent.TimeUnit;
 
-import rx.Observable;
-import rx.functions.Action1;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Observable;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by koma on 4/21/17.
@@ -32,7 +33,7 @@ import rx.subscriptions.CompositeSubscription;
 public class SplashActivity extends PermissionActivity {
     private static final int TIME_TO_MAINACTIVITY = 2000;
 
-    private CompositeSubscription mSubsriptions;
+    private CompositeDisposable mDisposables;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,11 +47,11 @@ public class SplashActivity extends PermissionActivity {
 
     @Override
     public void init() {
-        mSubsriptions = new CompositeSubscription();
-        mSubsriptions.add(Observable.timer(TIME_TO_MAINACTIVITY, TimeUnit.MILLISECONDS)
-                .subscribe(new Action1<Long>() {
+        mDisposables = new CompositeDisposable();
+        mDisposables.add(Observable.timer(TIME_TO_MAINACTIVITY, TimeUnit.MILLISECONDS)
+                .subscribe(new Consumer<Long>() {
                     @Override
-                    public void call(Long aLong) {
+                    public void accept(@NonNull Long aLong) throws Exception {
                         launchMainActivity();
                     }
                 }));
@@ -67,13 +68,13 @@ public class SplashActivity extends PermissionActivity {
     public void onStart() {
         super.onStart();
 
-        if (mSubsriptions != null) {
-            mSubsriptions.clear();
+        if (mDisposables != null) {
+            mDisposables.clear();
 
-            mSubsriptions.add(Observable.timer(TIME_TO_MAINACTIVITY, TimeUnit.MILLISECONDS)
-                    .subscribe(new Action1<Long>() {
+            mDisposables.add(Observable.timer(TIME_TO_MAINACTIVITY, TimeUnit.MILLISECONDS)
+                    .subscribe(new Consumer<Long>() {
                         @Override
-                        public void call(Long aLong) {
+                        public void accept(@NonNull Long aLong) throws Exception {
                             launchMainActivity();
                         }
                     }));
@@ -85,8 +86,8 @@ public class SplashActivity extends PermissionActivity {
     public void onStop() {
         super.onStop();
 
-        if (mSubsriptions != null) {
-            mSubsriptions.clear();
+        if (mDisposables != null) {
+            mDisposables.clear();
         }
     }
 

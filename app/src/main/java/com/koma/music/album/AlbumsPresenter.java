@@ -26,11 +26,11 @@ import com.koma.music.util.LogUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subscribers.DisposableSubscriber;
 
 /**
  * Created by koma on 3/21/17.
@@ -43,7 +43,7 @@ public class AlbumsPresenter implements AlbumsConstract.Presenter {
 
     private MusicRepository mRepository;
 
-    private CompositeSubscription mSubscriptions;
+    private CompositeDisposable mDisposables;
 
     public AlbumsPresenter(@NonNull AlbumsConstract.View view, MusicRepository repository) {
         mView = view;
@@ -51,7 +51,7 @@ public class AlbumsPresenter implements AlbumsConstract.Presenter {
 
         mRepository = repository;
 
-        mSubscriptions = new CompositeSubscription();
+        mDisposables = new CompositeDisposable();
     }
 
     @Override
@@ -65,8 +65,8 @@ public class AlbumsPresenter implements AlbumsConstract.Presenter {
     public void unSubscribe() {
         LogUtils.i(TAG, "unSubcribe");
 
-        if (mSubscriptions != null) {
-            mSubscriptions.clear();
+        if (mDisposables != null) {
+            mDisposables.clear();
         }
     }
 
@@ -74,19 +74,19 @@ public class AlbumsPresenter implements AlbumsConstract.Presenter {
     public void loadAlbums() {
         LogUtils.i(TAG, "loadAlbums");
 
-        mSubscriptions.clear();
+        mDisposables.clear();
 
-        Subscription subscription = mRepository.getAllAlbums().subscribeOn(Schedulers.io())
+        Disposable disposable = mRepository.getAllAlbums().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<Album>>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
+                .subscribeWith(new DisposableSubscriber<List<Album>>() {
                     @Override
                     public void onError(Throwable throwable) {
                         LogUtils.e(TAG, "loadAlbums onError : " + throwable.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
 
                     @Override
@@ -95,7 +95,7 @@ public class AlbumsPresenter implements AlbumsConstract.Presenter {
                     }
                 });
 
-        mSubscriptions.add(subscription);
+        mDisposables.add(disposable);
     }
 
     @Override

@@ -135,7 +135,6 @@ public class QuickControlFragment extends BaseFragment implements QuickControlCo
 
         Glide.with(this).load(Utils.getAlbumArtUri(
                 MusicUtils.getCurrentAlbumId()))
-                .placeholder(R.drawable.ic_album)
                 .into(mAlbumArt);
 
         updateBlurArtWork();

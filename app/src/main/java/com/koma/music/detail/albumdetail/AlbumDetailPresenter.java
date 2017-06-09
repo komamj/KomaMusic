@@ -21,11 +21,9 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.koma.music.MusicApplication;
-import com.koma.music.R;
 import com.koma.music.data.local.MusicRepository;
 import com.koma.music.data.model.Song;
 import com.koma.music.util.LogUtils;
@@ -34,11 +32,12 @@ import com.koma.music.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subscribers.DisposableSubscriber;
+
 
 /**
  * Created by koma on 5/5/17.
@@ -52,7 +51,7 @@ public class AlbumDetailPresenter implements AlbumDetailContract.Presenter {
     @NonNull
     private MusicRepository mRepository;
 
-    private CompositeSubscription mSubscriptions;
+    private CompositeDisposable mDisposables;
 
     public AlbumDetailPresenter(AlbumDetailContract.View view, MusicRepository repository) {
         mView = view;
@@ -60,7 +59,7 @@ public class AlbumDetailPresenter implements AlbumDetailContract.Presenter {
 
         mRepository = repository;
 
-        mSubscriptions = new CompositeSubscription();
+        mDisposables = new CompositeDisposable();
     }
 
     @Override
@@ -78,8 +77,8 @@ public class AlbumDetailPresenter implements AlbumDetailContract.Presenter {
     public void unSubscribe() {
         LogUtils.i(TAG, "subscribe");
 
-        if (mSubscriptions != null) {
-            mSubscriptions.unsubscribe();
+        if (mDisposables != null) {
+            mDisposables.clear();
         }
     }
 
@@ -87,23 +86,23 @@ public class AlbumDetailPresenter implements AlbumDetailContract.Presenter {
     public void loadAlbumSongs(long albumID) {
         LogUtils.i(TAG, "loadAlbumSongs albumId : " + albumID);
 
-        if (mSubscriptions != null) {
-            mSubscriptions.clear();
+        if (mDisposables != null) {
+            mDisposables.clear();
         }
 
         if (mView != null) {
-            Subscription subscription = mRepository.getAlbumSongs(mView.getAlbumId())
+            Disposable disposable = mRepository.getAlbumSongs(mView.getAlbumId())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Subscriber<List<Song>>() {
-                        @Override
-                        public void onCompleted() {
-
-                        }
-
+                    .subscribeWith(new DisposableSubscriber<List<Song>>() {
                         @Override
                         public void onError(Throwable throwable) {
                             LogUtils.e(TAG, "loadAlbumSongs onError : " + throwable.toString());
+                        }
+
+                        @Override
+                        public void onComplete() {
+
                         }
 
                         @Override
@@ -114,31 +113,29 @@ public class AlbumDetailPresenter implements AlbumDetailContract.Presenter {
                         }
                     });
 
-            mSubscriptions.add(subscription);
+            mDisposables.add(disposable);
         }
     }
 
     @Override
     public void loadAlbum(long albumID) {
         if (mView != null) {
-            Glide.with(mView.getContext()).load(Utils.getAlbumArtUri(albumID))
-                    .asBitmap()
-                    .error(R.drawable.ic_album)
-                    .priority(Priority.IMMEDIATE)
+            Glide.with(mView.getContext()).asBitmap()
+                    .load(Utils.getAlbumArtUri(albumID))
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
-                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                            super.onLoadFailed(e, errorDrawable);
-
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                             if (mView != null) {
-                                mView.showAlbum(errorDrawable);
+                                mView.showAlbum(resource);
                             }
                         }
 
                         @Override
-                        public void onResourceReady(Bitmap glideDrawable, GlideAnimation<? super Bitmap> glideAnimation) {
+                        public void onLoadFailed(Drawable errorDrawable) {
+                            super.onLoadFailed(errorDrawable);
+
                             if (mView != null) {
-                                mView.showAlbum(glideDrawable);
+                                mView.showAlbum(errorDrawable);
                             }
                         }
                     });

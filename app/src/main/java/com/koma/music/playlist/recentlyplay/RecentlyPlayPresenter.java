@@ -18,10 +18,8 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.koma.music.MusicApplication;
 import com.koma.music.R;
 import com.koma.music.data.local.MusicRepository;
@@ -35,11 +33,11 @@ import com.koma.music.util.Utils;
 
 import java.util.List;
 
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subscribers.DisposableSubscriber;
 
 /**
  * Created by koma on 4/20/17.
@@ -51,12 +49,12 @@ public class RecentlyPlayPresenter implements RecentlyPlayContract.Presenter {
     @NonNull
     private RecentlyPlayContract.View mView;
 
-    private CompositeSubscription mSubscriptions;
+    private CompositeDisposable mDisposables;
 
     private MusicRepository mRepository;
 
     public RecentlyPlayPresenter(@NonNull RecentlyPlayContract.View view, MusicRepository repository) {
-        mSubscriptions = new CompositeSubscription();
+        mDisposables = new CompositeDisposable();
 
         mView = view;
         mView.setPresenter(this);
@@ -75,28 +73,28 @@ public class RecentlyPlayPresenter implements RecentlyPlayContract.Presenter {
     public void unSubscribe() {
         LogUtils.i(TAG, "unSubscribe");
 
-        if (mSubscriptions != null) {
-            mSubscriptions.clear();
+        if (mDisposables != null) {
+            mDisposables.clear();
         }
     }
 
     @Override
     public void loadRecentlyPlayedSongs() {
-        if (mSubscriptions != null) {
-            mSubscriptions.clear();
+        if (mDisposables != null) {
+            mDisposables.clear();
         }
 
-        Subscription subscription = mRepository.getRecentlyPlayedSongs().subscribeOn(Schedulers.io())
+        Disposable disposable = mRepository.getRecentlyPlayedSongs().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<Song>>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
+                .subscribeWith(new DisposableSubscriber<List<Song>>() {
                     @Override
                     public void onError(Throwable e) {
                         LogUtils.e(TAG, "loadRecentlyPlayedSongs error : " + e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
 
                     @Override
@@ -105,7 +103,7 @@ public class RecentlyPlayPresenter implements RecentlyPlayContract.Presenter {
                     }
                 });
 
-        mSubscriptions.add(subscription);
+        mDisposables.add(disposable);
     }
 
     @Override
@@ -117,10 +115,10 @@ public class RecentlyPlayPresenter implements RecentlyPlayContract.Presenter {
                 mView.hideLoadingView();
 
                 if (songs.size() == 0) {
-                    Glide.with(mView.getContext()).load(R.drawable.ic_album).asBitmap()
+                    Glide.with(mView.getContext()).asBitmap().load(R.drawable.ic_album)
                             .into(new SimpleTarget<Bitmap>() {
                                 @Override
-                                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                                     if (mView != null) {
                                         mView.showArtwork(resource);
                                     }
@@ -129,26 +127,23 @@ public class RecentlyPlayPresenter implements RecentlyPlayContract.Presenter {
 
                     mView.showEmptyView();
                 } else {
-                    Glide.with(mView.getContext()).load(Utils.getAlbumArtUri(songs.get(0).mAlbumId))
-                            .asBitmap()
-                            .placeholder(R.drawable.ic_album)
-                            .error(R.drawable.ic_album)
-                            .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                            .priority(Priority.IMMEDIATE)
+                    Glide.with(mView.getContext()).asBitmap().load(Utils.getAlbumArtUri(songs.get(0).mAlbumId))
                             .into(new SimpleTarget<Bitmap>() {
                                 @Override
-                                public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                                    super.onLoadFailed(e, errorDrawable);
-                                    LogUtils.e(TAG, "onLoadfailed : " + e.toString());
+                                public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                                     if (mView != null) {
-                                        mView.showArtwork(errorDrawable);
+                                        mView.showArtwork(resource);
                                     }
                                 }
 
                                 @Override
-                                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                public void onLoadFailed(Drawable errorDrawable) {
+                                    super.onLoadFailed(errorDrawable);
+
+                                    LogUtils.e(TAG, "onLoadfailed");
+
                                     if (mView != null) {
-                                        mView.showArtwork(resource);
+                                        mView.showArtwork(errorDrawable);
                                     }
                                 }
                             });

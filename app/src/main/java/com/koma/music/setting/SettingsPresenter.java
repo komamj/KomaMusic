@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import com.koma.music.data.local.MusicRepository;
 import com.koma.music.util.LogUtils;
 
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Created by koma on 4/24/17.
@@ -18,7 +18,7 @@ public class SettingsPresenter implements SettingsContract.Presenter {
 
     private MusicRepository mRepository;
 
-    private CompositeSubscription mSubscriptions;
+    private CompositeDisposable mDisposables;
 
     public SettingsPresenter(SettingsContract.View view, MusicRepository repository) {
         mView = view;
@@ -26,7 +26,7 @@ public class SettingsPresenter implements SettingsContract.Presenter {
 
         mRepository = repository;
 
-        mSubscriptions = new CompositeSubscription();
+        mDisposables = new CompositeDisposable();
     }
 
     @Override

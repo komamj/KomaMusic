@@ -17,21 +17,20 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.koma.music.R;
+import com.bumptech.glide.request.transition.Transition;
 import com.koma.music.data.local.MusicRepository;
 import com.koma.music.data.model.Album;
 import com.koma.music.util.LogUtils;
 
 import java.util.List;
 
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subscribers.DisposableSubscriber;
+
 
 /**
  * Created by koma on 5/5/17.
@@ -44,7 +43,7 @@ public class ArtistDetailPresenter implements ArtistDetailContract.Presenter {
     @NonNull
     private MusicRepository mRepository;
 
-    private CompositeSubscription mSubscriptions;
+    private CompositeDisposable mDisposables;
 
     public ArtistDetailPresenter(ArtistDetailContract.View view, MusicRepository repository) {
         mView = view;
@@ -52,7 +51,7 @@ public class ArtistDetailPresenter implements ArtistDetailContract.Presenter {
 
         mRepository = repository;
 
-        mSubscriptions = new CompositeSubscription();
+        mDisposables = new CompositeDisposable();
     }
 
     @Override
@@ -71,8 +70,8 @@ public class ArtistDetailPresenter implements ArtistDetailContract.Presenter {
     public void unSubscribe() {
         LogUtils.i(TAG, "unSubscribe");
 
-        if (mSubscriptions != null) {
-            mSubscriptions.clear();
+        if (mDisposables != null) {
+            mDisposables.clear();
         }
     }
 
@@ -80,23 +79,23 @@ public class ArtistDetailPresenter implements ArtistDetailContract.Presenter {
     public void loadArtistAlbums(long artistId) {
         LogUtils.i(TAG, "loadArtistSongs atistId : " + artistId);
 
-        if (mSubscriptions != null) {
-            mSubscriptions.clear();
+        if (mDisposables != null) {
+            mDisposables.clear();
         }
 
         if (mView != null) {
-            Subscription subscription = mRepository.getArtistAlbums(mView.getArtistId())
+            Disposable disposable = mRepository.getArtistAlbums(mView.getArtistId())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Subscriber<List<Album>>() {
-                        @Override
-                        public void onCompleted() {
-
-                        }
-
+                    .subscribeWith(new DisposableSubscriber<List<Album>>() {
                         @Override
                         public void onError(Throwable throwable) {
                             LogUtils.e(TAG, "loadArtistAlbums onError : " + throwable.toString());
+                        }
+
+                        @Override
+                        public void onComplete() {
+
                         }
 
                         @Override
@@ -107,7 +106,7 @@ public class ArtistDetailPresenter implements ArtistDetailContract.Presenter {
                         }
                     });
 
-            mSubscriptions.add(subscription);
+            mDisposables.add(disposable);
         }
     }
 
@@ -116,15 +115,11 @@ public class ArtistDetailPresenter implements ArtistDetailContract.Presenter {
         LogUtils.i(TAG, "loadArtWork");
 
         if (mView != null) {
-            Glide.with(mView.getContext()).load(String.valueOf(artistId)).asBitmap()
-                    .placeholder(R.drawable.ic_album)
-                    .error(R.drawable.ic_album)
-                    .priority(Priority.IMMEDIATE)
-                    .dontAnimate()
+            Glide.with(mView.getContext()).asBitmap().load(String.valueOf(artistId))
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
-                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                            super.onLoadFailed(e, errorDrawable);
+                        public void onLoadFailed(Drawable errorDrawable) {
+                            super.onLoadFailed(errorDrawable);
 
                             if (mView != null) {
                                 mView.showArtwork(errorDrawable);
@@ -132,9 +127,9 @@ public class ArtistDetailPresenter implements ArtistDetailContract.Presenter {
                         }
 
                         @Override
-                        public void onResourceReady(Bitmap glideDrawable, GlideAnimation<? super Bitmap> glideAnimation) {
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                             if (mView != null) {
-                                mView.showArtwork(glideDrawable);
+                                mView.showArtwork(resource);
                             }
                         }
                     });

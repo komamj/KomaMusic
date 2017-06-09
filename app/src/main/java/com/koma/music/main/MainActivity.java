@@ -190,7 +190,6 @@ public class MainActivity extends BaseControlActivity implements
         super.onMetaChanged();
 
         Glide.with(this).load(Utils.getAlbumArtUri(MusicUtils.getCurrentAlbumId()))
-                .error(R.drawable.ic_notification)
                 .into(mNavAlbum);
     }
 

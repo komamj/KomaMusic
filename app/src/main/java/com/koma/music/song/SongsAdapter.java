@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.koma.music.R;
 import com.koma.music.base.BaseSongInfoViewHolder;
 import com.koma.music.base.BaseViewHolder;
@@ -49,8 +50,13 @@ public class SongsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     private List<Song> mData;
 
+    private RequestOptions mRequestOptions;
+
     public SongsAdapter(Context context, List<Song> songs) {
         mContext = context;
+
+        mRequestOptions = new RequestOptions().error(R.drawable.ic_album)
+                .placeholder(R.drawable.ic_album);
 
         setList(songs);
     }
@@ -86,10 +92,9 @@ public class SongsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
             ((SongsViewHolder) holder).mMoreMenu.setTag(position - 1);
 
-            Glide.with(mContext).load(Utils.getAlbumArtUri(mData.get(position - 1).mAlbumId))
-                    .error(R.drawable.ic_album)
-                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                    .placeholder(R.drawable.ic_album)
+            Glide.with(mContext)
+                    .load(Utils.getAlbumArtUri(mData.get(position - 1).mAlbumId))
+                    .apply(mRequestOptions)
                     .into(((SongsViewHolder) holder).mAlbum);
 
             ((SongsViewHolder) holder).mTitle.setText(mData.get(position - 1).mSongName);

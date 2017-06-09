@@ -26,7 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.koma.music.R;
 import com.koma.music.base.BaseViewHolder;
 import com.koma.music.data.model.Artist;
@@ -49,10 +49,15 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
 
     private Context mContext;
 
+    private RequestOptions mRequestOptions;
+
     public ArtistsAdapter(Context context, List<Artist> data) {
         mContext = context;
 
         mData = data;
+
+        mRequestOptions = new RequestOptions().error(R.drawable.ic_album)
+                .placeholder(R.drawable.ic_album);
     }
 
     public void replaceData(List<Artist> artists) {
@@ -78,10 +83,9 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
 
         holder.mAlbum.setTransitionName(holder.mTransitionName + String.valueOf(position));
 
-        Glide.with(mContext).load(String.valueOf(mData.get(position).mArtistId)).centerCrop()
-                .error(R.drawable.ic_album)
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .placeholder(R.drawable.ic_album)
+        Glide.with(mContext)
+                .load(String.valueOf(mData.get(position).mArtistId))
+                .apply(mRequestOptions)
                 .into(holder.mAlbum);
 
         holder.mTitle.setText(mData.get(position).mArtistName);

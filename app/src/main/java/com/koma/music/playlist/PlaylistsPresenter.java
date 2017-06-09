@@ -27,11 +27,11 @@ import com.koma.music.util.MusicUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subscribers.DisposableSubscriber;
 
 /**
  * Created by koma on 3/21/17.
@@ -45,7 +45,7 @@ public class PlaylistsPresenter implements PlaylistsConstract.Presenter {
 
     private MusicRepository mRepository;
 
-    private CompositeSubscription mSubscriptions;
+    private CompositeDisposable mDisposables;
 
     public PlaylistsPresenter(@NonNull PlaylistsConstract.View view, MusicRepository repository) {
         mView = view;
@@ -53,7 +53,7 @@ public class PlaylistsPresenter implements PlaylistsConstract.Presenter {
 
         mRepository = repository;
 
-        mSubscriptions = new CompositeSubscription();
+        mDisposables = new CompositeDisposable();
     }
 
     @Override
@@ -67,25 +67,25 @@ public class PlaylistsPresenter implements PlaylistsConstract.Presenter {
     public void unSubscribe() {
         LogUtils.i(TAG, "unSubscribe");
 
-        mSubscriptions.clear();
+        mDisposables.clear();
     }
 
     @Override
     public void loadPlaylists() {
         LogUtils.i(TAG, "loadPlaylists");
-        mSubscriptions.clear();
+        mDisposables.clear();
 
-        Subscription subscription = mRepository.getAllPlaylists().subscribeOn(Schedulers.io())
+        Disposable disposable = mRepository.getAllPlaylists().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<Playlist>>() {
-                    @Override
-                    public void onCompleted() {
-                        LogUtils.i(TAG, "onCompleted");
-                    }
-
+                .subscribeWith(new DisposableSubscriber<List<Playlist>>() {
                     @Override
                     public void onError(Throwable throwable) {
                         LogUtils.e(TAG, "loadPlaylists Error :" + throwable.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
 
                     @Override
@@ -94,7 +94,7 @@ public class PlaylistsPresenter implements PlaylistsConstract.Presenter {
                     }
                 });
 
-        mSubscriptions.add(subscription);
+        mDisposables.add(disposable);
     }
 
     @Override

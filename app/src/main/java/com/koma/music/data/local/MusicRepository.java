@@ -19,7 +19,7 @@ import com.koma.music.data.model.Song;
 
 import java.util.List;
 
-import rx.Observable;
+import io.reactivex.Flowable;
 
 /**
  * Created by koma on 3/20/17.
@@ -46,52 +46,52 @@ public class MusicRepository implements MusicDataSource {
     }
 
     @Override
-    public Observable<List<Song>> getAllSongs() {
+    public Flowable<List<Song>> getAllSongs() {
         return mLocalDataSource.getAllSongs();
     }
 
     @Override
-    public Observable<List<Playlist>> getAllPlaylists() {
+    public Flowable<List<Playlist>> getAllPlaylists() {
         return mLocalDataSource.getAllPlaylists();
     }
 
     @Override
-    public Observable<List<Album>> getAllAlbums() {
+    public Flowable<List<Album>> getAllAlbums() {
         return mLocalDataSource.getAllAlbums();
     }
 
     @Override
-    public Observable<List<Album>> getArtistAlbums(long artistId) {
+    public Flowable<List<Album>> getArtistAlbums(long artistId) {
         return mLocalDataSource.getArtistAlbums(artistId);
     }
 
     @Override
-    public Observable<List<Artist>> getAllArtists() {
+    public Flowable<List<Artist>> getAllArtists() {
         return mLocalDataSource.getAllArtists();
     }
 
     @Override
-    public Observable<List<Song>> getQueueSongs() {
+    public Flowable<List<Song>> getQueueSongs() {
         return mLocalDataSource.getQueueSongs();
     }
 
     @Override
-    public Observable<List<Song>> getAlbumSongs(long albumId) {
+    public Flowable<List<Song>> getAlbumSongs(long albumId) {
         return mLocalDataSource.getAlbumSongs(albumId);
     }
 
     @Override
-    public Observable<List<Song>> getRecentlyAddedSongs() {
+    public Flowable<List<Song>> getRecentlyAddedSongs() {
         return mLocalDataSource.getRecentlyAddedSongs();
     }
 
     @Override
-    public Observable<List<Song>> getRecentlyPlayedSongs() {
+    public Flowable<List<Song>> getRecentlyPlayedSongs() {
         return mLocalDataSource.getRecentlyPlayedSongs();
     }
 
     @Override
-    public Observable<List<Song>> getMyFavoriteSongs() {
+    public Flowable<List<Song>> getMyFavoriteSongs() {
         return mLocalDataSource.getMyFavoriteSongs();
     }
 }

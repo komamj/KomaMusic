@@ -23,8 +23,8 @@ import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -37,13 +37,11 @@ public class ImageLoader {
 
     public static Bitmap getArtworkByAlbumId(final Context context, long albumId) {
         final Bitmap[] artWork = new Bitmap[1];
-        Glide.with(context).load(Utils.getAlbumArtUri(albumId))
-                .asBitmap()
+        Glide.with(context).asBitmap().load(Utils.getAlbumArtUri(albumId))
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
-                    public void onResourceReady(Bitmap bitmap,
-                                                GlideAnimation<? super Bitmap> glideAnimation) {
-                        artWork[0] = bitmap;
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        artWork[0] = resource;
                     }
                 });
         return artWork[0];

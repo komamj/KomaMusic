@@ -28,8 +28,12 @@ import com.koma.music.song.SongsPresenter;
 
 import java.util.List;
 
-import rx.Observable;
-import rx.Subscriber;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
+import io.reactivex.FlowableOnSubscribe;
+import io.reactivex.annotations.NonNull;
+
 
 /**
  * Created by koma on 3/20/17.
@@ -37,113 +41,113 @@ import rx.Subscriber;
 
 public class LocalDataSource implements MusicDataSource {
     @Override
-    public Observable<List<Song>> getAllSongs() {
-        return Observable.create(new Observable.OnSubscribe<List<Song>>() {
+    public Flowable<List<Song>> getAllSongs() {
+        return Flowable.create(new FlowableOnSubscribe<List<Song>>() {
             @Override
-            public void call(Subscriber<? super List<Song>> subscriber) {
-                subscriber.onNext(SongsPresenter.getAllSongs());
-                subscriber.onCompleted();
+            public void subscribe(@NonNull FlowableEmitter<List<Song>> e) throws Exception {
+                e.onNext(SongsPresenter.getAllSongs());
+                e.onComplete();
             }
-        });
+        }, BackpressureStrategy.LATEST);
     }
 
     @Override
-    public Observable<List<Playlist>> getAllPlaylists() {
-        return Observable.create(new Observable.OnSubscribe<List<Playlist>>() {
+    public Flowable<List<Playlist>> getAllPlaylists() {
+        return Flowable.create(new FlowableOnSubscribe<List<Playlist>>() {
             @Override
-            public void call(Subscriber<? super List<Playlist>> subscriber) {
-                subscriber.onNext(PlaylistsPresenter.getAllPlaylists());
-                subscriber.onCompleted();
+            public void subscribe(@NonNull FlowableEmitter<List<Playlist>> e) throws Exception {
+                e.onNext(PlaylistsPresenter.getAllPlaylists());
+                e.onComplete();
             }
-        });
+        }, BackpressureStrategy.LATEST);
     }
 
     @Override
-    public Observable<List<Album>> getAllAlbums() {
-        return Observable.create(new Observable.OnSubscribe<List<Album>>() {
+    public Flowable<List<Album>> getAllAlbums() {
+        return Flowable.create(new FlowableOnSubscribe<List<Album>>() {
             @Override
-            public void call(Subscriber<? super List<Album>> subscriber) {
-                subscriber.onNext(AlbumsPresenter.getAllAlbums());
-                subscriber.onCompleted();
+            public void subscribe(@NonNull FlowableEmitter<List<Album>> e) throws Exception {
+                e.onNext(AlbumsPresenter.getAllAlbums());
+                e.onComplete();
             }
-        });
+        }, BackpressureStrategy.LATEST);
     }
 
     @Override
-    public Observable<List<Album>> getArtistAlbums(final long artistId) {
-        return Observable.create(new Observable.OnSubscribe<List<Album>>() {
+    public Flowable<List<Album>> getArtistAlbums(final long artistId) {
+        return Flowable.create(new FlowableOnSubscribe<List<Album>>() {
             @Override
-            public void call(Subscriber<? super List<Album>> subscriber) {
-                subscriber.onNext(AlbumsPresenter.getArtistAlbums(artistId));
-                subscriber.onCompleted();
+            public void subscribe(@NonNull FlowableEmitter<List<Album>> e) throws Exception {
+                e.onNext(AlbumsPresenter.getArtistAlbums(artistId));
+                e.onComplete();
             }
-        });
+        }, BackpressureStrategy.LATEST);
     }
 
     @Override
-    public Observable<List<Artist>> getAllArtists() {
-        return Observable.create(new Observable.OnSubscribe<List<Artist>>() {
+    public Flowable<List<Artist>> getAllArtists() {
+        return Flowable.create(new FlowableOnSubscribe<List<Artist>>() {
             @Override
-            public void call(Subscriber<? super List<Artist>> subscriber) {
-                subscriber.onNext(ArtistsPresenter.getAllArtists());
-                subscriber.onCompleted();
+            public void subscribe(@NonNull FlowableEmitter<List<Artist>> e) throws Exception {
+                e.onNext(ArtistsPresenter.getAllArtists());
+                e.onComplete();
             }
-        });
+        }, BackpressureStrategy.LATEST);
     }
 
     @Override
-    public Observable<List<Song>> getQueueSongs() {
-        return Observable.create(new Observable.OnSubscribe<List<Song>>() {
+    public Flowable<List<Song>> getQueueSongs() {
+        return Flowable.create(new FlowableOnSubscribe<List<Song>>() {
             @Override
-            public void call(Subscriber<? super List<Song>> subscriber) {
-                subscriber.onNext(PlayQueuePresenter.getQueueSongs());
-                subscriber.onCompleted();
+            public void subscribe(@NonNull FlowableEmitter<List<Song>> e) throws Exception {
+                e.onNext(PlayQueuePresenter.getQueueSongs());
+                e.onComplete();
             }
-        });
+        }, BackpressureStrategy.LATEST);
     }
 
     @Override
-    public Observable<List<Song>> getAlbumSongs(final long albumId) {
-        return Observable.create(new Observable.OnSubscribe<List<Song>>() {
+    public Flowable<List<Song>> getAlbumSongs(final long albumId) {
+        return Flowable.create(new FlowableOnSubscribe<List<Song>>() {
             @Override
-            public void call(Subscriber<? super List<Song>> subscriber) {
-                subscriber.onNext(AlbumDetailPresenter.getAlbumSongs(albumId));
-                subscriber.onCompleted();
+            public void subscribe(@NonNull FlowableEmitter<List<Song>> e) throws Exception {
+                e.onNext(AlbumDetailPresenter.getAlbumSongs(albumId));
+                e.onComplete();
             }
-        });
+        }, BackpressureStrategy.LATEST);
     }
 
     @Override
-    public Observable<List<Song>> getRecentlyAddedSongs() {
-        return Observable.create(new Observable.OnSubscribe<List<Song>>() {
+    public Flowable<List<Song>> getRecentlyAddedSongs() {
+        return Flowable.create(new FlowableOnSubscribe<List<Song>>() {
             @Override
-            public void call(Subscriber<? super List<Song>> subscriber) {
-                subscriber.onNext(RecentlyAddedPresenter.getRecentlyAddedSongs());
-                subscriber.onCompleted();
+            public void subscribe(@NonNull FlowableEmitter<List<Song>> e) throws Exception {
+                e.onNext(RecentlyAddedPresenter.getRecentlyAddedSongs());
+                e.onComplete();
             }
-        });
+        }, BackpressureStrategy.LATEST);
     }
 
     @Override
-    public Observable<List<Song>> getRecentlyPlayedSongs() {
-        return Observable.create(new Observable.OnSubscribe<List<Song>>() {
+    public Flowable<List<Song>> getRecentlyPlayedSongs() {
+        return Flowable.create(new FlowableOnSubscribe<List<Song>>() {
             @Override
-            public void call(Subscriber<? super List<Song>> subscriber) {
-                subscriber.onNext(RecentlyPlayPresenter.getRecentlyPlaySongs());
-                subscriber.onCompleted();
+            public void subscribe(@NonNull FlowableEmitter<List<Song>> e) throws Exception {
+                e.onNext(RecentlyPlayPresenter.getRecentlyPlaySongs());
+                e.onComplete();
             }
-        });
+        }, BackpressureStrategy.LATEST);
     }
 
     @Override
-    public Observable<List<Song>> getMyFavoriteSongs() {
-        return Observable.create(new Observable.OnSubscribe<List<Song>>() {
+    public Flowable<List<Song>> getMyFavoriteSongs() {
+        return Flowable.create(new FlowableOnSubscribe<List<Song>>() {
             @Override
-            public void call(Subscriber<? super List<Song>> subscriber) {
-                subscriber.onNext(MyFavoritePresenter.getFavoriteSongs());
-                subscriber.onCompleted();
+            public void subscribe(@NonNull FlowableEmitter<List<Song>> e) throws Exception {
+                e.onNext(MyFavoritePresenter.getFavoriteSongs());
+                e.onComplete();
             }
-        });
+        }, BackpressureStrategy.LATEST);
     }
 
 }

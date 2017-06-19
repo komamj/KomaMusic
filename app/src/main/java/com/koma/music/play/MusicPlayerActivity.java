@@ -17,7 +17,7 @@ import android.view.View;
 
 import com.koma.music.R;
 import com.koma.music.base.PermissionActivity;
-import com.koma.music.data.local.MusicRepository;
+import com.koma.music.data.source.local.MusicRepository;
 import com.koma.music.util.LogUtils;
 
 /**

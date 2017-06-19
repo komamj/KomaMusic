@@ -2,7 +2,7 @@ package com.koma.music.setting;
 
 import android.support.annotation.NonNull;
 
-import com.koma.music.data.local.MusicRepository;
+import com.koma.music.data.source.local.MusicRepository;
 import com.koma.music.util.LogUtils;
 
 import io.reactivex.disposables.CompositeDisposable;

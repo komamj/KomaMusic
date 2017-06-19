@@ -10,7 +10,7 @@
  * KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.koma.music.data.local.db;
+package com.koma.music.data.source.local.db;
 
 import android.content.ContentValues;
 import android.content.Context;

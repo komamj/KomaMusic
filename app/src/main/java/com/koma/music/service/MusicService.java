@@ -53,9 +53,9 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 
 import com.koma.music.R;
-import com.koma.music.data.local.db.MusicPlaybackState;
-import com.koma.music.data.local.db.RecentlyPlay;
-import com.koma.music.data.local.db.SongPlayCount;
+import com.koma.music.data.source.local.db.MusicPlaybackState;
+import com.koma.music.data.source.local.db.RecentlyPlay;
+import com.koma.music.data.source.local.db.SongPlayCount;
 import com.koma.music.data.model.MusicPlaybackTrack;
 import com.koma.music.util.LogUtils;
 import com.koma.music.util.PreferenceUtils;

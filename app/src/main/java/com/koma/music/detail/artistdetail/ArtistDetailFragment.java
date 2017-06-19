@@ -23,7 +23,7 @@ import android.view.View;
 import com.koma.music.R;
 import com.koma.music.album.AlbumsAdapter;
 import com.koma.music.base.BaseLoadingFragment;
-import com.koma.music.data.local.MusicRepository;
+import com.koma.music.data.source.local.MusicRepository;
 import com.koma.music.data.model.Album;
 import com.koma.music.detail.DetailsActivity;
 import com.koma.music.util.Constants;

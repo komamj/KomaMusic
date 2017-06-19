@@ -31,7 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.koma.music.R;
-import com.koma.music.data.local.db.FavoriteSong;
+import com.koma.music.data.source.local.db.FavoriteSong;
 import com.koma.music.service.MusicServiceConstants;
 import com.koma.music.util.LogUtils;
 import com.koma.music.util.MusicUtils;

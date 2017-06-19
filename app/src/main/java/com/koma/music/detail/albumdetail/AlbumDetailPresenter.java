@@ -24,7 +24,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.koma.music.MusicApplication;
-import com.koma.music.data.local.MusicRepository;
+import com.koma.music.data.source.local.MusicRepository;
 import com.koma.music.data.model.Song;
 import com.koma.music.util.LogUtils;
 import com.koma.music.util.Utils;

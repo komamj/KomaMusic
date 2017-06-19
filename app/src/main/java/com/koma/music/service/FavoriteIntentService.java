@@ -16,7 +16,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
-import com.koma.music.data.local.db.FavoriteSong;
+import com.koma.music.data.source.local.db.FavoriteSong;
 import com.koma.music.util.Constants;
 
 /**

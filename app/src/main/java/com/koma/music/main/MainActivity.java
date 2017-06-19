@@ -14,6 +14,8 @@ package com.koma.music.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
@@ -31,7 +33,6 @@ import com.koma.music.R;
 import com.koma.music.album.AlbumsFragment;
 import com.koma.music.artist.ArtistsFragment;
 import com.koma.music.base.BaseControlActivity;
-import com.koma.music.play.quickcontrol.QuickControlFragment;
 import com.koma.music.playlist.PlaylistsFragment;
 import com.koma.music.song.SongsFragment;
 import com.koma.music.util.MusicUtils;

@@ -1,4 +1,4 @@
-package com.koma.music.data.local.db;
+package com.koma.music.data.source.local.db;
 
 import android.database.AbstractCursor;
 import android.database.Cursor;

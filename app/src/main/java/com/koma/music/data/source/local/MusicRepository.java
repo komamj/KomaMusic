@@ -10,7 +10,7 @@
  * KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.koma.music.data.local;
+package com.koma.music.data.source.local;
 
 import com.koma.music.data.model.Album;
 import com.koma.music.data.model.Artist;
@@ -19,12 +19,14 @@ import com.koma.music.data.model.Song;
 
 import java.util.List;
 
+import javax.inject.Singleton;
+
 import io.reactivex.Flowable;
 
 /**
  * Created by koma on 3/20/17.
  */
-
+@Singleton
 public class MusicRepository implements MusicDataSource {
     private static MusicRepository mRepostory;
 

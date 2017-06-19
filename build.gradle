@@ -26,12 +26,20 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
+// Define versions in a single place
 ext {
+    // Sdk and tools
+    minSdkVersion = 21
+    targetSdkVersion = 25
+    compileSdkVersion = 25
+    buildToolsVersion = '25.0.2'
+
     // App dependencies
-    supportLibraryVersion = '25.3.1'
-    glideVersion = '4.0.0-RC0'
-    rxjavaVersion = '2.1.0'
-    rxandroidVersion = '2.0.1'
-    butterknife = '8.6.0'
-    leakcanaryVersion = '1.5'
+    dagger_version = '2.11-rc2'
+    support_version = '25.3.1'
+    glide_version = '4.0.0-RC0'
+    rxjava_version = '2.1.0'
+    rxandroid_version = '2.0.1'
+    butterknife_version = '8.6.0'
+    leakcanary_version = '1.5.1'
 }

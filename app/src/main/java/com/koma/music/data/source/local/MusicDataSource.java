@@ -10,7 +10,7 @@
  * KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.koma.music.data.local;
+package com.koma.music.data.source.local;
 
 import com.koma.music.data.model.Album;
 import com.koma.music.data.model.Artist;
